@@ -1,0 +1,185 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+/**
+ * EventActor Pivot Model
+ *
+ * Links actors to events with roles and attribution details
+ *
+ * @property int $id
+ * @property int $event_id
+ * @property int $actor_id
+ * @property string $role
+ * @property string|null $role_description
+ * @property string $certainty
+ * @property int|null $personnel_count
+ * @property int|null $casualties_claimed
+ * @property int|null $losses_suffered
+ * @property string|null $source_type
+ * @property string|null $source_url
+ * @property string|null $verified_by
+ * @property string|null $notes
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
+class EventActor extends Model
+{
+    protected $table = 'event_actors';
+
+    protected $fillable = [
+        'event_id',
+        'actor_id',
+        'role',
+        'role_description',
+        'certainty',
+        'personnel_count',
+        'casualties_claimed',
+        'losses_suffered',
+        'source_type',
+        'source_url',
+        'verified_by',
+        'notes',
+    ];
+
+    protected $casts = [
+        'personnel_count' => 'integer',
+        'casualties_claimed' => 'integer',
+        'losses_suffered' => 'integer',
+    ];
+
+    // ==================== RELATIONSHIPS ====================
+
+    /**
+     * Event this attribution belongs to
+     */
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class);
+    }
+
+    /**
+     * Actor attributed
+     */
+    public function actor(): BelongsTo
+    {
+        return $this->belongsTo(Actor::class);
+    }
+
+    // ==================== SCOPES ====================
+
+    /**
+     * Scope by role
+     */
+    public function scopeRole($query, string $role)
+    {
+        return $query->where('role', $role);
+    }
+
+    /**
+     * Scope to perpetrators
+     */
+    public function scopePerpetrators($query)
+    {
+        return $query->where('role', 'perpetrator');
+    }
+
+    /**
+     * Scope to victims
+     */
+    public function scopeVictims($query)
+    {
+        return $query->where('role', 'victim');
+    }
+
+    /**
+     * Scope by certainty level
+     */
+    public function scopeCertainty($query, string $certainty)
+    {
+        return $query->where('certainty', $certainty);
+    }
+
+    /**
+     * Scope to confirmed attributions
+     */
+    public function scopeConfirmed($query)
+    {
+        return $query->where('certainty', 'confirmed');
+    }
+
+    /**
+     * Scope to unconfirmed attributions
+     */
+    public function scopeUnconfirmed($query)
+    {
+        return $query->whereIn('certainty', ['unconfirmed', 'alleged', 'disputed']);
+    }
+
+    // ==================== METHODS ====================
+
+    /**
+     * Check if attribution is verified
+     */
+    public function isVerified(): bool
+    {
+        return $this->certainty === 'confirmed';
+    }
+
+    /**
+     * Get formatted role name
+     */
+    public function getFormattedRole(): string
+    {
+        return match ($this->role) {
+            'perpetrator' => 'Perpetrator',
+            'victim' => 'Victim',
+            'equipment_owner' => 'Equipment Owner',
+            'operator' => 'Operator',
+            'ally' => 'Allied Force',
+            'mediator' => 'Mediator',
+            'witness' => 'Witness',
+            'claimed_by' => 'Claimed By',
+            'attributed_to' => 'Attributed To',
+            'other' => 'Other',
+            default => ucfirst(str_replace('_', ' ', $this->role)),
+        };
+    }
+
+    /**
+     * Get formatted certainty level
+     */
+    public function getFormattedCertainty(): string
+    {
+        return match ($this->certainty) {
+            'confirmed' => 'Confirmed',
+            'likely' => 'Likely',
+            'possible' => 'Possible',
+            'alleged' => 'Alleged',
+            'disputed' => 'Disputed',
+            'unconfirmed' => 'Unconfirmed',
+            default => ucfirst($this->certainty),
+        };
+    }
+
+    /**
+     * Get certainty badge color
+     */
+    public function getCertaintyColor(): string
+    {
+        return match ($this->certainty) {
+            'confirmed' => 'green',
+            'likely' => 'lime',
+            'possible' => 'yellow',
+            'alleged' => 'orange',
+            'disputed' => 'red',
+            'unconfirmed' => 'gray',
+            default => 'gray',
+        };
+    }
+}

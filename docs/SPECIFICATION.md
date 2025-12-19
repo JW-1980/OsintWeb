@@ -63,9 +63,9 @@ OsintWeb is a comprehensive Open Source Intelligence (OSINT) platform designed f
 ```
 Backend:
 - Laravel 11+ (PHP 8.2+)
-- PostgreSQL 15+ with PostGIS
-- Redis 7+
-- Meilisearch (full-text search)
+- MySQL 8.0+ with spatial extensions
+- Laravel file/database cache (no Redis required)
+- Meilisearch (full-text search, optional)
 
 Frontend:
 - Vue.js 3 + TypeScript
@@ -74,11 +74,13 @@ Frontend:
 - TailwindCSS
 
 Infrastructure:
-- Docker + Docker Compose
-- Nginx
-- Laravel Horizon (queues)
+- Nginx or Apache (shared hosting compatible)
+- Laravel database queues
 - Laravel Telescope (debugging)
+- Optional: Docker for local development
 ```
+
+**Note:** See [MySQL Stack Specification](MYSQL_STACK_SPECIFICATION.md) for complete database architecture, hosting recommendations, and migration guides.
 
 ---
 
@@ -1761,12 +1763,20 @@ Tasks:
 
 ### Required PHP Extensions
 ```
-- pgsql, pdo_pgsql
-- gd or imagick
-- redis
-- zip
-- xml
+- mysql, pdo_mysql (MySQL 8.0+ support)
+- gd or imagick (image processing)
+- mbstring (multibyte string handling)
+- xml (XML processing)
+- curl (HTTP requests)
+- zip (file compression)
+- bcmath (precision math)
+- json (JSON processing)
+- tokenizer (Laravel routing)
+- Optional: intl (internationalization)
+- Optional: opcache (performance optimization)
 ```
+
+**Note:** For complete installation instructions and hosting requirements, see [MySQL Stack Specification](MYSQL_STACK_SPECIFICATION.md).
 
 ### Required JavaScript Libraries
 ```json
@@ -1788,11 +1798,29 @@ Tasks:
 }
 ```
 
-### PostGIS Requirements
+### MySQL Spatial Support
+
+MySQL 8.0+ includes native spatial data types and functions:
+
 ```sql
-CREATE EXTENSION IF NOT EXISTS postgis;
-CREATE EXTENSION IF NOT EXISTS postgis_topology;
+-- Point data (events, equipment locations)
+POINT SRID 4326
+
+-- Polygon data (control zones, areas)
+POLYGON SRID 4326
+
+-- Spatial indexes for performance
+CREATE SPATIAL INDEX idx_location ON events(location);
+CREATE SPATIAL INDEX idx_geometry ON control_zones(geometry);
+
+-- Distance calculations (meters)
+ST_Distance_Sphere(point1, point2)
+
+-- Contains checks (point in polygon)
+ST_Contains(polygon, point)
 ```
+
+**For complete MySQL spatial reference and migration examples, see [MySQL Stack Specification](MYSQL_STACK_SPECIFICATION.md).**
 
 ---
 

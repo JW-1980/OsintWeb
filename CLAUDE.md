@@ -29,10 +29,10 @@
 - **Backend**: Laravel 11+ (PHP 8.2+)
 - **Frontend**: Vue.js 3 with TypeScript
 - **Maps**: Leaflet.js with OpenStreetMap
-- **Database**: PostgreSQL with PostGIS extension
-- **Cache**: Redis
-- **Search**: Meilisearch
-- **Queue**: Laravel Horizon
+- **Database**: MySQL 8.0+ with spatial extensions
+- **Cache**: Laravel file/database cache (no Redis required)
+- **Search**: Meilisearch (or MySQL full-text for shared hosting)
+- **Queue**: Laravel database queues
 
 ### Directory Structure
 ```
@@ -164,9 +164,11 @@
 
 ### Caching Strategy
 - Cache expensive database queries
-- Use Redis for session and cache
+- Development: File-based cache (storage/framework/cache)
+- Production: Database cache table
 - Implement query result caching for map data
 - Cache external API responses
+- No Redis required - simplified hosting
 
 ### Database Optimization
 - Index foreign keys
@@ -184,5 +186,6 @@
 ### Health Checks
 - Implement `/health` endpoint
 - Check database connectivity
-- Check Redis connectivity
+- Check cache functionality
+- Check search service availability (if using Meilisearch)
 - Check external service dependencies
