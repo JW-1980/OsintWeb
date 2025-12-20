@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\EventMediaController;
 use App\Http\Controllers\Api\EventSourceController;
 use App\Http\Controllers\Api\EquipmentController;
+use App\Http\Controllers\Api\MilitaryEquipmentController;
 use App\Http\Controllers\Api\ControlZoneController;
 use App\Http\Controllers\Api\CountryController;
 use App\Http\Controllers\Api\FactionController;
@@ -65,12 +66,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{uuid}/sources/{sourceId}', [EventSourceController::class, 'destroy']);
     });
 
-    // Equipment
+    // Equipment - Full CRUD Operations
     Route::prefix('equipment')->group(function () {
-        Route::get('/', [EquipmentController::class, 'index']);
-        Route::get('/categories', [EquipmentController::class, 'categories']);
-        Route::get('/search', [EquipmentController::class, 'search']);
-        Route::get('/{uuid}', [EquipmentController::class, 'show']);
+        Route::get('/', [MilitaryEquipmentController::class, 'index']);
+        Route::post('/', [MilitaryEquipmentController::class, 'store']);
+        Route::get('/categories', [MilitaryEquipmentController::class, 'categories']);
+        Route::get('/autocomplete', [MilitaryEquipmentController::class, 'autocomplete']);
+        Route::get('/stats', [MilitaryEquipmentController::class, 'stats']);
+        Route::get('/by-country/{countryId}', [MilitaryEquipmentController::class, 'byCountry']);
+        Route::get('/{id}', [MilitaryEquipmentController::class, 'show']);
+        Route::put('/{id}', [MilitaryEquipmentController::class, 'update']);
+        Route::delete('/{id}', [MilitaryEquipmentController::class, 'destroy']);
+        Route::post('/{id}/restore', [MilitaryEquipmentController::class, 'restore']);
         Route::get('/{uuid}/events', [EquipmentController::class, 'events']);
     });
 
