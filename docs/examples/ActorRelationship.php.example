@@ -1,0 +1,165 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+/**
+ * ActorRelationship Model
+ *
+ * Tracks relationships between actors (alliances, hostilities, etc.)
+ *
+ * @property int $id
+ * @property int $actor_from_id
+ * @property int $actor_to_id
+ * @property string $relationship_type
+ * @property string $valid_from
+ * @property string|null $valid_to
+ * @property string|null $description
+ * @property string $strength
+ * @property string|null $source_url
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ */
+class ActorRelationship extends Model
+{
+    protected $fillable = [
+        'actor_from_id',
+        'actor_to_id',
+        'relationship_type',
+        'valid_from',
+        'valid_to',
+        'description',
+        'strength',
+        'source_url',
+    ];
+
+    protected $casts = [
+        'valid_from' => 'date',
+        'valid_to' => 'date',
+    ];
+
+    // ==================== RELATIONSHIPS ====================
+
+    /**
+     * The actor initiating the relationship
+     */
+    public function actorFrom(): BelongsTo
+    {
+        return $this->belongsTo(Actor::class, 'actor_from_id');
+    }
+
+    /**
+     * The target actor of the relationship
+     */
+    public function actorTo(): BelongsTo
+    {
+        return $this->belongsTo(Actor::class, 'actor_to_id');
+    }
+
+    // ==================== SCOPES ====================
+
+    /**
+     * Scope to current/active relationships
+     */
+    public function scopeActive($query)
+    {
+        return $query->where(function ($q) {
+            $q->whereNull('valid_to')
+                ->orWhere('valid_to', '>=', now());
+        });
+    }
+
+    /**
+     * Scope to historical/expired relationships
+     */
+    public function scopeHistorical($query)
+    {
+        return $query->whereNotNull('valid_to')
+            ->where('valid_to', '<', now());
+    }
+
+    /**
+     * Scope by relationship type
+     */
+    public function scopeType($query, string $type)
+    {
+        return $query->where('relationship_type', $type);
+    }
+
+    /**
+     * Scope to allied relationships
+     */
+    public function scopeAllied($query)
+    {
+        return $query->where('relationship_type', 'allied');
+    }
+
+    /**
+     * Scope to hostile relationships
+     */
+    public function scopeHostile($query)
+    {
+        return $query->where('relationship_type', 'hostile');
+    }
+
+    /**
+     * Scope by strength
+     */
+    public function scopeStrength($query, string $strength)
+    {
+        return $query->where('strength', $strength);
+    }
+
+    // ==================== METHODS ====================
+
+    /**
+     * Check if relationship is currently active
+     */
+    public function isActive(): bool
+    {
+        if ($this->valid_to === null) {
+            return true;
+        }
+
+        return $this->valid_to >= now();
+    }
+
+    /**
+     * Get formatted relationship type
+     */
+    public function getFormattedType(): string
+    {
+        return match ($this->relationship_type) {
+            'allied' => 'Allied',
+            'hostile' => 'Hostile',
+            'sponsor' => 'Sponsor',
+            'affiliated' => 'Affiliated',
+            'splinter_group' => 'Splinter Group',
+            'merged_into' => 'Merged Into',
+            'rival' => 'Rival',
+            'neutral' => 'Neutral',
+            'unknown' => 'Unknown',
+            default => ucfirst(str_replace('_', ' ', $this->relationship_type)),
+        };
+    }
+
+    /**
+     * Get relationship color for display
+     */
+    public function getRelationshipColor(): string
+    {
+        return match ($this->relationship_type) {
+            'allied' => 'green',
+            'hostile' => 'red',
+            'sponsor' => 'blue',
+            'affiliated' => 'purple',
+            'rival' => 'orange',
+            'neutral' => 'gray',
+            default => 'gray',
+        };
+    }
+}

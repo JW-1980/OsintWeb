@@ -1,0 +1,445 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Database\Seeders;
+
+use App\Models\Actor;
+use App\Models\ActorRelationship;
+use Illuminate\Database\Seeder;
+
+class ActorSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        // ==================== COUNTRIES ====================
+
+        $russia = Actor::create([
+            'name' => 'Russian Federation',
+            'short_name' => 'Russia',
+            'official_name' => 'Russian Federation',
+            'actor_type' => 'country',
+            'iso_code_alpha2' => 'RU',
+            'iso_code_alpha3' => 'RUS',
+            'iso_code_numeric' => '643',
+            'also_known_as' => ['Russia', 'РФ', 'RF'],
+            'color_hex' => '#0039A6',
+            'flag_url' => '/flags/ru.svg',
+            'primary_region' => 'Eastern Europe',
+            'designation_status' => 'recognized_state',
+            'is_active' => true,
+            'founded_date' => '1991-12-25',
+            'description' => 'Successor state to the Soviet Union',
+        ]);
+
+        $ukraine = Actor::create([
+            'name' => 'Ukraine',
+            'short_name' => 'Ukraine',
+            'official_name' => 'Ukraine',
+            'actor_type' => 'country',
+            'iso_code_alpha2' => 'UA',
+            'iso_code_alpha3' => 'UKR',
+            'iso_code_numeric' => '804',
+            'also_known_as' => ['Ukraine', 'Україна'],
+            'color_hex' => '#0057B7',
+            'flag_url' => '/flags/ua.svg',
+            'primary_region' => 'Eastern Europe',
+            'designation_status' => 'recognized_state',
+            'is_active' => true,
+            'founded_date' => '1991-08-24',
+        ]);
+
+        $usa = Actor::create([
+            'name' => 'United States of America',
+            'short_name' => 'USA',
+            'official_name' => 'United States of America',
+            'actor_type' => 'country',
+            'iso_code_alpha2' => 'US',
+            'iso_code_alpha3' => 'USA',
+            'iso_code_numeric' => '840',
+            'also_known_as' => ['United States', 'America', 'US'],
+            'color_hex' => '#B22234',
+            'flag_url' => '/flags/us.svg',
+            'primary_region' => 'North America',
+            'designation_status' => 'recognized_state',
+            'is_active' => true,
+        ]);
+
+        $israel = Actor::create([
+            'name' => 'Israel',
+            'short_name' => 'Israel',
+            'official_name' => 'State of Israel',
+            'actor_type' => 'country',
+            'iso_code_alpha2' => 'IL',
+            'iso_code_alpha3' => 'ISR',
+            'iso_code_numeric' => '376',
+            'also_known_as' => ['Israel', 'ישראל'],
+            'color_hex' => '#0038B8',
+            'flag_url' => '/flags/il.svg',
+            'primary_region' => 'Middle East',
+            'designation_status' => 'recognized_state',
+            'is_active' => true,
+            'founded_date' => '1948-05-14',
+        ]);
+
+        $iran = Actor::create([
+            'name' => 'Iran',
+            'short_name' => 'Iran',
+            'official_name' => 'Islamic Republic of Iran',
+            'actor_type' => 'country',
+            'iso_code_alpha2' => 'IR',
+            'iso_code_alpha3' => 'IRN',
+            'iso_code_numeric' => '364',
+            'also_known_as' => ['Iran', 'Persia', 'ایران'],
+            'color_hex' => '#239F40',
+            'flag_url' => '/flags/ir.svg',
+            'primary_region' => 'Middle East',
+            'designation_status' => 'sanctioned',
+            'is_active' => true,
+        ]);
+
+        $syria = Actor::create([
+            'name' => 'Syria',
+            'short_name' => 'Syria',
+            'official_name' => 'Syrian Arab Republic',
+            'actor_type' => 'country',
+            'iso_code_alpha2' => 'SY',
+            'iso_code_alpha3' => 'SYR',
+            'iso_code_numeric' => '760',
+            'also_known_as' => ['Syria', 'سوريا'],
+            'color_hex' => '#CE1126',
+            'flag_url' => '/flags/sy.svg',
+            'primary_region' => 'Middle East',
+            'designation_status' => 'sanctioned',
+            'is_active' => true,
+        ]);
+
+        $iraq = Actor::create([
+            'name' => 'Iraq',
+            'short_name' => 'Iraq',
+            'official_name' => 'Republic of Iraq',
+            'actor_type' => 'country',
+            'iso_code_alpha2' => 'IQ',
+            'iso_code_alpha3' => 'IRQ',
+            'iso_code_numeric' => '368',
+            'also_known_as' => ['Iraq', 'العراق'],
+            'color_hex' => '#CE1126',
+            'flag_url' => '/flags/iq.svg',
+            'primary_region' => 'Middle East',
+            'designation_status' => 'recognized_state',
+            'is_active' => true,
+        ]);
+
+        // ==================== TERRORIST ORGANIZATIONS ====================
+
+        $isis = Actor::create([
+            'name' => 'Islamic State of Iraq and Syria',
+            'short_name' => 'ISIS',
+            'official_name' => 'ad-Dawlah al-Islāmiyah',
+            'actor_type' => 'terrorist_org',
+            'actor_subtype' => 'Salafist jihadist',
+            'also_known_as' => ['ISIS', 'ISIL', 'Daesh', 'IS', 'Islamic State'],
+            'color_hex' => '#000000',
+            'emblem_url' => '/emblems/isis.png',
+            'primary_region' => 'Middle East',
+            'operating_areas' => ['Syria', 'Iraq', 'Libya', 'Afghanistan', 'Nigeria'],
+            'designation_status' => 'terrorist_un',
+            'is_active' => true,
+            'founded_date' => '2013-04-08',
+            'ideology' => 'Salafist jihadism, Islamic fundamentalism',
+            'estimated_size' => '20,000-30,000 fighters (est. 2023)',
+            'description' => 'Salafi jihadist militant organization and unrecognized quasi-state',
+        ]);
+
+        $alQaeda = Actor::create([
+            'name' => 'Al-Qaeda',
+            'short_name' => 'AQ',
+            'official_name' => 'al-Qāʿidah',
+            'actor_type' => 'terrorist_org',
+            'actor_subtype' => 'Salafist jihadist',
+            'also_known_as' => ['Al-Qaeda', 'Al-Qaida', 'القاعدة'],
+            'color_hex' => '#1C1C1C',
+            'primary_region' => 'International',
+            'operating_areas' => ['Afghanistan', 'Pakistan', 'Yemen', 'Syria', 'Somalia'],
+            'designation_status' => 'terrorist_un',
+            'is_active' => true,
+            'founded_date' => '1988-08-20',
+            'ideology' => 'Salafist jihadism, Pan-Islamism',
+            'estimated_size' => '30,000-40,000 fighters (global affiliates)',
+            'description' => 'Militant Sunni Islamist multi-national organization',
+        ]);
+
+        $hezbollah = Actor::create([
+            'name' => 'Hezbollah',
+            'short_name' => 'Hezbollah',
+            'official_name' => 'Islamic Resistance Movement',
+            'actor_type' => 'militia',
+            'actor_subtype' => 'Shia Islamist',
+            'parent_country_id' => $iran->id,
+            'also_known_as' => ['Hezbollah', 'Hizbullah', 'Party of God', 'حزب الله'],
+            'color_hex' => '#00A651',
+            'flag_url' => '/emblems/hezbollah.png',
+            'primary_region' => 'Middle East',
+            'operating_areas' => ['Lebanon', 'Syria'],
+            'designation_status' => 'terrorist_us',
+            'is_active' => true,
+            'founded_date' => '1985-02-16',
+            'ideology' => 'Shia Islamism, Anti-Zionism, Khomeinism',
+            'estimated_size' => '20,000-30,000 fighters',
+            'description' => 'Lebanese Shia Islamist political party and militant group',
+        ]);
+
+        $hamas = Actor::create([
+            'name' => 'Hamas',
+            'short_name' => 'Hamas',
+            'official_name' => 'Islamic Resistance Movement',
+            'actor_type' => 'terrorist_org',
+            'actor_subtype' => 'Sunni Islamist',
+            'also_known_as' => ['Hamas', 'حماس', 'Harakat al-Muqawama al-Islamiyya'],
+            'color_hex' => '#007A3D',
+            'flag_url' => '/emblems/hamas.png',
+            'primary_region' => 'Middle East',
+            'operating_areas' => ['Gaza Strip', 'West Bank'],
+            'designation_status' => 'terrorist_us',
+            'is_active' => true,
+            'founded_date' => '1987-12-14',
+            'ideology' => 'Palestinian nationalism, Sunni Islamism',
+            'estimated_size' => '20,000-25,000 fighters (Izz ad-Din al-Qassam Brigades)',
+            'description' => 'Palestinian Sunni Islamist political and military organization',
+        ]);
+
+        // ==================== REBEL GROUPS ====================
+
+        $fsa = Actor::create([
+            'name' => 'Free Syrian Army',
+            'short_name' => 'FSA',
+            'official_name' => 'Free Syrian Army',
+            'actor_type' => 'rebel_group',
+            'actor_subtype' => 'Syrian opposition',
+            'also_known_as' => ['FSA', 'الجيش السوري الحر'],
+            'color_hex' => '#007A3D',
+            'flag_url' => '/emblems/fsa.png',
+            'primary_region' => 'Middle East',
+            'operating_areas' => ['Syria'],
+            'designation_status' => 'none',
+            'is_active' => true,
+            'founded_date' => '2011-07-29',
+            'ideology' => 'Syrian nationalism, Anti-Assad',
+            'estimated_size' => '30,000-40,000 fighters (peak)',
+            'description' => 'Loose coalition of Syrian opposition armed groups',
+        ]);
+
+        // ==================== PARAMILITARY / PMCs ====================
+
+        $wagner = Actor::create([
+            'name' => 'Wagner Group',
+            'short_name' => 'Wagner',
+            'official_name' => 'PMC Wagner',
+            'actor_type' => 'private_military',
+            'actor_subtype' => 'Private military company',
+            'parent_country_id' => $russia->id,
+            'also_known_as' => ['Wagner PMC', 'ChVK Wagner', 'Группа Вагнера'],
+            'color_hex' => '#8B4513',
+            'logo_url' => '/emblems/wagner.png',
+            'primary_region' => 'International',
+            'operating_areas' => ['Syria', 'Libya', 'CAR', 'Mali', 'Ukraine', 'Sudan'],
+            'designation_status' => 'sanctioned',
+            'is_active' => false,
+            'founded_date' => '2014-01-01',
+            'dissolved_date' => '2023-06-24',
+            'ideology' => 'Mercenary',
+            'estimated_size' => '50,000 fighters (peak)',
+            'description' => 'Russian paramilitary organization and private military company',
+        ]);
+
+        // ==================== SEPARATIST GROUPS ====================
+
+        $dpr = Actor::create([
+            'name' => 'Donetsk People\'s Republic',
+            'short_name' => 'DPR',
+            'official_name' => 'Donetsk People\'s Republic',
+            'actor_type' => 'separatist_group',
+            'actor_subtype' => 'Pro-Russian separatists',
+            'parent_country_id' => $russia->id,
+            'also_known_as' => ['DPR', 'DNR', 'ДНР'],
+            'color_hex' => '#000000',
+            'flag_url' => '/flags/dpr.svg',
+            'primary_region' => 'Eastern Europe',
+            'operating_areas' => ['Donetsk Oblast'],
+            'designation_status' => 'unrecognized_state',
+            'is_active' => true,
+            'founded_date' => '2014-04-07',
+            'ideology' => 'Pro-Russian separatism',
+            'estimated_size' => '20,000 fighters',
+            'description' => 'Unrecognized separatist state in eastern Ukraine',
+        ]);
+
+        $lpr = Actor::create([
+            'name' => 'Luhansk People\'s Republic',
+            'short_name' => 'LPR',
+            'official_name' => 'Luhansk People\'s Republic',
+            'actor_type' => 'separatist_group',
+            'actor_subtype' => 'Pro-Russian separatists',
+            'parent_country_id' => $russia->id,
+            'also_known_as' => ['LPR', 'LNR', 'ЛНР'],
+            'color_hex' => '#0057B7',
+            'flag_url' => '/flags/lpr.svg',
+            'primary_region' => 'Eastern Europe',
+            'operating_areas' => ['Luhansk Oblast'],
+            'designation_status' => 'unrecognized_state',
+            'is_active' => true,
+            'founded_date' => '2014-04-27',
+            'ideology' => 'Pro-Russian separatism',
+            'estimated_size' => '14,000 fighters',
+            'description' => 'Unrecognized separatist state in eastern Ukraine',
+        ]);
+
+        // ==================== INSURGENT GROUPS ====================
+
+        $taliban = Actor::create([
+            'name' => 'Taliban',
+            'short_name' => 'Taliban',
+            'official_name' => 'Islamic Emirate of Afghanistan',
+            'actor_type' => 'insurgent_group',
+            'actor_subtype' => 'Islamist',
+            'also_known_as' => ['Taliban', 'طالبان', 'Islamic Emirate'],
+            'color_hex' => '#FFFFFF',
+            'flag_url' => '/flags/taliban.svg',
+            'primary_region' => 'South Asia',
+            'operating_areas' => ['Afghanistan'],
+            'designation_status' => 'sanctioned',
+            'is_active' => true,
+            'founded_date' => '1994-09-01',
+            'ideology' => 'Deobandi Islamism, Pashtun nationalism',
+            'estimated_size' => '58,000-100,000 fighters',
+            'description' => 'Afghan Islamic fundamentalist political movement and military organization',
+        ]);
+
+        $houthis = Actor::create([
+            'name' => 'Ansar Allah',
+            'short_name' => 'Houthis',
+            'official_name' => 'Ansar Allah',
+            'actor_type' => 'insurgent_group',
+            'actor_subtype' => 'Shia Islamist',
+            'parent_country_id' => $iran->id,
+            'also_known_as' => ['Houthis', 'Ansar Allah', 'أنصار الله'],
+            'color_hex' => '#CE1126',
+            'flag_url' => '/emblems/houthis.png',
+            'primary_region' => 'Middle East',
+            'operating_areas' => ['Yemen'],
+            'designation_status' => 'sanctioned',
+            'is_active' => true,
+            'founded_date' => '1992-01-01',
+            'ideology' => 'Zaydi Shia Islamism, Yemeni nationalism',
+            'estimated_size' => '20,000-200,000 fighters',
+            'description' => 'Yemeni Shia Islamist political and armed movement',
+        ]);
+
+        // ==================== ACTOR RELATIONSHIPS ====================
+
+        // Russia-Ukraine: Hostile
+        ActorRelationship::create([
+            'actor_from_id' => $russia->id,
+            'actor_to_id' => $ukraine->id,
+            'relationship_type' => 'hostile',
+            'valid_from' => '2014-02-20',
+            'valid_to' => null,
+            'strength' => 'strong',
+            'description' => 'Armed conflict since 2014 annexation of Crimea',
+        ]);
+
+        // USA-Ukraine: Allied
+        ActorRelationship::create([
+            'actor_from_id' => $usa->id,
+            'actor_to_id' => $ukraine->id,
+            'relationship_type' => 'allied',
+            'valid_from' => '2022-02-24',
+            'valid_to' => null,
+            'strength' => 'strong',
+            'description' => 'US support to Ukraine during 2022 invasion',
+        ]);
+
+        // Russia-Wagner: Sponsor
+        ActorRelationship::create([
+            'actor_from_id' => $russia->id,
+            'actor_to_id' => $wagner->id,
+            'relationship_type' => 'sponsor',
+            'valid_from' => '2014-01-01',
+            'valid_to' => '2023-06-24',
+            'strength' => 'strong',
+            'description' => 'Russian state sponsorship of Wagner PMC',
+        ]);
+
+        // Iran-Hezbollah: Sponsor
+        ActorRelationship::create([
+            'actor_from_id' => $iran->id,
+            'actor_to_id' => $hezbollah->id,
+            'relationship_type' => 'sponsor',
+            'valid_from' => '1985-02-16',
+            'valid_to' => null,
+            'strength' => 'strong',
+            'description' => 'Iranian sponsorship and support of Hezbollah',
+        ]);
+
+        // Iran-Houthis: Sponsor
+        ActorRelationship::create([
+            'actor_from_id' => $iran->id,
+            'actor_to_id' => $houthis->id,
+            'relationship_type' => 'sponsor',
+            'valid_from' => '2014-01-01',
+            'valid_to' => null,
+            'strength' => 'moderate',
+            'description' => 'Iranian support to Houthi insurgency',
+        ]);
+
+        // Israel-Hezbollah: Hostile
+        ActorRelationship::create([
+            'actor_from_id' => $israel->id,
+            'actor_to_id' => $hezbollah->id,
+            'relationship_type' => 'hostile',
+            'valid_from' => '1985-02-16',
+            'valid_to' => null,
+            'strength' => 'strong',
+            'description' => 'Ongoing conflict between Israel and Hezbollah',
+        ]);
+
+        // Israel-Hamas: Hostile
+        ActorRelationship::create([
+            'actor_from_id' => $israel->id,
+            'actor_to_id' => $hamas->id,
+            'relationship_type' => 'hostile',
+            'valid_from' => '1987-12-14',
+            'valid_to' => null,
+            'strength' => 'strong',
+            'description' => 'Ongoing Israeli-Palestinian conflict',
+        ]);
+
+        // Syria-FSA: Hostile
+        ActorRelationship::create([
+            'actor_from_id' => $syria->id,
+            'actor_to_id' => $fsa->id,
+            'relationship_type' => 'hostile',
+            'valid_from' => '2011-07-29',
+            'valid_to' => null,
+            'strength' => 'strong',
+            'description' => 'Syrian Civil War',
+        ]);
+
+        // Russia-Syria: Allied
+        ActorRelationship::create([
+            'actor_from_id' => $russia->id,
+            'actor_to_id' => $syria->id,
+            'relationship_type' => 'allied',
+            'valid_from' => '2015-09-30',
+            'valid_to' => null,
+            'strength' => 'strong',
+            'description' => 'Russian military intervention in Syria',
+        ]);
+
+        $this->command->info('Actor seeding completed successfully!');
+        $this->command->info('Created countries, terrorist organizations, rebel groups, PMCs, and relationships.');
+    }
+}

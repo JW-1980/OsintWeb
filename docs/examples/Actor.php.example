@@ -1,0 +1,467 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
+
+/**
+ * Actor Model
+ *
+ * Represents both state actors (countries) and non-state actors
+ * (terrorist organizations, militias, rebel groups, etc.)
+ *
+ * @property int $id
+ * @property string $uuid
+ * @property string $name
+ * @property string|null $short_name
+ * @property string|null $official_name
+ * @property string $actor_type
+ * @property string|null $actor_subtype
+ * @property int|null $parent_country_id
+ * @property int|null $parent_actor_id
+ * @property array|null $also_known_as
+ * @property string|null $color_hex
+ * @property string|null $flag_url
+ * @property string|null $logo_url
+ * @property string|null $emblem_url
+ * @property string|null $primary_region
+ * @property array|null $operating_areas
+ * @property string $designation_status
+ * @property bool $is_active
+ * @property string|null $founded_date
+ * @property string|null $dissolved_date
+ * @property string|null $ideology
+ * @property string|null $estimated_size
+ * @property string|null $description
+ * @property string|null $notes
+ * @property string|null $iso_code_alpha2
+ * @property string|null $iso_code_alpha3
+ * @property string|null $iso_code_numeric
+ * @property \Illuminate\Support\Carbon $created_at
+ * @property \Illuminate\Support\Carbon $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ */
+class Actor extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'name',
+        'short_name',
+        'official_name',
+        'actor_type',
+        'actor_subtype',
+        'parent_country_id',
+        'parent_actor_id',
+        'also_known_as',
+        'color_hex',
+        'flag_url',
+        'logo_url',
+        'emblem_url',
+        'primary_region',
+        'operating_areas',
+        'designation_status',
+        'is_active',
+        'founded_date',
+        'dissolved_date',
+        'ideology',
+        'estimated_size',
+        'description',
+        'notes',
+        'iso_code_alpha2',
+        'iso_code_alpha3',
+        'iso_code_numeric',
+    ];
+
+    protected $casts = [
+        'also_known_as' => 'array',
+        'operating_areas' => 'array',
+        'is_active' => 'boolean',
+        'founded_date' => 'date',
+        'dissolved_date' => 'date',
+    ];
+
+    protected $hidden = [
+        'deleted_at',
+    ];
+
+    protected $appends = [
+        'display_name',
+        'is_country',
+        'is_non_state_actor',
+    ];
+
+    /**
+     * Boot the model.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (self $actor) {
+            if (empty($actor->uuid)) {
+                $actor->uuid = (string) Str::uuid();
+            }
+        });
+    }
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
+    // ==================== RELATIONSHIPS ====================
+
+    /**
+     * Parent country (for non-state actors)
+     */
+    public function parentCountry(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_country_id');
+    }
+
+    /**
+     * Parent actor (for sub-groups)
+     */
+    public function parentActor(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_actor_id');
+    }
+
+    /**
+     * Child actors (sub-groups)
+     */
+    public function childActors(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_actor_id');
+    }
+
+    /**
+     * Actors that have this as parent country
+     */
+    public function sponsoredActors(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_country_id');
+    }
+
+    /**
+     * Events this actor is involved in (via pivot)
+     */
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'event_actors')
+            ->withPivot([
+                'role',
+                'role_description',
+                'certainty',
+                'personnel_count',
+                'casualties_claimed',
+                'losses_suffered',
+                'source_type',
+                'source_url',
+                'verified_by',
+                'notes',
+            ])
+            ->withTimestamps();
+    }
+
+    /**
+     * Events where this actor was the perpetrator
+     */
+    public function eventsAsPerpetrator(): BelongsToMany
+    {
+        return $this->events()->wherePivot('role', 'perpetrator');
+    }
+
+    /**
+     * Events where this actor was the victim
+     */
+    public function eventsAsVictim(): BelongsToMany
+    {
+        return $this->events()->wherePivot('role', 'victim');
+    }
+
+    /**
+     * Aliases
+     */
+    public function aliases(): HasMany
+    {
+        return $this->hasMany(ActorAlias::class);
+    }
+
+    /**
+     * Relationships initiated by this actor
+     */
+    public function relationshipsFrom(): HasMany
+    {
+        return $this->hasMany(ActorRelationship::class, 'actor_from_id');
+    }
+
+    /**
+     * Relationships where this actor is the target
+     */
+    public function relationshipsTo(): HasMany
+    {
+        return $this->hasMany(ActorRelationship::class, 'actor_to_id');
+    }
+
+    /**
+     * All relationships (both directions)
+     */
+    public function allRelationships()
+    {
+        return $this->relationshipsFrom->merge($this->relationshipsTo);
+    }
+
+    /**
+     * Allied actors
+     */
+    public function allies()
+    {
+        return $this->relationshipsFrom()
+            ->where('relationship_type', 'allied')
+            ->whereNull('valid_to')
+            ->orWhere('valid_to', '>=', now());
+    }
+
+    /**
+     * Hostile actors
+     */
+    public function hostiles()
+    {
+        return $this->relationshipsFrom()
+            ->where('relationship_type', 'hostile')
+            ->whereNull('valid_to')
+            ->orWhere('valid_to', '>=', now());
+    }
+
+    // ==================== ACCESSORS ====================
+
+    /**
+     * Get display name (short_name or name)
+     */
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->short_name ?? $this->name;
+    }
+
+    /**
+     * Check if actor is a country
+     */
+    public function getIsCountryAttribute(): bool
+    {
+        return $this->actor_type === 'country';
+    }
+
+    /**
+     * Check if actor is a non-state actor
+     */
+    public function getIsNonStateActorAttribute(): bool
+    {
+        return $this->actor_type !== 'country';
+    }
+
+    // ==================== SCOPES ====================
+
+    /**
+     * Scope to only countries
+     */
+    public function scopeCountries($query)
+    {
+        return $query->where('actor_type', 'country');
+    }
+
+    /**
+     * Scope to non-state actors
+     */
+    public function scopeNonStateActors($query)
+    {
+        return $query->where('actor_type', '!=', 'country');
+    }
+
+    /**
+     * Scope to active actors
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope by actor type
+     */
+    public function scopeOfType($query, string|array $types)
+    {
+        $types = is_array($types) ? $types : [$types];
+        return $query->whereIn('actor_type', $types);
+    }
+
+    /**
+     * Scope to designated terrorist organizations
+     */
+    public function scopeTerroristDesignated($query)
+    {
+        return $query->whereIn('designation_status', [
+            'terrorist_us',
+            'terrorist_un',
+            'terrorist_eu',
+        ]);
+    }
+
+    /**
+     * Scope by region
+     */
+    public function scopeInRegion($query, string $region)
+    {
+        return $query->where('primary_region', $region);
+    }
+
+    /**
+     * Search scope
+     */
+    public function scopeSearch($query, string $search)
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('short_name', 'LIKE', "%{$search}%")
+                ->orWhere('official_name', 'LIKE', "%{$search}%")
+                ->orWhereJsonContains('also_known_as', $search);
+        });
+    }
+
+    // ==================== METHODS ====================
+
+    /**
+     * Check if actor is designated as terrorist by any authority
+     */
+    public function isTerroristDesignated(): bool
+    {
+        return in_array($this->designation_status, [
+            'terrorist_us',
+            'terrorist_un',
+            'terrorist_eu',
+        ]);
+    }
+
+    /**
+     * Get all names/aliases as array
+     */
+    public function getAllNames(): array
+    {
+        $names = [$this->name];
+
+        if ($this->short_name) {
+            $names[] = $this->short_name;
+        }
+
+        if ($this->official_name) {
+            $names[] = $this->official_name;
+        }
+
+        if ($this->also_known_as) {
+            $names = array_merge($names, $this->also_known_as);
+        }
+
+        return array_unique($names);
+    }
+
+    /**
+     * Get formatted actor type for display
+     */
+    public function getFormattedActorType(): string
+    {
+        return match ($this->actor_type) {
+            'country' => 'Country',
+            'terrorist_org' => 'Terrorist Organization',
+            'rebel_group' => 'Rebel Group',
+            'militia' => 'Militia',
+            'paramilitary' => 'Paramilitary',
+            'private_military' => 'Private Military Company',
+            'separatist_group' => 'Separatist Group',
+            'insurgent_group' => 'Insurgent Group',
+            'criminal_org' => 'Criminal Organization',
+            'coalition' => 'Coalition',
+            'international_org' => 'International Organization',
+            'unknown' => 'Unknown',
+            default => ucfirst(str_replace('_', ' ', $this->actor_type)),
+        };
+    }
+
+    /**
+     * Get statistics for this actor
+     */
+    public function getStatistics(): array
+    {
+        return [
+            'total_events' => $this->events()->count(),
+            'as_perpetrator' => $this->eventsAsPerpetrator()->count(),
+            'as_victim' => $this->eventsAsVictim()->count(),
+            'equipment_owned' => $this->getEquipmentCount(),
+            'equipment_lost' => $this->getEquipmentLosses(),
+            'allies_count' => $this->allies()->count(),
+            'hostiles_count' => $this->hostiles()->count(),
+        ];
+    }
+
+    /**
+     * Get equipment count (to be implemented based on your equipment model)
+     */
+    protected function getEquipmentCount(): int
+    {
+        // Implement based on your equipment tracking system
+        return 0;
+    }
+
+    /**
+     * Get equipment losses
+     */
+    protected function getEquipmentLosses(): int
+    {
+        // Implement based on event_equipment table
+        return 0;
+    }
+
+    /**
+     * Check if actor has relationship with another actor
+     */
+    public function hasRelationshipWith(self $actor, ?string $type = null): bool
+    {
+        $query = $this->relationshipsFrom()
+            ->where('actor_to_id', $actor->id)
+            ->whereNull('valid_to')
+            ->orWhere('valid_to', '>=', now());
+
+        if ($type) {
+            $query->where('relationship_type', $type);
+        }
+
+        return $query->exists();
+    }
+
+    /**
+     * Check if actor is allied with another actor
+     */
+    public function isAlliedWith(self $actor): bool
+    {
+        return $this->hasRelationshipWith($actor, 'allied');
+    }
+
+    /**
+     * Check if actor is hostile to another actor
+     */
+    public function isHostileTo(self $actor): bool
+    {
+        return $this->hasRelationshipWith($actor, 'hostile');
+    }
+}
