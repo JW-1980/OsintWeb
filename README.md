@@ -77,6 +77,44 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - Session and export logging
 - GDPR-compliant with retention policies
 
+### Role-Based Access Control (RBAC)
+- **Fine-grained permissions** with 50+ granular permission types
+- Hierarchical role system with priority-based resolution
+- Built-in roles: Administrator, Moderator, Editor, Analyst, Viewer
+- Direct user permissions that override role permissions
+- Time-limited role/permission assignments with expiration dates
+- User groups for team-based access management
+- Permission caching for performance
+
+### Event Workflow System
+- **Draft events** - Save work-in-progress events
+- **Approval workflow** - Submit events for moderator review
+- **Scheduled publishing** - Set future publication dates
+- **Event versioning** - Track all changes with rollback capability
+- **Visibility controls** - Public, private, restricted, or internal events
+- Grant access to specific users, groups, or roles
+- Time-limited access with automatic expiration
+
+### Extended Equipment Properties
+- **Flexible property system** - Add custom fields to any equipment
+- Property types: text, rich text, numbers, links, images, videos, dates, locations
+- Property categories for organization (Performance, Armament, Protection, etc.)
+- **Full version history** - Every change is tracked with diff visualization
+- Rollback to any previous version
+- Image galleries with primary image selection
+- Video embeds (YouTube, Vimeo, Dailymotion)
+- External link management with link health checking
+- Property verification workflow
+
+### Configurable Application
+- **Customizable application name** - Set during installation
+- Configurable logo, favicon, and branding
+- Default map center and zoom settings
+- Timezone and locale preferences
+- Registration and security settings
+- Event approval requirements
+- All settings editable from admin panel
+
 ### Installation Wizard
 - **One-time setup wizard** for easy deployment (locked after completion)
 - Automatic requirements check (PHP 8.2+, extensions, directory permissions)
@@ -346,7 +384,48 @@ php artisan osint:install --force
 
 ## Changelog
 
-### Version 1.0.0 (Current)
+### Version 1.1.0 (Current)
+
+**Role-Based Access Control (RBAC)**
+- Added comprehensive permission system with 50+ granular permissions
+- Hierarchical role system (Admin, Moderator, Editor, Analyst, Viewer)
+- Direct user permission grants and denials
+- Time-limited permissions with automatic expiration
+- User groups for team-based access management
+- Permission caching for high performance
+
+**Event Workflow & Visibility**
+- Draft events for work-in-progress content
+- Approval workflow with moderator review
+- Scheduled publishing for future publication
+- Event versioning with full change history
+- Visibility controls: public, private, restricted, internal
+- Access grants by user, group, or role with expiration
+
+**Extended Equipment Properties**
+- Flexible property system with 11 data types
+- Property categories (Performance, Armament, Protection, Electronics, etc.)
+- Full version history with rollback capability
+- Image galleries with primary image selection
+- Video embeds (YouTube, Vimeo, Dailymotion)
+- External link management with health checking
+- Property verification workflow
+
+**Configurable Application**
+- Application name configurable during installation
+- Customizable branding (logo, favicon)
+- Configurable defaults (map center, timezone, locale)
+- Admin-editable settings panel
+
+**Actor Emoji Improvements**
+- Updated emoji assignments for actor types
+- Cartels: 💊 (pill)
+- PMCs: 🏴 (black flag)
+- Separatists: 🏳️ (white flag)
+- Rebels: 🚩 (red flag)
+- Terrorists: 🏴‍☠️ (pirate flag)
+
+### Version 1.0.0
 
 **Installation Wizard**
 - Added one-time installation wizard for easy deployment

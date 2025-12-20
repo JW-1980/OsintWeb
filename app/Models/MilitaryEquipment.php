@@ -113,6 +113,106 @@ class MilitaryEquipment extends Model
     }
 
     /**
+     * Get the extensible properties for this equipment
+     */
+    public function properties(): HasMany
+    {
+        return $this->hasMany(EquipmentProperty::class, 'equipment_id')
+            ->orderBy('sort_order');
+    }
+
+    /**
+     * Get properties by category
+     */
+    public function propertiesByCategory(?int $categoryId = null): HasMany
+    {
+        $query = $this->properties();
+
+        if ($categoryId !== null) {
+            $query->where('category_id', $categoryId);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Get properties by type
+     */
+    public function propertiesByType(string $type): HasMany
+    {
+        return $this->properties()->where('type', $type);
+    }
+
+    /**
+     * Get the images attached to this equipment
+     */
+    public function equipmentImages(): HasMany
+    {
+        return $this->hasMany(EquipmentImage::class, 'equipment_id')
+            ->orderBy('sort_order');
+    }
+
+    /**
+     * Get the primary image
+     */
+    public function primaryImage(): HasMany
+    {
+        return $this->hasMany(EquipmentImage::class, 'equipment_id')
+            ->where('is_primary', true)
+            ->limit(1);
+    }
+
+    /**
+     * Get the links attached to this equipment
+     */
+    public function links(): HasMany
+    {
+        return $this->hasMany(EquipmentLink::class, 'equipment_id')
+            ->orderBy('sort_order');
+    }
+
+    /**
+     * Get the videos attached to this equipment
+     */
+    public function videos(): HasMany
+    {
+        return $this->hasMany(EquipmentVideo::class, 'equipment_id')
+            ->orderBy('sort_order');
+    }
+
+    /**
+     * Add a property to this equipment
+     */
+    public function addProperty(array $data): EquipmentProperty
+    {
+        return $this->properties()->create($data);
+    }
+
+    /**
+     * Add an image to this equipment
+     */
+    public function addImage(array $data): EquipmentImage
+    {
+        return $this->equipmentImages()->create($data);
+    }
+
+    /**
+     * Add a link to this equipment
+     */
+    public function addLink(array $data): EquipmentLink
+    {
+        return $this->links()->create($data);
+    }
+
+    /**
+     * Add a video to this equipment
+     */
+    public function addVideo(array $data): EquipmentVideo
+    {
+        return $this->videos()->create($data);
+    }
+
+    /**
      * Scope to filter active equipment
      */
     public function scopeActive($query)
@@ -174,5 +274,13 @@ class MilitaryEquipment extends Model
         }
 
         return $query;
+    }
+
+    /**
+     * Scope to include all related media
+     */
+    public function scopeWithAllMedia($query)
+    {
+        return $query->with(['equipmentImages', 'links', 'videos', 'properties']);
     }
 }

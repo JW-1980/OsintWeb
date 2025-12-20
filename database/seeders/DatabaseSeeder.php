@@ -12,11 +12,20 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // Application settings
+            SettingsSeeder::class,
+
+            // RBAC - Permissions and Roles
+            PermissionsSeeder::class,
+
             // Base data
             CountriesSeeder::class,
 
             // Actors (countries, groups, organizations)
             ActorsSeeder::class,
+
+            // Equipment property categories
+            EquipmentPropertyCategoriesSeeder::class,
 
             // Military equipment categories and items
             MilitaryEquipmentSeeder::class,
