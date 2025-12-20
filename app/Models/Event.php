@@ -29,6 +29,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon $occurred_at
  * @property int|null $confidence_score
  * @property string $status
+ * @property \Carbon\Carbon|null $scheduled_publish_at
+ * @property int|null $approved_by
+ * @property \Carbon\Carbon|null $approved_at
+ * @property string|null $approval_notes
+ * @property bool $requires_approval
+ * @property \Carbon\Carbon|null $published_at
+ * @property string $visibility
+ * @property int $version
+ * @property int|null $parent_version_id
  * @property bool $is_verified
  * @property \Carbon\Carbon|null $verified_at
  * @property int|null $verified_by
@@ -46,6 +55,17 @@ class Event extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const STATUS_DRAFT = 'draft';
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_VERIFIED = 'verified';
+    public const STATUS_DISPUTED = 'disputed';
+    public const STATUS_ARCHIVED = 'archived';
+
+    public const VISIBILITY_PUBLIC = 'public';
+    public const VISIBILITY_PRIVATE = 'private';
+    public const VISIBILITY_RESTRICTED = 'restricted';
+    public const VISIBILITY_INTERNAL = 'internal';
+
     protected $fillable = [
         'uuid',
         'event_type_id',
@@ -59,6 +79,15 @@ class Event extends Model
         'occurred_at',
         'confidence_score',
         'status',
+        'scheduled_publish_at',
+        'approved_by',
+        'approved_at',
+        'approval_notes',
+        'requires_approval',
+        'published_at',
+        'visibility',
+        'version',
+        'parent_version_id',
         'is_verified',
         'verified_at',
         'verified_by',
@@ -75,6 +104,11 @@ class Event extends Model
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
         'confidence_score' => 'integer',
+        'scheduled_publish_at' => 'datetime',
+        'approved_at' => 'datetime',
+        'requires_approval' => 'boolean',
+        'published_at' => 'datetime',
+        'version' => 'integer',
         'is_verified' => 'boolean',
         'verified_at' => 'datetime',
         'custom_fields' => 'array',
@@ -107,6 +141,30 @@ class Event extends Model
     public function verifier(): BelongsTo
     {
         return $this->belongsTo(User::class, 'verified_by');
+    }
+
+    /**
+     * Get the user who approved this event
+     */
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    /**
+     * Get the parent version of this event
+     */
+    public function parentVersion(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_version_id');
+    }
+
+    /**
+     * Get child versions of this event
+     */
+    public function childVersions(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_version_id');
     }
 
     /**
@@ -144,6 +202,201 @@ class Event extends Model
     }
 
     /**
+     * Get users with direct access to this event
+     */
+    public function userAccess(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'event_user_access')
+            ->withPivot(['access_level', 'granted_by', 'expires_at'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Get groups with access to this event
+     */
+    public function groupAccess(): BelongsToMany
+    {
+        return $this->belongsToMany(UserGroup::class, 'event_group_access')
+            ->withPivot(['access_level', 'granted_by', 'expires_at'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Get roles with access to this event
+     */
+    public function roleAccess(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'event_role_access')
+            ->withPivot(['access_level', 'granted_by', 'expires_at'])
+            ->withTimestamps();
+    }
+
+    /**
+     * Check if event is a draft
+     */
+    public function isDraft(): bool
+    {
+        return $this->status === self::STATUS_DRAFT;
+    }
+
+    /**
+     * Check if event is pending approval
+     */
+    public function isPending(): bool
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    /**
+     * Check if event is published/verified
+     */
+    public function isPublished(): bool
+    {
+        return $this->status === self::STATUS_VERIFIED && $this->published_at !== null;
+    }
+
+    /**
+     * Check if event is scheduled for publishing
+     */
+    public function isScheduled(): bool
+    {
+        return $this->scheduled_publish_at !== null && $this->scheduled_publish_at->isFuture();
+    }
+
+    /**
+     * Submit event for approval
+     */
+    public function submitForApproval(): void
+    {
+        $this->update([
+            'status' => self::STATUS_PENDING,
+        ]);
+    }
+
+    /**
+     * Approve the event
+     */
+    public function approve(User $approver, ?string $notes = null): void
+    {
+        $this->update([
+            'status' => self::STATUS_VERIFIED,
+            'approved_by' => $approver->id,
+            'approved_at' => now(),
+            'approval_notes' => $notes,
+            'published_at' => $this->scheduled_publish_at ?? now(),
+        ]);
+    }
+
+    /**
+     * Reject the event back to draft
+     */
+    public function reject(User $approver, ?string $notes = null): void
+    {
+        $this->update([
+            'status' => self::STATUS_DRAFT,
+            'approved_by' => $approver->id,
+            'approved_at' => now(),
+            'approval_notes' => $notes,
+        ]);
+    }
+
+    /**
+     * Schedule the event for publishing
+     */
+    public function schedulePublish(\Carbon\Carbon $publishAt): void
+    {
+        $this->update([
+            'scheduled_publish_at' => $publishAt,
+        ]);
+    }
+
+    /**
+     * Publish the event immediately
+     */
+    public function publish(): void
+    {
+        $this->update([
+            'status' => self::STATUS_VERIFIED,
+            'published_at' => now(),
+            'scheduled_publish_at' => null,
+        ]);
+    }
+
+    /**
+     * Unpublish the event (back to draft)
+     */
+    public function unpublish(): void
+    {
+        $this->update([
+            'status' => self::STATUS_DRAFT,
+            'published_at' => null,
+        ]);
+    }
+
+    /**
+     * Grant access to a user
+     */
+    public function grantUserAccess(User $user, string $accessLevel = 'view', ?User $grantedBy = null): void
+    {
+        $this->userAccess()->syncWithoutDetaching([
+            $user->id => [
+                'access_level' => $accessLevel,
+                'granted_by' => $grantedBy?->id,
+            ],
+        ]);
+    }
+
+    /**
+     * Grant access to a group
+     */
+    public function grantGroupAccess(UserGroup $group, string $accessLevel = 'view', ?User $grantedBy = null): void
+    {
+        $this->groupAccess()->syncWithoutDetaching([
+            $group->id => [
+                'access_level' => $accessLevel,
+                'granted_by' => $grantedBy?->id,
+            ],
+        ]);
+    }
+
+    /**
+     * Grant access to a role
+     */
+    public function grantRoleAccess(Role $role, string $accessLevel = 'view', ?User $grantedBy = null): void
+    {
+        $this->roleAccess()->syncWithoutDetaching([
+            $role->id => [
+                'access_level' => $accessLevel,
+                'granted_by' => $grantedBy?->id,
+            ],
+        ]);
+    }
+
+    /**
+     * Revoke user access
+     */
+    public function revokeUserAccess(User $user): void
+    {
+        $this->userAccess()->detach($user->id);
+    }
+
+    /**
+     * Revoke group access
+     */
+    public function revokeGroupAccess(UserGroup $group): void
+    {
+        $this->groupAccess()->detach($group->id);
+    }
+
+    /**
+     * Revoke role access
+     */
+    public function revokeRoleAccess(Role $role): void
+    {
+        $this->roleAccess()->detach($role->id);
+    }
+
+    /**
      * Scope to filter verified events
      */
     public function scopeVerified($query)
@@ -164,7 +417,115 @@ class Event extends Model
      */
     public function scopePublished($query)
     {
-        return $query->where('status', 'published');
+        return $query->where('status', self::STATUS_VERIFIED)
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now());
+    }
+
+    /**
+     * Scope to filter draft events
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('status', self::STATUS_DRAFT);
+    }
+
+    /**
+     * Scope to filter pending events
+     */
+    public function scopePendingApproval($query)
+    {
+        return $query->where('status', self::STATUS_PENDING);
+    }
+
+    /**
+     * Scope to filter scheduled events
+     */
+    public function scopeScheduled($query)
+    {
+        return $query->whereNotNull('scheduled_publish_at')
+            ->where('scheduled_publish_at', '>', now());
+    }
+
+    /**
+     * Scope to filter events due for publishing
+     */
+    public function scopeDueForPublishing($query)
+    {
+        return $query->where('status', self::STATUS_PENDING)
+            ->whereNotNull('scheduled_publish_at')
+            ->where('scheduled_publish_at', '<=', now())
+            ->where('requires_approval', false);
+    }
+
+    /**
+     * Scope to filter by visibility
+     */
+    public function scopeVisibility($query, string $visibility)
+    {
+        return $query->where('visibility', $visibility);
+    }
+
+    /**
+     * Scope to filter public events
+     */
+    public function scopePubliclyVisible($query)
+    {
+        return $query->where('visibility', self::VISIBILITY_PUBLIC)
+            ->published();
+    }
+
+    /**
+     * Scope to filter events accessible by a user
+     */
+    public function scopeAccessibleBy($query, User $user)
+    {
+        return $query->where(function ($q) use ($user) {
+            // Author always has access
+            $q->where('user_id', $user->id);
+
+            // Public and published
+            $q->orWhere(function ($q2) {
+                $q2->where('visibility', self::VISIBILITY_PUBLIC)
+                    ->where('status', self::STATUS_VERIFIED);
+            });
+
+            // Internal events for authenticated users
+            $q->orWhere('visibility', self::VISIBILITY_INTERNAL);
+
+            // Direct user access
+            $q->orWhereHas('userAccess', function ($q2) use ($user) {
+                $q2->where('user_id', $user->id)
+                    ->where(function ($q3) {
+                        $q3->whereNull('expires_at')
+                            ->orWhere('expires_at', '>', now());
+                    });
+            });
+
+            // Group access
+            $userGroupIds = $user->groups()->pluck('user_groups.id');
+            if ($userGroupIds->isNotEmpty()) {
+                $q->orWhereHas('groupAccess', function ($q2) use ($userGroupIds) {
+                    $q2->whereIn('user_group_id', $userGroupIds)
+                        ->where(function ($q3) {
+                            $q3->whereNull('expires_at')
+                                ->orWhere('expires_at', '>', now());
+                        });
+                });
+            }
+
+            // Role access
+            $userRoleIds = $user->roles()->pluck('roles.id');
+            if ($userRoleIds->isNotEmpty()) {
+                $q->orWhereHas('roleAccess', function ($q2) use ($userRoleIds) {
+                    $q2->whereIn('role_id', $userRoleIds)
+                        ->where(function ($q3) {
+                            $q3->whereNull('expires_at')
+                                ->orWhere('expires_at', '>', now());
+                        });
+                });
+            }
+        });
     }
 
     /**
@@ -234,8 +595,32 @@ class Event extends Model
     {
         $this->latitude = $latitude;
         $this->longitude = $longitude;
+    }
 
-        // Set PostGIS POINT if using spatial columns
-        // $this->location = DB::raw("ST_GeomFromText('POINT({$longitude} {$latitude})', 4326)");
+    /**
+     * Get all available statuses
+     */
+    public static function getStatuses(): array
+    {
+        return [
+            self::STATUS_DRAFT,
+            self::STATUS_PENDING,
+            self::STATUS_VERIFIED,
+            self::STATUS_DISPUTED,
+            self::STATUS_ARCHIVED,
+        ];
+    }
+
+    /**
+     * Get all available visibility options
+     */
+    public static function getVisibilityOptions(): array
+    {
+        return [
+            self::VISIBILITY_PUBLIC,
+            self::VISIBILITY_PRIVATE,
+            self::VISIBILITY_RESTRICTED,
+            self::VISIBILITY_INTERNAL,
+        ];
     }
 }
