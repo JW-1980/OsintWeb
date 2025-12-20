@@ -24,13 +24,14 @@ OsintWeb provides powerful tools for:
 - Multiple resolution options (72/150/300 DPI) for screen, print, or high-quality output
 
 ### Military Equipment Database
-- **Naval**: Aircraft carriers, submarines, destroyers, frigates, patrol boats
-- **Land**: Tanks, IFVs, APCs, artillery, MLRS, SAM systems
-- **Aircraft**: Fighters, bombers, transports, AWACS
-- **Helicopters**: Attack, transport, utility, naval
-- **Missiles**: MANPADS, ATGMs, portable rocket systems
+**140+ Pre-loaded Equipment Items with Full CRUD Operations:**
+- **Naval**: Aircraft carriers (Ford, Nimitz, Queen Elizabeth, Liaoning), submarines (Virginia, Borei, Astute), destroyers (Arleigh Burke, Type 055, Zumwalt), frigates (FREMM, Type 26)
+- **Land**: Main battle tanks (M1A2, Leopard 2, T-90M, K2, Challenger 3), IFVs (Bradley, CV90, BMP-3), artillery (Archer, K9, Koalitsiya-SV, TOS-1A)
+- **Aircraft**: 5th-gen fighters (F-35, F-22, Su-57, J-20), 4th-gen (F-16, Rafale, Typhoon, Gripen), bombers (B-2, B-21, Tu-160)
+- **Helicopters**: Attack (AH-64E, Ka-52, Mi-28N, Tiger), transport (Black Hawk, Chinook, Mi-8)
+- **Missiles & Drones**: Cruise missiles (Kh-101, Tomahawk), ballistic (Iskander, ATACMS, PrSM), drones (MQ-9, Bayraktar, Lancet)
 
-Per-country inventory tracking with loss statistics.
+Per-country inventory tracking with loss statistics. Full CRUD operations via API and admin panel.
 
 ### Event Types (49 Templates)
 
@@ -390,6 +391,20 @@ php artisan osint:install --force
 ## Changelog
 
 ### Version 1.2.0 (Current)
+
+**Expanded Military Equipment Database**
+- 140+ real-world military equipment entries with detailed specifications
+- Naval vessels: Ford-class, Nimitz-class carriers, Type 055 destroyer, Arleigh Burke, Zumwalt, Virginia-class submarines
+- Modern fighter jets: F-22 Raptor, Su-57 Felon, J-20, Gripen E, Eurofighter Typhoon
+- Main battle tanks: K2 Black Panther, Type 10, Arjun Mk.2, Altay, T-14 Armata, Strv 122
+- Artillery systems: Archer, Koalitsiya-SV, TOS-1A, MLRS, HIMARS, PrSM
+- Attack helicopters: Tiger, Mi-28N, Ka-52, AH-1Z Viper
+- Strategic bombers: B-2 Spirit, B-21 Raider, Tu-160
+- Missiles: Kinzhal, Kh-101, Iskander-M, BrahMos, ATACMS
+- Drones: MQ-9 Reaper, Akinci, Bayraktar TB2, Orlan-10, Lancet
+- Coverage: 15+ countries (USA, Russia, China, UK, France, Germany, Sweden, South Korea, Japan, India, Turkey, and more)
+- All entries include: dimensions, weight, armament, propulsion, range, production numbers
+- Full CRUD functionality for managing equipment database
 
 **Map Export System**
 - Export maps as PNG, JPG, PDF, or SVG images
