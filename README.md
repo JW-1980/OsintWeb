@@ -78,13 +78,15 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - GDPR-compliant with retention policies
 
 ### Installation Wizard
-- **One-time setup wizard** for easy deployment
-- Automatic requirements check (PHP, extensions, permissions)
-- Database configuration with connection testing
-- Interactive migration runner with progress
-- Admin account creation with secure password requirements
-- Optional email and search configuration
-- CLI alternative for automated deployments
+- **One-time setup wizard** for easy deployment (locked after completion)
+- Automatic requirements check (PHP 8.2+, extensions, directory permissions)
+- Database configuration with live connection testing
+- Interactive migration runner with real-time progress
+- Admin account creation with strong password validation
+- Optional email configuration (SMTP, Mailgun, Postmark, SES) with test email
+- Optional search engine setup (MySQL full-text, Meilisearch, Algolia)
+- Application settings (timezone, map defaults, user registration, security)
+- CLI alternative for automated deployments and CI/CD pipelines
 
 ### 35 OSINT-Focused Features
 
@@ -176,6 +178,8 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 
 #### Option 1: Web-Based Installation Wizard (Recommended)
 
+The easiest way to install OsintWeb is through the interactive web-based wizard:
+
 ```bash
 # Clone repository
 git clone https://github.com/your-org/osintweb.git
@@ -185,18 +189,53 @@ cd osintweb
 composer install
 npm install && npm run build
 
-# Start server
+# Copy environment file
+cp .env.example .env
+
+# Start development server
 php artisan serve
 ```
 
-Then visit `http://localhost:8000` - the installation wizard will guide you through:
-1. Requirements check (PHP extensions, permissions)
-2. Database configuration (with connection test)
-3. Running migrations
-4. Application settings (timezone, map defaults)
-5. Admin account creation
-6. Email configuration (optional)
-7. Search configuration (MySQL full-text or Meilisearch)
+Then visit `http://localhost:8000` - the installation wizard will automatically start and guide you through:
+
+**Step 1: Welcome & Requirements**
+- Checks PHP version (8.2+), required extensions, and directory permissions
+- Displays pass/fail status for all requirements
+
+**Step 2: Database Configuration**
+- Enter MySQL connection details
+- Test connection before proceeding
+- Option to create database automatically
+
+**Step 3: Run Migrations**
+- View migration progress in real-time
+- Optional: Seed initial data (countries, equipment categories)
+- Optional: Load sample conflict data for testing
+
+**Step 4: Application Settings**
+- Set application name, URL, timezone, and language
+- Configure default map center and zoom level
+- User registration and security settings
+
+**Step 5: Admin Account**
+- Create administrator account
+- Enforces strong password requirements (12+ chars, mixed case, numbers, symbols)
+
+**Step 6: Email Configuration** (Optional - can skip)
+- Choose email provider (SMTP, Mailgun, Postmark, SES, or Log)
+- Test email delivery before saving
+- Can be configured later from admin panel
+
+**Step 7: Search Configuration** (Optional)
+- Choose search engine: MySQL Full-Text (default), Meilisearch, or Algolia
+- Test connection for external services
+
+**Step 8: Finish**
+- Finalizes installation and creates lock file
+- Clears caches and optimizes application
+- Redirects to homepage - ready to log in!
+
+> **Note:** After installation completes, the wizard is locked and cannot be accessed again unless you delete `storage/installed`
 
 #### Option 2: Command Line Installation
 
@@ -238,18 +277,52 @@ npm run build
 php artisan serve
 ```
 
-#### Option 3: Non-Interactive CLI Install
+#### Option 3: CLI Installation (Interactive or Automated)
 
+For server environments or automated deployments:
+
+**Interactive CLI Mode:**
 ```bash
+# Prompts you for all configuration values
+php artisan osint:install
+```
+
+**Non-Interactive (Automated) Mode:**
+```bash
+# Perfect for CI/CD pipelines and automated deployments
 php artisan osint:install \
     --db-host=localhost \
+    --db-port=3306 \
     --db-name=osintweb \
     --db-user=root \
     --db-pass=secret \
-    --admin-name="Admin" \
+    --admin-name="Admin User" \
     --admin-email=admin@example.com \
-    --admin-pass=SecurePass123! \
-    --seed
+    --admin-pass=SecurePassword123! \
+    --app-url=https://osint.example.com \
+    --seed \
+    --skip-email
+```
+
+**Available Options:**
+- `--db-host` - Database host (default: 127.0.0.1)
+- `--db-port` - Database port (default: 3306)
+- `--db-name` - Database name (default: osintweb)
+- `--db-user` - Database username
+- `--db-pass` - Database password
+- `--admin-name` - Admin user name
+- `--admin-email` - Admin email address
+- `--admin-pass` - Admin password (min 12 chars)
+- `--app-url` - Application URL
+- `--seed` - Seed initial data
+- `--skip-email` - Skip email configuration
+- `--force` - Force reinstallation (deletes lock file)
+
+**Reinstalling:**
+```bash
+# Delete lock file and run installer again
+rm storage/installed
+php artisan osint:install --force
 ```
 
 ## Project Structure
@@ -270,6 +343,31 @@ php artisan osint:install \
 /docs                   # Documentation (14 specification files)
 /tests                  # Feature & unit tests
 ```
+
+## Changelog
+
+### Version 1.0.0 (Current)
+
+**Installation Wizard**
+- Added one-time installation wizard for easy deployment
+- Web-based setup interface with 8-step guided process
+- Automatic system requirements verification
+- Live database connection testing
+- Interactive migration runner with progress tracking
+- Secure admin account creation with password strength validation
+- Optional email and search engine configuration
+- CLI installer with interactive and automated modes
+- Installation lock file prevents re-running wizard
+- Full specification available in `docs/INSTALLATION_WIZARD_SPEC.md`
+
+**Previous Features**
+- Complete OSINT platform with 35 intelligence features
+- Actor attribution system with 200+ pre-loaded entities
+- Conflict party autocomplete with smart prioritization
+- Audit trail system with blockchain-style integrity
+- Interactive mapping with control zones and timeline
+- Military equipment database with 5 categories
+- 49 event types for comprehensive conflict tracking
 
 ## Contributing
 
