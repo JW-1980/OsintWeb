@@ -121,6 +121,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/geojson', [ExportController::class, 'geojson']);
         Route::get('/csv', [ExportController::class, 'csv']);
         Route::get('/equipment.csv', [ExportController::class, 'equipmentCsv']);
+
+        // Map export (JPG, PNG, PDF, SVG)
+        Route::get('/map/options', [ExportController::class, 'mapExportOptions']);
+        Route::get('/map/stats', [ExportController::class, 'mapExportStats']);
+        Route::post('/map/image', [ExportController::class, 'storeMapImage']);
+        Route::post('/map/pdf', [ExportController::class, 'generateMapPdf']);
+        Route::get('/download/{filename}', [ExportController::class, 'downloadMapExport'])->name('api.export.download');
     });
 
     // Statistics
