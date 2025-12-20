@@ -77,6 +77,15 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - Session and export logging
 - GDPR-compliant with retention policies
 
+### Installation Wizard
+- **One-time setup wizard** for easy deployment
+- Automatic requirements check (PHP, extensions, permissions)
+- Database configuration with connection testing
+- Interactive migration runner with progress
+- Admin account creation with secure password requirements
+- Optional email and search configuration
+- CLI alternative for automated deployments
+
 ### 35 OSINT-Focused Features
 
 **Original 15 Features:**
@@ -144,6 +153,7 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - [MySQL Stack Specification](docs/MYSQL_STACK_SPECIFICATION.md) - Database architecture and hosting guide
 - [Stack Migration Summary](docs/STACK_MIGRATION_SUMMARY.md) - Quick reference for tech stack
 - [Audit Implementation Guide](docs/AUDIT_IMPLEMENTATION_GUIDE.md) - Audit trail quick start
+- [Installation Wizard Specification](docs/INSTALLATION_WIZARD_SPEC.md) - One-time setup wizard
 
 ### Quick References
 - [Actor Attribution Quick Reference](docs/ACTOR_ATTRIBUTION_QUICK_REFERENCE.md) - Developer cheat sheet
@@ -164,15 +174,37 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 
 ### Installation
 
+#### Option 1: Web-Based Installation Wizard (Recommended)
+
 ```bash
 # Clone repository
 git clone https://github.com/your-org/osintweb.git
 cd osintweb
 
-# Install PHP dependencies
+# Install dependencies
 composer install
+npm install && npm run build
 
-# Install JavaScript dependencies
+# Start server
+php artisan serve
+```
+
+Then visit `http://localhost:8000` - the installation wizard will guide you through:
+1. Requirements check (PHP extensions, permissions)
+2. Database configuration (with connection test)
+3. Running migrations
+4. Application settings (timezone, map defaults)
+5. Admin account creation
+6. Email configuration (optional)
+7. Search configuration (MySQL full-text or Meilisearch)
+
+#### Option 2: Command Line Installation
+
+```bash
+# Clone and install
+git clone https://github.com/your-org/osintweb.git
+cd osintweb
+composer install
 npm install
 
 # Configure environment
@@ -190,7 +222,7 @@ php artisan key:generate
 # Create database
 mysql -u root -p -e "CREATE DATABASE osintweb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 
-# Run migrations
+# Run migrations with seed data
 php artisan migrate --seed
 
 # Create cache and session tables
@@ -204,6 +236,20 @@ npm run build
 
 # Start development server
 php artisan serve
+```
+
+#### Option 3: Non-Interactive CLI Install
+
+```bash
+php artisan osint:install \
+    --db-host=localhost \
+    --db-name=osintweb \
+    --db-user=root \
+    --db-pass=secret \
+    --admin-name="Admin" \
+    --admin-email=admin@example.com \
+    --admin-pass=SecurePass123! \
+    --seed
 ```
 
 ## Project Structure

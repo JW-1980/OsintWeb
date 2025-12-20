@@ -10,11 +10,12 @@
 7. [Map Features](#map-features)
 8. [Export & Integration](#export--integration)
 9. [User Management](#user-management)
-10. [15 Major OSINT Features](#15-major-osint-features)
-11. [Database Schema](#database-schema)
-12. [API Endpoints](#api-endpoints)
-13. [UI/UX Specifications](#uiux-specifications)
-14. [Implementation Phases](#implementation-phases)
+10. [Installation Wizard](#installation-wizard)
+11. [15 Major OSINT Features](#15-major-osint-features)
+12. [Database Schema](#database-schema)
+13. [API Endpoints](#api-endpoints)
+14. [UI/UX Specifications](#uiux-specifications)
+15. [Implementation Phases](#implementation-phases)
 
 ---
 
@@ -1117,7 +1118,106 @@ Standard CRUD for:
 
 ---
 
-## 10. 15 Major OSINT Features
+## 10. Installation Wizard
+
+A one-time setup wizard that runs automatically on first access and guides users through the complete installation process.
+
+### 10.1 Wizard Steps
+
+```
+Step 1: Welcome & Requirements Check
+- PHP version check (8.2+ required)
+- Extension verification (mysql, mbstring, xml, curl, zip, bcmath, gd)
+- Directory permission checks (storage/, .env)
+- Display pass/fail status with solutions
+
+Step 2: Database Configuration
+- MySQL host, port, database name
+- Username and password
+- Connection test before proceeding
+- Option to create database if not exists
+- MySQL 8.0+ version verification
+
+Step 3: Run Migrations
+- Display list of migrations
+- Progress bar during execution
+- Success/error status per migration
+- Option to seed initial data (countries, equipment categories)
+- Option to load sample conflict data
+
+Step 4: Application Settings
+- Application name and URL
+- Timezone and language
+- Default map center (lat/lng) and zoom
+- Registration settings (public/private, email verification)
+- Security settings (session lifetime, rate limits, 2FA)
+
+Step 5: Admin Account Creation
+- Name, email, password
+- Password requirements: 12+ chars, mixed case, numbers, symbols
+- Email verification bypass for admin
+
+Step 6: Email Configuration (Optional)
+- SMTP settings or mail provider (Mailgun, SES, Postmark)
+- Test email functionality
+- Can skip for later configuration
+
+Step 7: Search Configuration (Optional)
+- MySQL Full-Text (default, no extra setup)
+- Meilisearch (connection test)
+- Algolia (API keys)
+
+Step 8: Installation Complete
+- Generate app key
+- Clear and rebuild caches
+- Create lock file (storage/installed)
+- Display next steps and important URLs
+```
+
+### 10.2 Security Features
+
+```
+Installation Lock:
+- Lock file created at storage/installed after completion
+- Contains: installed_at, version, installer_ip, config_checksum
+- Middleware blocks /install/* routes after installation
+- Re-installation requires server access to delete lock file
+
+Password Requirements:
+- Minimum 12 characters
+- Mixed case (upper + lower)
+- At least 1 number
+- At least 1 special character
+- Real-time validation feedback
+```
+
+### 10.3 CLI Alternative
+
+```bash
+# Interactive CLI installer
+php artisan osint:install
+
+# Non-interactive with parameters
+php artisan osint:install \
+    --db-host=localhost \
+    --db-port=3306 \
+    --db-name=osintweb \
+    --db-user=root \
+    --db-pass=secret \
+    --admin-name="Admin User" \
+    --admin-email=admin@example.com \
+    --admin-pass=SecurePassword123! \
+    --app-url=https://osint.example.com \
+    --skip-email \
+    --seed \
+    --force
+```
+
+**For complete implementation details, see [Installation Wizard Specification](INSTALLATION_WIZARD_SPEC.md).**
+
+---
+
+## 11. 15 Major OSINT Features
 
 ### 1. Source Verification System
 ```
@@ -1341,7 +1441,7 @@ Feature: Legal-Grade Archiving
 
 ---
 
-## 11. Database Schema
+## 12. Database Schema
 
 ### Core Tables
 
@@ -1501,7 +1601,7 @@ CREATE INDEX audit_logs_auditable_idx ON audit_logs(auditable_type, auditable_id
 
 ---
 
-## 12. API Endpoints
+## 13. API Endpoints
 
 ### Authentication
 ```
@@ -1585,7 +1685,7 @@ GET    /api/stats/timeline            # Timeline data
 
 ---
 
-## 13. UI/UX Specifications
+## 14. UI/UX Specifications
 
 ### Main Layout
 ```
@@ -1656,7 +1756,7 @@ GET    /api/stats/timeline            # Timeline data
 
 ---
 
-## 14. Implementation Phases
+## 15. Implementation Phases
 
 ### Phase 1: Foundation (Weeks 1-4)
 ```
