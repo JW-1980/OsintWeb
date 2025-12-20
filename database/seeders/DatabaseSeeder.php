@@ -29,6 +29,10 @@ class DatabaseSeeder extends Seeder
 
             // Military equipment categories and items
             MilitaryEquipmentSeeder::class,
+
+            // OSINT Skills and Intelligence Agents
+            OsintSkillsSeeder::class,
+            IntelligenceAgentsSeeder::class,
         ]);
     }
 }

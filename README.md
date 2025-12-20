@@ -20,6 +20,8 @@ OsintWeb provides powerful tools for:
 - Dynamic legend system
 - Click-to-add events or enter coordinates manually
 - Export to Google Maps/KML/GeoJSON
+- **Map Export**: Export maps as PNG, JPG, PDF, or SVG with customizable options
+- Multiple resolution options (72/150/300 DPI) for screen, print, or high-quality output
 
 ### Military Equipment Database
 - **Naval**: Aircraft carriers, submarines, destroyers, frigates, patrol boats
@@ -67,6 +69,9 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - Compare map states between dates
 - Track all changes over time
 - Export timeline as reports
+- **Chronological Timeline Builder**: Create custom investigation timelines
+- Link timeline entries to events, zones, and other entities
+- Case management integration for investigation workflows
 
 ### Audit Trail System
 - **Complete change tracking** for all entities
@@ -384,7 +389,69 @@ php artisan osint:install --force
 
 ## Changelog
 
-### Version 1.1.0 (Current)
+### Version 1.2.0 (Current)
+
+**Map Export System**
+- Export maps as PNG, JPG, PDF, or SVG images
+- Multiple resolution options: Screen (72 DPI), Print (150 DPI), High Quality (300 DPI)
+- Configurable page sizes for PDF (A4, A3, Letter, Legal)
+- Include legend, scale bar, title, and timestamp in exports
+- Server-side storage for generated exports
+
+**OSINT Skills & Training System**
+- 10 OSINT skill categories with comprehensive methodology
+- 15+ detailed skills with tools, best practices, and resources
+- Skills covering: Geolocation, Image Analysis, Video Verification, Flight Tracking, Maritime Intelligence, Satellite Imagery, Social Media OSINT, Weapons Identification, Unit Identification, Verification Tools
+- User skill assessments and certification tracking
+- Training exercises with scoring and hints
+
+**Intelligence Agents**
+- 18 pre-configured intelligence agents for automated data collection
+- Agents for: ADS-B flight tracking, AIS maritime monitoring, satellite change detection, social media monitoring, news aggregation
+- Configurable triggers, filters, and notification channels
+- Agent execution logging and data point storage
+- Support for scheduled and manual agent runs
+
+**Case Management & Investigation**
+- Investigation case workspaces with collaboration
+- Timeline entries linked to cases
+- Network analysis entities and relationships
+- Case notes and attachments
+- Priority and classification levels
+
+**Chronological Timeline Builder**
+- Create custom investigation timelines
+- Link entries to events, zones, and entities
+- Duration-based and point-in-time entries
+- Verification workflow for timeline entries
+
+**Real-time Alert System**
+- Configurable alerts for events, zones, and thresholds
+- Multiple notification channels (email, webhook, push)
+- Alert logging and trigger tracking
+- Immediate, daily, or weekly frequency options
+
+**Report Generation**
+- Generate event summaries, equipment loss reports, and timelines
+- Multiple output formats (PDF, HTML, DOCX, CSV)
+- Configurable sections and filters
+- Public/private report visibility
+
+**Saved Searches**
+- Save frequently used search filters
+- Notifications for new matching content
+- Default search per entity type
+
+**Data Sources Configuration**
+- Configure external data sources (ADS-B, AIS, satellite, social, news)
+- Rate limiting and sync tracking
+- Credential management with encryption
+
+**Customizable Actor Emojis (Admin Panel)**
+- Admin-configurable emojis for each actor type
+- Settings for: countries, terrorists, militias, PMCs, separatists, rebels, cartels, insurgents, political organizations, international orgs, coalitions, proxies, paramilitaries
+
+### Version 1.1.0
 
 **Role-Based Access Control (RBAC)**
 - Added comprehensive permission system with 50+ granular permissions
