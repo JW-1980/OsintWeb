@@ -21,6 +21,8 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\UserAccountController;
 use App\Http\Controllers\Api\OnboardingController;
 use App\Http\Controllers\Api\AudioController;
+use App\Http\Controllers\Api\SkillController;
+use App\Http\Controllers\Api\AgentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -259,6 +261,47 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/{uuid}/transcriptions/{transcriptionUuid}/segments', [AudioController::class, 'addSegment']);
         Route::put('/{uuid}/transcriptions/{transcriptionUuid}/segments/{segmentId}', [AudioController::class, 'updateSegment']);
         Route::delete('/{uuid}/transcriptions/{transcriptionUuid}/segments/{segmentId}', [AudioController::class, 'deleteSegment']);
+    });
+
+    // Skills (AI Skills with keyword triggering)
+    Route::prefix('skills')->group(function () {
+        Route::get('/', [SkillController::class, 'index']);
+        Route::get('/categories', [SkillController::class, 'categories']);
+        Route::get('/stats', [SkillController::class, 'stats']);
+        Route::post('/match', [SkillController::class, 'match']);
+        Route::post('/suggest', [SkillController::class, 'suggest']);
+        Route::post('/trigger', [SkillController::class, 'trigger']);
+        Route::get('/preferences', [SkillController::class, 'preferences']);
+        Route::get('/{slug}', [SkillController::class, 'show']);
+        Route::put('/{slug}/preference', [SkillController::class, 'updatePreference']);
+        Route::get('/{slug}/triggers', [SkillController::class, 'triggers']);
+        Route::post('/{slug}/agent', [SkillController::class, 'createAgent']);
+
+        // Admin only
+        Route::post('/', [SkillController::class, 'store']);
+        Route::put('/{slug}', [SkillController::class, 'update']);
+        Route::delete('/{slug}', [SkillController::class, 'destroy']);
+    });
+
+    // Agents (AI Agents built from skills)
+    Route::prefix('agents')->group(function () {
+        Route::get('/', [AgentController::class, 'index']);
+        Route::get('/types', [AgentController::class, 'types']);
+        Route::post('/', [AgentController::class, 'store']);
+        Route::post('/from-skills', [AgentController::class, 'createFromSkills']);
+        Route::get('/{slug}', [AgentController::class, 'show']);
+        Route::put('/{slug}', [AgentController::class, 'update']);
+        Route::delete('/{slug}', [AgentController::class, 'destroy']);
+
+        // Agent skills
+        Route::post('/{slug}/skills', [AgentController::class, 'addSkill']);
+        Route::delete('/{slug}/skills/{skillId}', [AgentController::class, 'removeSkill']);
+
+        // Agent execution
+        Route::post('/{slug}/run', [AgentController::class, 'run']);
+        Route::get('/{slug}/executions', [AgentController::class, 'executions']);
+        Route::get('/{slug}/executions/{executionUuid}', [AgentController::class, 'execution']);
+        Route::get('/{slug}/stats', [AgentController::class, 'stats']);
     });
 });
 
