@@ -16,6 +16,8 @@ use App\Http\Controllers\Api\FactionController;
 use App\Http\Controllers\Api\ActorController;
 use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\Api\StatsController;
+use App\Http\Controllers\Api\ArticleController;
+use App\Http\Controllers\Api\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -137,6 +139,44 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/events', [StatsController::class, 'events']);
         Route::get('/timeline', [StatsController::class, 'timeline']);
         Route::get('/heatmap', [StatsController::class, 'heatmap']);
+    });
+
+    // Articles / News / Premium Content
+    Route::prefix('articles')->group(function () {
+        Route::get('/', [ArticleController::class, 'index']);
+        Route::post('/', [ArticleController::class, 'store']);
+        Route::get('/categories', [ArticleController::class, 'categories']);
+        Route::get('/tags', [ArticleController::class, 'tags']);
+        Route::get('/bookmarks', [ArticleController::class, 'myBookmarks']);
+        Route::get('/{uuid}', [ArticleController::class, 'show']);
+        Route::put('/{uuid}', [ArticleController::class, 'update']);
+        Route::delete('/{uuid}', [ArticleController::class, 'destroy']);
+        Route::post('/{uuid}/bookmark', [ArticleController::class, 'bookmark']);
+        Route::delete('/{uuid}/bookmark', [ArticleController::class, 'unbookmark']);
+        Route::post('/{uuid}/progress', [ArticleController::class, 'trackProgress']);
+
+        // Article comments
+        Route::get('/{uuid}/comments', [CommentController::class, 'index']);
+        Route::post('/{uuid}/comments', [CommentController::class, 'store']);
+    });
+
+    // Comments
+    Route::prefix('comments')->group(function () {
+        Route::put('/{uuid}', [CommentController::class, 'update']);
+        Route::delete('/{uuid}', [CommentController::class, 'destroy']);
+        Route::post('/{uuid}/vote', [CommentController::class, 'vote']);
+        Route::post('/{uuid}/report', [CommentController::class, 'report']);
+        Route::get('/{uuid}/revisions', [CommentController::class, 'revisions']);
+        Route::get('/{uuid}/replies', [CommentController::class, 'replies']);
+
+        // Moderation (requires permission)
+        Route::get('/pending', [CommentController::class, 'pending']);
+        Route::post('/{uuid}/approve', [CommentController::class, 'approve']);
+        Route::post('/{uuid}/reject', [CommentController::class, 'reject']);
+        Route::post('/{uuid}/spam', [CommentController::class, 'markSpam']);
+        Route::post('/bulk-moderate', [CommentController::class, 'bulkModerate']);
+        Route::get('/reports', [CommentController::class, 'reports']);
+        Route::post('/reports/{uuid}/review', [CommentController::class, 'reviewReport']);
     });
 });
 

@@ -98,8 +98,33 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - **Scheduled publishing** - Set future publication dates
 - **Event versioning** - Track all changes with rollback capability
 - **Visibility controls** - Public, private, restricted, or internal events
-- Grant access to specific users, groups, or roles
-- Time-limited access with automatic expiration
+
+### News & Articles System
+- **Content types**: News, articles, analysis, reports, tutorials
+- **Premium content** with subscription-based access control
+- **10 categories**: Breaking News, Conflict Analysis, Equipment & Technology, OSINT Techniques, Geopolitics, Investigative Reports, Humanitarian, Cyber & Information Warfare, Opinion, Regional Focus
+- **Tag system** with automatic slug generation
+- **Publishing workflow**: Draft, pending review, published, archived
+- **Reading metrics**: View count, reading time, progress tracking
+- **Bookmarks** with folder organization and notes
+- **SEO support**: Meta title, description, keywords
+
+### Advanced Comment System
+- **Threaded comments** with configurable depth (up to 5 levels)
+- **Time-limited editing** (default 15 minutes) with full revision history
+- **Upvote/downvote** system with score calculation
+- **Report system** with 8 reason types (spam, harassment, hate speech, etc.)
+- **Moderation queue** with spam score visibility
+- **Bulk moderation** actions for efficiency
+- **Author reply highlighting** and pinned comments
+
+### Anti-Spam Protection
+- **Honeypot fields** to catch bots
+- **Form timing analysis** (blocks rapid submissions)
+- **Spam scoring** with keyword, regex, and domain pattern matching
+- **Rate limiting**: Cooldown between comments, hourly/daily limits
+- **IP blocking** and user-based restrictions
+- **Configurable thresholds** for auto-approval and rejection
 
 ### Extended Equipment Properties
 - **Flexible property system** - Add custom fields to any equipment
@@ -390,7 +415,73 @@ php artisan osint:install --force
 
 ## Changelog
 
-### Version 1.2.0 (Current)
+### Version 1.3.0 (Current)
+
+**News, Articles & Premium Content System**
+- Full content management for news, articles, analysis, reports, and tutorials
+- Premium content with subscription-based access control
+- Article categories: Breaking News, Conflict Analysis, Equipment & Technology, OSINT Techniques, Geopolitics, Investigative Reports, Humanitarian, Cyber & Information Warfare
+- Tag system with automatic slug generation
+- Featured and pinned articles
+- Reading time calculation
+- View count and share tracking
+- Bookmarks with folder organization
+- Reading progress tracking
+- SEO metadata (title, description, keywords)
+- Publishing workflow: draft, pending review, published, archived
+- Scheduled publishing support
+
+**Advanced Threaded Comment System**
+- Threaded/nested comments with configurable max depth (default: 5 levels)
+- Limited edit window (configurable, default: 15 minutes)
+- Complete edit revision history with diff tracking
+- Upvote/downvote system with score calculation
+- Comment reporting with multiple reason types
+- Moderation queue for pending comments
+- Bulk moderation actions (approve, reject, spam, delete)
+
+**Anti-Spam & Anti-Bot Protection**
+- Honeypot field detection
+- Form timing analysis (blocks submissions under 3 seconds)
+- Spam score calculation with multiple heuristics:
+  - Keyword matching (configurable patterns)
+  - Regex pattern detection
+  - Domain/URL blocking
+  - Excessive caps detection
+  - Link count limits
+  - Repeated character detection
+  - Common spam phrase detection
+- Rate limiting: cooldown between comments, hourly/daily limits
+- IP and user-based blocking
+- Browser fingerprint tracking
+- Auto-approval threshold (low spam score = auto-approve)
+
+**Comment Moderation Features**
+- Pending queue with spam score visibility
+- Report management with action tracking
+- Bulk moderation operations
+- Author reply highlighting
+- Pinned comments
+- Comment status: pending, approved, rejected, spam, hidden
+
+**Subscription System**
+- User subscription management
+- Plan tiers: Free, Basic, Premium, Enterprise
+- Feature-based access control
+- Subscription status tracking
+
+**18 New Comment/Article Settings**
+- Edit window duration
+- Max thread depth
+- Content length limits
+- Rate limiting thresholds
+- Guest commenting toggle
+- Approval requirements
+- Spam detection thresholds
+- Voting toggle
+- Edit history visibility
+
+### Version 1.2.0
 
 **Expanded Military Equipment Database**
 - 140+ real-world military equipment entries with detailed specifications
