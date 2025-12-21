@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\UserAccountController;
 use App\Http\Controllers\Api\OnboardingController;
+use App\Http\Controllers\Api\AudioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -228,6 +229,36 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/step/{stepKey}/complete', [OnboardingController::class, 'completeStep']);
         Route::post('/skip', [OnboardingController::class, 'skip']);
         Route::post('/reset', [OnboardingController::class, 'reset']);
+    });
+
+    // Audio & Transcription
+    Route::prefix('audio')->group(function () {
+        // Audio files
+        Route::get('/', [AudioController::class, 'index']);
+        Route::post('/', [AudioController::class, 'store']);
+        Route::get('/ai-models', [AudioController::class, 'aiModels']);
+        Route::get('/{uuid}', [AudioController::class, 'show']);
+        Route::put('/{uuid}', [AudioController::class, 'update']);
+        Route::delete('/{uuid}', [AudioController::class, 'destroy']);
+        Route::post('/{uuid}/play', [AudioController::class, 'recordPlay']);
+
+        // Transcriptions for audio file
+        Route::get('/{uuid}/transcriptions', [AudioController::class, 'transcriptions']);
+        Route::post('/{uuid}/transcriptions/manual', [AudioController::class, 'createManualTranscription']);
+        Route::post('/{uuid}/transcriptions/ai', [AudioController::class, 'requestAiTranscription']);
+        Route::get('/{uuid}/transcriptions/jobs/{jobUuid}', [AudioController::class, 'transcriptionJobStatus']);
+
+        // Specific transcription
+        Route::get('/{uuid}/transcriptions/{transcriptionUuid}', [AudioController::class, 'getTranscription']);
+        Route::put('/{uuid}/transcriptions/{transcriptionUuid}', [AudioController::class, 'updateTranscription']);
+        Route::post('/{uuid}/transcriptions/{transcriptionUuid}/primary', [AudioController::class, 'setPrimary']);
+        Route::get('/{uuid}/transcriptions/{transcriptionUuid}/export', [AudioController::class, 'exportTranscription']);
+        Route::get('/{uuid}/transcriptions/{transcriptionUuid}/revisions', [AudioController::class, 'revisions']);
+
+        // Transcript segments
+        Route::post('/{uuid}/transcriptions/{transcriptionUuid}/segments', [AudioController::class, 'addSegment']);
+        Route::put('/{uuid}/transcriptions/{transcriptionUuid}/segments/{segmentId}', [AudioController::class, 'updateSegment']);
+        Route::delete('/{uuid}/transcriptions/{transcriptionUuid}/segments/{segmentId}', [AudioController::class, 'deleteSegment']);
     });
 });
 

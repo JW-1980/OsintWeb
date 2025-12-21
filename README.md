@@ -153,6 +153,27 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - **Consent History**: View complete consent change log
 - **Email Preferences**: Granular email notification controls
 
+### Audio & Transcription System
+- **Audio File Management**: Upload, organize, and share audio files
+  - Support for MP3, WAV, OGG, FLAC, AAC, M4A, WebM formats
+  - Visibility controls: public, private, unlisted
+  - Play count tracking
+  - Audio collections/playlists
+  - Link audio to conflict events as evidence
+- **Manual Transcription**: Create and edit transcripts manually
+  - Timed segments with speaker identification
+  - Segment-by-segment editing with timestamps
+  - Full revision history with diff tracking
+  - Multiple transcriptions per audio file
+- **AI Transcription via OpenRouter.ai**
+  - Automatic speech-to-text transcription
+  - Multiple AI model support (OpenAI Whisper, Google Gemini)
+  - Speaker diarization (multi-speaker identification)
+  - Confidence scoring
+  - Cost tracking per transcription
+- **Transcript Export**: VTT, SRT, and plain text formats
+- **User-Facing Presentation**: Display audio with synchronized transcripts
+
 ### Extended Equipment Properties
 - **Flexible property system** - Add custom fields to any equipment
 - Property types: text, rich text, numbers, links, images, videos, dates, locations
@@ -442,7 +463,41 @@ php artisan osint:install --force
 
 ## Changelog
 
-### Version 1.4.0 (Current)
+### Version 1.5.0 (Current)
+
+**Audio & Transcription System**
+- Audio file upload and management with visibility controls
+- Support for 7 audio formats: MP3, WAV, OGG, FLAC, AAC, M4A, WebM
+- Audio collections/playlists for organization
+- Link audio files to conflict events as evidence
+- Manual transcription with timed segments
+- Speaker identification and diarization
+- AI transcription via OpenRouter.ai integration
+- Multiple AI model support (OpenAI Whisper, Google Gemini)
+- Transcript revision history with diff tracking
+- Export to VTT, SRT, and plain text formats
+- Confidence scoring for AI transcriptions
+- Cost tracking per AI transcription job
+
+**New Database Tables**
+- audio_files: Audio file storage and metadata
+- transcriptions: Transcription records with type and status
+- transcript_segments: Timed text segments with speaker info
+- transcript_revisions: Edit history for transcripts
+- transcription_jobs: AI transcription job queue
+- speakers: Speaker profiles for identification
+- audio_collections: Playlist/folder organization
+- audio_collection_items: Audio-collection pivot
+- audio_event: Link audio to events
+
+**GDPR Compliance in CLAUDE.md**
+- Added comprehensive GDPR & Privacy Compliance section
+- Data minimization requirements
+- Consent management guidelines
+- Right to access, portability, and deletion
+- Privacy by design principles
+
+### Version 1.4.0
 
 **User Account System**
 - Profile management with avatar, bio, organization, location, website
