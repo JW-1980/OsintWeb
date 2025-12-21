@@ -126,6 +126,33 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - **IP blocking** and user-based restrictions
 - **Configurable thresholds** for auto-approval and rejection
 
+### User Account System
+- **Profile Management**: Name, bio, organization, location, website, timezone, locale
+- **Default Random Avatars**: Unique generated avatars for every user
+  - Geometric patterns based on user seed
+  - Initials-based avatars
+  - Gravatar integration
+  - Custom image upload support
+  - Multiple color palettes (vibrant, pastel, earth, ocean)
+- **Session Management**: View active sessions, device info, terminate other sessions
+- **Activity Log**: Complete history of user actions
+- **Account Security**: Password changes, failed login tracking, account locking
+
+### Onboarding System
+- **Guided Setup**: 9-step onboarding flow for new users
+- **Progress Tracking**: Step-by-step completion with percentage
+- **Customizable Steps**: Welcome, Profile, Avatar, Privacy, Preferences, Explore Map, Browse Events, Explore Equipment, Complete
+- **Skip Option**: Users can skip onboarding if preferred
+- **Reset Capability**: Re-run onboarding at any time
+
+### Privacy & GDPR Compliance
+- **Consent Management**: Track all consent changes with full audit trail
+- **Consent Types**: Terms of service, privacy policy, marketing, analytics, data processing, cookies
+- **Data Export (Right to Portability)**: Request and download all personal data in JSON/CSV/XML
+- **Account Deletion (Right to be Forgotten)**: Request account deletion with 14-day grace period
+- **Consent History**: View complete consent change log
+- **Email Preferences**: Granular email notification controls
+
 ### Extended Equipment Properties
 - **Flexible property system** - Add custom fields to any equipment
 - Property types: text, rich text, numbers, links, images, videos, dates, locations
@@ -415,7 +442,66 @@ php artisan osint:install --force
 
 ## Changelog
 
-### Version 1.3.0 (Current)
+### Version 1.4.0 (Current)
+
+**User Account System**
+- Profile management with avatar, bio, organization, location, website
+- Timezone and locale preferences
+- Session management with device detection
+- Active session listing with terminate capabilities
+- Activity log tracking all user actions
+- Account security with password change functionality
+- Failed login attempt tracking with automatic account locking
+
+**Default Random Avatar Generation**
+- Unique geometric pattern avatars generated for every user
+- Four pattern types: circles, polygons, grid, waves
+- Initials-based avatar option
+- Gravatar integration for email-linked avatars
+- Custom avatar upload with image cropping
+- Multiple color palettes: vibrant, pastel, earth, ocean
+- Regenerate avatar with new random seed
+- SVG-based for perfect scaling at any size
+
+**Onboarding System**
+- 9-step guided onboarding flow for new users
+- Steps: Welcome, Profile, Avatar, Privacy, Preferences, Explore Map, Browse Events, Explore Equipment, Complete
+- Step-by-step progress tracking with completion percentage
+- Save progress between sessions
+- Skip onboarding option
+- Reset and re-run onboarding at any time
+- Step-specific content and instructions
+
+**Privacy & GDPR Compliance**
+- Consent logging with full audit trail
+- Consent types: Terms of service, privacy policy, marketing, analytics, data processing, cookies, third-party sharing
+- Data export requests (Right to Portability)
+  - Export formats: JSON, CSV, XML
+  - Selectable data types: profile, comments, articles, events, bookmarks, activity, consent, sessions
+  - Download links with 7-day expiration
+- Account deletion requests (Right to be Forgotten)
+  - 14-day grace period before deletion
+  - Email confirmation required
+  - Cancel request during grace period
+  - Deletion summary after completion
+- Consent history viewing
+- Email preference management
+- Cookie consent tracking
+
+**New Database Tables**
+- consent_logs: Track all consent changes
+- data_export_requests: GDPR data export workflow
+- account_deletion_requests: GDPR deletion workflow
+- user_sessions: Active session management
+- user_activities: Activity logging
+- onboarding_progress: Track onboarding steps
+- user_preference_changes: Preference audit trail
+
+**API Endpoints**
+- Account: profile, password, avatar, preferences, privacy, consent, data export, deletion, sessions, activity
+- Onboarding: status, step details, complete step, skip, reset
+
+### Version 1.3.0
 
 **News, Articles & Premium Content System**
 - Full content management for news, articles, analysis, reports, and tutorials

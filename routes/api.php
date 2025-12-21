@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\Api\StatsController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\UserAccountController;
+use App\Http\Controllers\Api\OnboardingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -177,6 +179,55 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/bulk-moderate', [CommentController::class, 'bulkModerate']);
         Route::get('/reports', [CommentController::class, 'reports']);
         Route::post('/reports/{uuid}/review', [CommentController::class, 'reviewReport']);
+    });
+
+    // User Account Management
+    Route::prefix('account')->group(function () {
+        // Profile
+        Route::get('/profile', [UserAccountController::class, 'profile']);
+        Route::put('/profile', [UserAccountController::class, 'updateProfile']);
+        Route::put('/password', [UserAccountController::class, 'changePassword']);
+
+        // Avatar
+        Route::get('/avatar/options', [UserAccountController::class, 'avatarOptions']);
+        Route::put('/avatar', [UserAccountController::class, 'updateAvatar']);
+        Route::post('/avatar/regenerate', [UserAccountController::class, 'regenerateAvatar']);
+        Route::post('/avatar/upload', [UserAccountController::class, 'uploadAvatar']);
+        Route::delete('/avatar', [UserAccountController::class, 'deleteAvatar']);
+
+        // Preferences
+        Route::get('/preferences', [UserAccountController::class, 'preferences']);
+        Route::put('/preferences', [UserAccountController::class, 'updatePreferences']);
+
+        // Privacy & Consent (GDPR)
+        Route::get('/privacy', [UserAccountController::class, 'privacySettings']);
+        Route::put('/consent', [UserAccountController::class, 'updateConsent']);
+        Route::get('/consent/history', [UserAccountController::class, 'consentHistory']);
+
+        // Data Export (GDPR Right to Data Portability)
+        Route::post('/data-export', [UserAccountController::class, 'requestDataExport']);
+        Route::get('/data-export', [UserAccountController::class, 'dataExportRequests']);
+
+        // Account Deletion (GDPR Right to be Forgotten)
+        Route::post('/deletion', [UserAccountController::class, 'requestAccountDeletion']);
+        Route::delete('/deletion', [UserAccountController::class, 'cancelAccountDeletion']);
+
+        // Sessions
+        Route::get('/sessions', [UserAccountController::class, 'sessions']);
+        Route::delete('/sessions/{uuid}', [UserAccountController::class, 'terminateSession']);
+        Route::delete('/sessions', [UserAccountController::class, 'terminateOtherSessions']);
+
+        // Activity Log
+        Route::get('/activity', [UserAccountController::class, 'activityLog']);
+    });
+
+    // Onboarding
+    Route::prefix('onboarding')->group(function () {
+        Route::get('/status', [OnboardingController::class, 'status']);
+        Route::get('/step/{stepKey}', [OnboardingController::class, 'step']);
+        Route::post('/step/{stepKey}/complete', [OnboardingController::class, 'completeStep']);
+        Route::post('/skip', [OnboardingController::class, 'skip']);
+        Route::post('/reset', [OnboardingController::class, 'reset']);
     });
 });
 

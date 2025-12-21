@@ -28,12 +28,39 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $is_active
  * @property bool $is_verified
  * @property string|null $avatar_url
+ * @property string $avatar_type
+ * @property string|null $avatar_seed
+ * @property string|null $avatar_color
  * @property string|null $bio
  * @property string|null $organization
  * @property string|null $location
  * @property string|null $website
+ * @property string $timezone
+ * @property string $locale
  * @property array|null $preferences
  * @property array|null $permissions
+ * @property int $onboarding_step
+ * @property \Carbon\Carbon|null $onboarding_completed_at
+ * @property bool $onboarding_skipped
+ * @property array|null $onboarding_data
+ * @property \Carbon\Carbon|null $terms_accepted_at
+ * @property string|null $terms_version
+ * @property \Carbon\Carbon|null $privacy_policy_accepted_at
+ * @property string|null $privacy_policy_version
+ * @property bool $marketing_consent
+ * @property \Carbon\Carbon|null $marketing_consent_at
+ * @property bool $analytics_consent
+ * @property \Carbon\Carbon|null $analytics_consent_at
+ * @property bool $data_processing_consent
+ * @property \Carbon\Carbon|null $data_processing_consent_at
+ * @property string|null $consent_ip
+ * @property array|null $email_preferences
+ * @property bool $email_notifications_enabled
+ * @property \Carbon\Carbon|null $email_unsubscribed_at
+ * @property \Carbon\Carbon|null $account_locked_at
+ * @property string|null $account_locked_reason
+ * @property int $failed_login_attempts
+ * @property \Carbon\Carbon|null $password_changed_at
  * @property \Carbon\Carbon|null $last_login_at
  * @property string|null $last_login_ip
  * @property \Carbon\Carbon $created_at
@@ -52,12 +79,39 @@ class User extends Authenticatable
         'is_active',
         'is_verified',
         'avatar_url',
+        'avatar_type',
+        'avatar_seed',
+        'avatar_color',
         'bio',
         'organization',
         'location',
         'website',
+        'timezone',
+        'locale',
         'preferences',
         'permissions',
+        'onboarding_step',
+        'onboarding_completed_at',
+        'onboarding_skipped',
+        'onboarding_data',
+        'terms_accepted_at',
+        'terms_version',
+        'privacy_policy_accepted_at',
+        'privacy_policy_version',
+        'marketing_consent',
+        'marketing_consent_at',
+        'analytics_consent',
+        'analytics_consent_at',
+        'data_processing_consent',
+        'data_processing_consent_at',
+        'consent_ip',
+        'email_preferences',
+        'email_notifications_enabled',
+        'email_unsubscribed_at',
+        'account_locked_at',
+        'account_locked_reason',
+        'failed_login_attempts',
+        'password_changed_at',
         'last_login_at',
         'last_login_ip',
     ];
@@ -65,6 +119,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'avatar_seed',
+        'consent_ip',
+        'last_login_ip',
     ];
 
     protected $casts = [
@@ -74,6 +131,24 @@ class User extends Authenticatable
         'is_verified' => 'boolean',
         'preferences' => 'array',
         'permissions' => 'array',
+        'onboarding_data' => 'array',
+        'email_preferences' => 'array',
+        'onboarding_step' => 'integer',
+        'onboarding_completed_at' => 'datetime',
+        'onboarding_skipped' => 'boolean',
+        'terms_accepted_at' => 'datetime',
+        'privacy_policy_accepted_at' => 'datetime',
+        'marketing_consent' => 'boolean',
+        'marketing_consent_at' => 'datetime',
+        'analytics_consent' => 'boolean',
+        'analytics_consent_at' => 'datetime',
+        'data_processing_consent' => 'boolean',
+        'data_processing_consent_at' => 'datetime',
+        'email_notifications_enabled' => 'boolean',
+        'email_unsubscribed_at' => 'datetime',
+        'account_locked_at' => 'datetime',
+        'failed_login_attempts' => 'integer',
+        'password_changed_at' => 'datetime',
         'last_login_at' => 'datetime',
     ];
 
@@ -147,6 +222,178 @@ class User extends Authenticatable
     public function auditableEvents(): MorphMany
     {
         return $this->morphMany(AuditLog::class, 'auditable');
+    }
+
+    /**
+     * Get user's comments
+     */
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Get user's articles
+     */
+    public function articles(): HasMany
+    {
+        return $this->hasMany(Article::class, 'author_id');
+    }
+
+    /**
+     * Get user's consent logs
+     */
+    public function consentLogs(): HasMany
+    {
+        return $this->hasMany(ConsentLog::class);
+    }
+
+    /**
+     * Get user's data export requests
+     */
+    public function dataExportRequests(): HasMany
+    {
+        return $this->hasMany(DataExportRequest::class);
+    }
+
+    /**
+     * Get user's account deletion requests
+     */
+    public function accountDeletionRequests(): HasMany
+    {
+        return $this->hasMany(AccountDeletionRequest::class);
+    }
+
+    /**
+     * Get user's sessions
+     */
+    public function sessions(): HasMany
+    {
+        return $this->hasMany(UserSession::class);
+    }
+
+    /**
+     * Get active sessions
+     */
+    public function activeSessions(): HasMany
+    {
+        return $this->hasMany(UserSession::class)->where('expires_at', '>', now());
+    }
+
+    /**
+     * Get user's activity log
+     */
+    public function activities(): HasMany
+    {
+        return $this->hasMany(UserActivity::class);
+    }
+
+    /**
+     * Get user's onboarding progress
+     */
+    public function onboardingProgress(): HasMany
+    {
+        return $this->hasMany(OnboardingProgress::class);
+    }
+
+    /**
+     * Get user's article bookmarks
+     */
+    public function articleBookmarks(): HasMany
+    {
+        return $this->hasMany(ArticleBookmark::class);
+    }
+
+    /**
+     * Get bookmarked articles
+     */
+    public function bookmarkedArticles(): BelongsToMany
+    {
+        return $this->belongsToMany(Article::class, 'article_bookmarks')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get user's subscriptions
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(UserSubscription::class);
+    }
+
+    /**
+     * Check if user has active subscription
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->subscriptions()
+            ->where('status', 'active')
+            ->where('ends_at', '>', now())
+            ->exists();
+    }
+
+    /**
+     * Check if user has completed onboarding
+     */
+    public function hasCompletedOnboarding(): bool
+    {
+        return $this->onboarding_completed_at !== null;
+    }
+
+    /**
+     * Check if user account is locked
+     */
+    public function isLocked(): bool
+    {
+        return $this->account_locked_at !== null;
+    }
+
+    /**
+     * Lock the user account
+     */
+    public function lock(string $reason): void
+    {
+        $this->update([
+            'account_locked_at' => now(),
+            'account_locked_reason' => $reason,
+        ]);
+    }
+
+    /**
+     * Unlock the user account
+     */
+    public function unlock(): void
+    {
+        $this->update([
+            'account_locked_at' => null,
+            'account_locked_reason' => null,
+            'failed_login_attempts' => 0,
+        ]);
+    }
+
+    /**
+     * Record failed login attempt
+     */
+    public function recordFailedLogin(): void
+    {
+        $this->increment('failed_login_attempts');
+
+        // Lock after 5 failed attempts
+        if ($this->failed_login_attempts >= 5) {
+            $this->lock('Too many failed login attempts');
+        }
+    }
+
+    /**
+     * Record successful login
+     */
+    public function recordLogin(string $ipAddress): void
+    {
+        $this->update([
+            'last_login_at' => now(),
+            'last_login_ip' => $ipAddress,
+            'failed_login_attempts' => 0,
+        ]);
     }
 
     /**
