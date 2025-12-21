@@ -98,8 +98,81 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - **Scheduled publishing** - Set future publication dates
 - **Event versioning** - Track all changes with rollback capability
 - **Visibility controls** - Public, private, restricted, or internal events
-- Grant access to specific users, groups, or roles
-- Time-limited access with automatic expiration
+
+### News & Articles System
+- **Content types**: News, articles, analysis, reports, tutorials
+- **Premium content** with subscription-based access control
+- **10 categories**: Breaking News, Conflict Analysis, Equipment & Technology, OSINT Techniques, Geopolitics, Investigative Reports, Humanitarian, Cyber & Information Warfare, Opinion, Regional Focus
+- **Tag system** with automatic slug generation
+- **Publishing workflow**: Draft, pending review, published, archived
+- **Reading metrics**: View count, reading time, progress tracking
+- **Bookmarks** with folder organization and notes
+- **SEO support**: Meta title, description, keywords
+
+### Advanced Comment System
+- **Threaded comments** with configurable depth (up to 5 levels)
+- **Time-limited editing** (default 15 minutes) with full revision history
+- **Upvote/downvote** system with score calculation
+- **Report system** with 8 reason types (spam, harassment, hate speech, etc.)
+- **Moderation queue** with spam score visibility
+- **Bulk moderation** actions for efficiency
+- **Author reply highlighting** and pinned comments
+
+### Anti-Spam Protection
+- **Honeypot fields** to catch bots
+- **Form timing analysis** (blocks rapid submissions)
+- **Spam scoring** with keyword, regex, and domain pattern matching
+- **Rate limiting**: Cooldown between comments, hourly/daily limits
+- **IP blocking** and user-based restrictions
+- **Configurable thresholds** for auto-approval and rejection
+
+### User Account System
+- **Profile Management**: Name, bio, organization, location, website, timezone, locale
+- **Default Random Avatars**: Unique generated avatars for every user
+  - Geometric patterns based on user seed
+  - Initials-based avatars
+  - Gravatar integration
+  - Custom image upload support
+  - Multiple color palettes (vibrant, pastel, earth, ocean)
+- **Session Management**: View active sessions, device info, terminate other sessions
+- **Activity Log**: Complete history of user actions
+- **Account Security**: Password changes, failed login tracking, account locking
+
+### Onboarding System
+- **Guided Setup**: 9-step onboarding flow for new users
+- **Progress Tracking**: Step-by-step completion with percentage
+- **Customizable Steps**: Welcome, Profile, Avatar, Privacy, Preferences, Explore Map, Browse Events, Explore Equipment, Complete
+- **Skip Option**: Users can skip onboarding if preferred
+- **Reset Capability**: Re-run onboarding at any time
+
+### Privacy & GDPR Compliance
+- **Consent Management**: Track all consent changes with full audit trail
+- **Consent Types**: Terms of service, privacy policy, marketing, analytics, data processing, cookies
+- **Data Export (Right to Portability)**: Request and download all personal data in JSON/CSV/XML
+- **Account Deletion (Right to be Forgotten)**: Request account deletion with 14-day grace period
+- **Consent History**: View complete consent change log
+- **Email Preferences**: Granular email notification controls
+
+### Audio & Transcription System
+- **Audio File Management**: Upload, organize, and share audio files
+  - Support for MP3, WAV, OGG, FLAC, AAC, M4A, WebM formats
+  - Visibility controls: public, private, unlisted
+  - Play count tracking
+  - Audio collections/playlists
+  - Link audio to conflict events as evidence
+- **Manual Transcription**: Create and edit transcripts manually
+  - Timed segments with speaker identification
+  - Segment-by-segment editing with timestamps
+  - Full revision history with diff tracking
+  - Multiple transcriptions per audio file
+- **AI Transcription via OpenRouter.ai**
+  - Automatic speech-to-text transcription
+  - Multiple AI model support (OpenAI Whisper, Google Gemini)
+  - Speaker diarization (multi-speaker identification)
+  - Confidence scoring
+  - Cost tracking per transcription
+- **Transcript Export**: VTT, SRT, and plain text formats
+- **User-Facing Presentation**: Display audio with synchronized transcripts
 
 ### Extended Equipment Properties
 - **Flexible property system** - Add custom fields to any equipment
@@ -390,7 +463,166 @@ php artisan osint:install --force
 
 ## Changelog
 
-### Version 1.2.0 (Current)
+### Version 1.5.0 (Current)
+
+**Audio & Transcription System**
+- Audio file upload and management with visibility controls
+- Support for 7 audio formats: MP3, WAV, OGG, FLAC, AAC, M4A, WebM
+- Audio collections/playlists for organization
+- Link audio files to conflict events as evidence
+- Manual transcription with timed segments
+- Speaker identification and diarization
+- AI transcription via OpenRouter.ai integration
+- Multiple AI model support (OpenAI Whisper, Google Gemini)
+- Transcript revision history with diff tracking
+- Export to VTT, SRT, and plain text formats
+- Confidence scoring for AI transcriptions
+- Cost tracking per AI transcription job
+
+**New Database Tables**
+- audio_files: Audio file storage and metadata
+- transcriptions: Transcription records with type and status
+- transcript_segments: Timed text segments with speaker info
+- transcript_revisions: Edit history for transcripts
+- transcription_jobs: AI transcription job queue
+- speakers: Speaker profiles for identification
+- audio_collections: Playlist/folder organization
+- audio_collection_items: Audio-collection pivot
+- audio_event: Link audio to events
+
+**GDPR Compliance in CLAUDE.md**
+- Added comprehensive GDPR & Privacy Compliance section
+- Data minimization requirements
+- Consent management guidelines
+- Right to access, portability, and deletion
+- Privacy by design principles
+
+### Version 1.4.0
+
+**User Account System**
+- Profile management with avatar, bio, organization, location, website
+- Timezone and locale preferences
+- Session management with device detection
+- Active session listing with terminate capabilities
+- Activity log tracking all user actions
+- Account security with password change functionality
+- Failed login attempt tracking with automatic account locking
+
+**Default Random Avatar Generation**
+- Unique geometric pattern avatars generated for every user
+- Four pattern types: circles, polygons, grid, waves
+- Initials-based avatar option
+- Gravatar integration for email-linked avatars
+- Custom avatar upload with image cropping
+- Multiple color palettes: vibrant, pastel, earth, ocean
+- Regenerate avatar with new random seed
+- SVG-based for perfect scaling at any size
+
+**Onboarding System**
+- 9-step guided onboarding flow for new users
+- Steps: Welcome, Profile, Avatar, Privacy, Preferences, Explore Map, Browse Events, Explore Equipment, Complete
+- Step-by-step progress tracking with completion percentage
+- Save progress between sessions
+- Skip onboarding option
+- Reset and re-run onboarding at any time
+- Step-specific content and instructions
+
+**Privacy & GDPR Compliance**
+- Consent logging with full audit trail
+- Consent types: Terms of service, privacy policy, marketing, analytics, data processing, cookies, third-party sharing
+- Data export requests (Right to Portability)
+  - Export formats: JSON, CSV, XML
+  - Selectable data types: profile, comments, articles, events, bookmarks, activity, consent, sessions
+  - Download links with 7-day expiration
+- Account deletion requests (Right to be Forgotten)
+  - 14-day grace period before deletion
+  - Email confirmation required
+  - Cancel request during grace period
+  - Deletion summary after completion
+- Consent history viewing
+- Email preference management
+- Cookie consent tracking
+
+**New Database Tables**
+- consent_logs: Track all consent changes
+- data_export_requests: GDPR data export workflow
+- account_deletion_requests: GDPR deletion workflow
+- user_sessions: Active session management
+- user_activities: Activity logging
+- onboarding_progress: Track onboarding steps
+- user_preference_changes: Preference audit trail
+
+**API Endpoints**
+- Account: profile, password, avatar, preferences, privacy, consent, data export, deletion, sessions, activity
+- Onboarding: status, step details, complete step, skip, reset
+
+### Version 1.3.0
+
+**News, Articles & Premium Content System**
+- Full content management for news, articles, analysis, reports, and tutorials
+- Premium content with subscription-based access control
+- Article categories: Breaking News, Conflict Analysis, Equipment & Technology, OSINT Techniques, Geopolitics, Investigative Reports, Humanitarian, Cyber & Information Warfare
+- Tag system with automatic slug generation
+- Featured and pinned articles
+- Reading time calculation
+- View count and share tracking
+- Bookmarks with folder organization
+- Reading progress tracking
+- SEO metadata (title, description, keywords)
+- Publishing workflow: draft, pending review, published, archived
+- Scheduled publishing support
+
+**Advanced Threaded Comment System**
+- Threaded/nested comments with configurable max depth (default: 5 levels)
+- Limited edit window (configurable, default: 15 minutes)
+- Complete edit revision history with diff tracking
+- Upvote/downvote system with score calculation
+- Comment reporting with multiple reason types
+- Moderation queue for pending comments
+- Bulk moderation actions (approve, reject, spam, delete)
+
+**Anti-Spam & Anti-Bot Protection**
+- Honeypot field detection
+- Form timing analysis (blocks submissions under 3 seconds)
+- Spam score calculation with multiple heuristics:
+  - Keyword matching (configurable patterns)
+  - Regex pattern detection
+  - Domain/URL blocking
+  - Excessive caps detection
+  - Link count limits
+  - Repeated character detection
+  - Common spam phrase detection
+- Rate limiting: cooldown between comments, hourly/daily limits
+- IP and user-based blocking
+- Browser fingerprint tracking
+- Auto-approval threshold (low spam score = auto-approve)
+
+**Comment Moderation Features**
+- Pending queue with spam score visibility
+- Report management with action tracking
+- Bulk moderation operations
+- Author reply highlighting
+- Pinned comments
+- Comment status: pending, approved, rejected, spam, hidden
+
+**Subscription System**
+- User subscription management
+- Plan tiers: Free, Basic, Premium, Enterprise
+- Feature-based access control
+- Subscription status tracking
+
+**18 New Comment/Article Settings**
+- Edit window duration
+- Max thread depth
+- Content length limits
+- Rate limiting thresholds
+- Guest commenting toggle
+- Approval requirements
+- Spam detection thresholds
+- Voting toggle
+- Edit history visibility
+
+### Version 1.2.0
 
 **Expanded Military Equipment Database**
 - 140+ real-world military equipment entries with detailed specifications

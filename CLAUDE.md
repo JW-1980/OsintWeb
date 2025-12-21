@@ -103,6 +103,21 @@
 - Allow users to export and delete their data
 - Anonymize user data in analytics
 
+### GDPR & Privacy Compliance
+All features MUST be designed with GDPR compliance in mind:
+- **Data Minimization**: Only collect data that is strictly necessary
+- **Consent Management**: Track and log all user consent with timestamps
+- **Right to Access**: Users must be able to view all their personal data
+- **Right to Portability**: Implement data export in machine-readable formats (JSON, CSV)
+- **Right to be Forgotten**: Provide account deletion with complete data removal
+- **Data Retention**: Define and enforce retention periods for all data types
+- **Privacy by Design**: Build privacy controls into every feature from the start
+- **Audit Trail**: Log all data access and modifications for compliance
+- **Cookie Consent**: Implement proper cookie consent for analytics/marketing
+- **Third-Party Data Sharing**: Document and allow opt-out of any data sharing
+- **Breach Notification**: Implement mechanisms to detect and report data breaches
+- **Age Verification**: Consider age restrictions where applicable
+
 ## Database Conventions
 
 ### Naming

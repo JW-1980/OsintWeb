@@ -16,6 +16,11 @@ use App\Http\Controllers\Api\FactionController;
 use App\Http\Controllers\Api\ActorController;
 use App\Http\Controllers\Api\ExportController;
 use App\Http\Controllers\Api\StatsController;
+use App\Http\Controllers\Api\ArticleController;
+use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\UserAccountController;
+use App\Http\Controllers\Api\OnboardingController;
+use App\Http\Controllers\Api\AudioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -137,6 +142,123 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/events', [StatsController::class, 'events']);
         Route::get('/timeline', [StatsController::class, 'timeline']);
         Route::get('/heatmap', [StatsController::class, 'heatmap']);
+    });
+
+    // Articles / News / Premium Content
+    Route::prefix('articles')->group(function () {
+        Route::get('/', [ArticleController::class, 'index']);
+        Route::post('/', [ArticleController::class, 'store']);
+        Route::get('/categories', [ArticleController::class, 'categories']);
+        Route::get('/tags', [ArticleController::class, 'tags']);
+        Route::get('/bookmarks', [ArticleController::class, 'myBookmarks']);
+        Route::get('/{uuid}', [ArticleController::class, 'show']);
+        Route::put('/{uuid}', [ArticleController::class, 'update']);
+        Route::delete('/{uuid}', [ArticleController::class, 'destroy']);
+        Route::post('/{uuid}/bookmark', [ArticleController::class, 'bookmark']);
+        Route::delete('/{uuid}/bookmark', [ArticleController::class, 'unbookmark']);
+        Route::post('/{uuid}/progress', [ArticleController::class, 'trackProgress']);
+
+        // Article comments
+        Route::get('/{uuid}/comments', [CommentController::class, 'index']);
+        Route::post('/{uuid}/comments', [CommentController::class, 'store']);
+    });
+
+    // Comments
+    Route::prefix('comments')->group(function () {
+        Route::put('/{uuid}', [CommentController::class, 'update']);
+        Route::delete('/{uuid}', [CommentController::class, 'destroy']);
+        Route::post('/{uuid}/vote', [CommentController::class, 'vote']);
+        Route::post('/{uuid}/report', [CommentController::class, 'report']);
+        Route::get('/{uuid}/revisions', [CommentController::class, 'revisions']);
+        Route::get('/{uuid}/replies', [CommentController::class, 'replies']);
+
+        // Moderation (requires permission)
+        Route::get('/pending', [CommentController::class, 'pending']);
+        Route::post('/{uuid}/approve', [CommentController::class, 'approve']);
+        Route::post('/{uuid}/reject', [CommentController::class, 'reject']);
+        Route::post('/{uuid}/spam', [CommentController::class, 'markSpam']);
+        Route::post('/bulk-moderate', [CommentController::class, 'bulkModerate']);
+        Route::get('/reports', [CommentController::class, 'reports']);
+        Route::post('/reports/{uuid}/review', [CommentController::class, 'reviewReport']);
+    });
+
+    // User Account Management
+    Route::prefix('account')->group(function () {
+        // Profile
+        Route::get('/profile', [UserAccountController::class, 'profile']);
+        Route::put('/profile', [UserAccountController::class, 'updateProfile']);
+        Route::put('/password', [UserAccountController::class, 'changePassword']);
+
+        // Avatar
+        Route::get('/avatar/options', [UserAccountController::class, 'avatarOptions']);
+        Route::put('/avatar', [UserAccountController::class, 'updateAvatar']);
+        Route::post('/avatar/regenerate', [UserAccountController::class, 'regenerateAvatar']);
+        Route::post('/avatar/upload', [UserAccountController::class, 'uploadAvatar']);
+        Route::delete('/avatar', [UserAccountController::class, 'deleteAvatar']);
+
+        // Preferences
+        Route::get('/preferences', [UserAccountController::class, 'preferences']);
+        Route::put('/preferences', [UserAccountController::class, 'updatePreferences']);
+
+        // Privacy & Consent (GDPR)
+        Route::get('/privacy', [UserAccountController::class, 'privacySettings']);
+        Route::put('/consent', [UserAccountController::class, 'updateConsent']);
+        Route::get('/consent/history', [UserAccountController::class, 'consentHistory']);
+
+        // Data Export (GDPR Right to Data Portability)
+        Route::post('/data-export', [UserAccountController::class, 'requestDataExport']);
+        Route::get('/data-export', [UserAccountController::class, 'dataExportRequests']);
+
+        // Account Deletion (GDPR Right to be Forgotten)
+        Route::post('/deletion', [UserAccountController::class, 'requestAccountDeletion']);
+        Route::delete('/deletion', [UserAccountController::class, 'cancelAccountDeletion']);
+
+        // Sessions
+        Route::get('/sessions', [UserAccountController::class, 'sessions']);
+        Route::delete('/sessions/{uuid}', [UserAccountController::class, 'terminateSession']);
+        Route::delete('/sessions', [UserAccountController::class, 'terminateOtherSessions']);
+
+        // Activity Log
+        Route::get('/activity', [UserAccountController::class, 'activityLog']);
+    });
+
+    // Onboarding
+    Route::prefix('onboarding')->group(function () {
+        Route::get('/status', [OnboardingController::class, 'status']);
+        Route::get('/step/{stepKey}', [OnboardingController::class, 'step']);
+        Route::post('/step/{stepKey}/complete', [OnboardingController::class, 'completeStep']);
+        Route::post('/skip', [OnboardingController::class, 'skip']);
+        Route::post('/reset', [OnboardingController::class, 'reset']);
+    });
+
+    // Audio & Transcription
+    Route::prefix('audio')->group(function () {
+        // Audio files
+        Route::get('/', [AudioController::class, 'index']);
+        Route::post('/', [AudioController::class, 'store']);
+        Route::get('/ai-models', [AudioController::class, 'aiModels']);
+        Route::get('/{uuid}', [AudioController::class, 'show']);
+        Route::put('/{uuid}', [AudioController::class, 'update']);
+        Route::delete('/{uuid}', [AudioController::class, 'destroy']);
+        Route::post('/{uuid}/play', [AudioController::class, 'recordPlay']);
+
+        // Transcriptions for audio file
+        Route::get('/{uuid}/transcriptions', [AudioController::class, 'transcriptions']);
+        Route::post('/{uuid}/transcriptions/manual', [AudioController::class, 'createManualTranscription']);
+        Route::post('/{uuid}/transcriptions/ai', [AudioController::class, 'requestAiTranscription']);
+        Route::get('/{uuid}/transcriptions/jobs/{jobUuid}', [AudioController::class, 'transcriptionJobStatus']);
+
+        // Specific transcription
+        Route::get('/{uuid}/transcriptions/{transcriptionUuid}', [AudioController::class, 'getTranscription']);
+        Route::put('/{uuid}/transcriptions/{transcriptionUuid}', [AudioController::class, 'updateTranscription']);
+        Route::post('/{uuid}/transcriptions/{transcriptionUuid}/primary', [AudioController::class, 'setPrimary']);
+        Route::get('/{uuid}/transcriptions/{transcriptionUuid}/export', [AudioController::class, 'exportTranscription']);
+        Route::get('/{uuid}/transcriptions/{transcriptionUuid}/revisions', [AudioController::class, 'revisions']);
+
+        // Transcript segments
+        Route::post('/{uuid}/transcriptions/{transcriptionUuid}/segments', [AudioController::class, 'addSegment']);
+        Route::put('/{uuid}/transcriptions/{transcriptionUuid}/segments/{segmentId}', [AudioController::class, 'updateSegment']);
+        Route::delete('/{uuid}/transcriptions/{transcriptionUuid}/segments/{segmentId}', [AudioController::class, 'deleteSegment']);
     });
 });
 

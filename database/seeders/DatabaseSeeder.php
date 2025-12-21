@@ -33,6 +33,10 @@ class DatabaseSeeder extends Seeder
             // OSINT Skills and Intelligence Agents
             OsintSkillsSeeder::class,
             IntelligenceAgentsSeeder::class,
+
+            // Articles & Comments
+            ArticleCategoriesSeeder::class,
+            SpamPatternsSeeder::class,
         ]);
     }
 }
