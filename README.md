@@ -153,6 +153,39 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - **Consent History**: View complete consent change log
 - **Email Preferences**: Granular email notification controls
 
+### AI Skills & Agents System
+- **Keyword-Triggered Skills**: Skills automatically activate based on prompt keywords
+  - Name, slug, keywords, and aliases all trigger skill matching
+  - Configurable match thresholds per skill
+  - Match score calculation with weighted keyword importance
+  - User preference overrides for skill priorities
+- **15 Pre-built OSINT Skills**:
+  - Geolocation Analysis: Identify locations from images/videos
+  - Image Verification: Detect manipulation and verify authenticity
+  - Video Analysis: Extract evidence and verify footage
+  - Military Equipment Identification: Identify vehicles, weapons, and gear
+  - Social Media Investigation: Analyze accounts and connections
+  - Timeline Reconstruction: Build chronological event sequences
+  - Language Translation: Multi-language support
+  - Satellite Imagery Analysis: Detect changes and structures
+  - Document Analysis: Extract and verify document content
+  - Conflict Mapping: Map front lines and territorial control
+  - Casualty Verification: Verify reported losses
+  - Network Analysis: Map entity relationships
+  - Open Source Research: Multi-source investigation
+  - Weather/Environmental Analysis: Chronolocation verification
+  - Unit & Insignia Identification: Military unit recognition
+- **Skill-Based AI Agents**: Create intelligent agents from skills
+  - Auto-generate agents from single or multiple skills
+  - Combine skills for composite agent capabilities
+  - Agent execution with skill context enhancement
+  - OpenRouter.ai integration for AI-powered responses
+- **Execution Tracking**: Full audit trail of agent runs
+  - Matched skills per execution
+  - Token usage and cost tracking
+  - Step-by-step execution logs
+  - Confidence scoring
+
 ### Audio & Transcription System
 - **Audio File Management**: Upload, organize, and share audio files
   - Support for MP3, WAV, OGG, FLAC, AAC, M4A, WebM formats
@@ -463,7 +496,41 @@ php artisan osint:install --force
 
 ## Changelog
 
-### Version 1.5.0 (Current)
+### Version 1.6.0 (Current)
+
+**AI Skills & Agents System**
+- Keyword-triggered skill matching with configurable thresholds
+- Skills activate based on name, slug, keywords, and aliases in prompts
+- Match score calculation with weighted keyword importance
+- 15 pre-built OSINT skills:
+  - Geolocation Analysis, Image Verification, Video Analysis
+  - Military Equipment Identification, Social Media Investigation
+  - Timeline Reconstruction, Language Translation, Satellite Imagery Analysis
+  - Document Analysis, Conflict Mapping, Casualty Verification
+  - Network Analysis, Open Source Research, Weather/Environmental Analysis
+  - Unit & Insignia Identification
+- Skill-based AI agents with automatic generation from skills
+- Composite agents combining multiple skills
+- OpenRouter.ai integration for AI-powered responses
+- User skill preferences with priority overrides
+- Full execution tracking with audit trail
+- Token usage, cost tracking, and confidence scoring
+
+**New Database Tables**
+- skills: OSINT skill definitions with keywords and configuration
+- skill_dependencies: Skill relationship mapping
+- agents: AI agent configurations
+- agent_skill: Agent-skill pivot with proficiency
+- agent_executions: Execution records and results
+- skill_triggers: Skill activation logging
+- agent_templates: Pre-built agent templates
+- user_skill_preferences: User preference overrides
+
+**API Endpoints**
+- Skills: list, show, match, suggest, trigger, categories, stats, preferences
+- Agents: list, create, update, delete, add/remove skills, run, executions, stats
+
+### Version 1.5.0
 
 **Audio & Transcription System**
 - Audio file upload and management with visibility controls
