@@ -1,0 +1,1253 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-12-14",
+  "description": "Index of all available Claude Code skills for the Boekhouder project",
+  "skills": [
+    {
+      "name": "skill-router",
+      "path": ".claude/skills/skill-router.md",
+      "description": "Automatically identifies and recommends relevant skills based on the user's prompt",
+      "tags": [
+        "meta",
+        "routing",
+        "auto-include",
+        "skill-discovery"
+      ],
+      "triggers": [
+        "sk-skill-router",
+        "which skill",
+        "what skill",
+        "recommend skill",
+        "help me find",
+        "suggest skill"
+      ],
+      "related": [],
+      "category": "meta"
+    },
+    {
+      "name": "laravel-ecosystem",
+      "path": ".claude/skills/laravel-ecosystem.md",
+      "description": "Laravel PHP patterns, Eloquent ORM, API design, services",
+      "tags": [
+        "laravel",
+        "php",
+        "backend",
+        "api",
+        "eloquent"
+      ],
+      "triggers": [
+        "sk-laravel-ecosystem",
+        "laravel package",
+        "eloquent model",
+        "api endpoint",
+        "laravel controller",
+        "service class",
+        "laravel deployment",
+        "composer require",
+        "artisan command",
+        "laravel migration"
+      ],
+      "related": [
+        "mysql",
+        "security",
+        "laravel-middleware"
+      ],
+      "category": "technical-backend"
+    },
+    {
+      "name": "flutter",
+      "path": ".claude/skills/flutter.md",
+      "description": "Flutter and Dart development, widgets, state management",
+      "tags": [
+        "flutter",
+        "dart",
+        "mobile",
+        "widgets",
+        "provider"
+      ],
+      "triggers": [
+        "sk-flutter",
+        "flutter widget",
+        "flutter screen",
+        "dart class",
+        "provider pattern",
+        "flutter navigation",
+        "stateful widget",
+        "flutter app",
+        "mobile development",
+        "flutter state",
+        "bloc pattern",
+        "flutter ui",
+        "dart code",
+        "flutter build"
+      ],
+      "related": [
+        "ui-ux",
+        "flutter-app-design"
+      ],
+      "category": "technical-frontend"
+    },
+    {
+      "name": "mysql",
+      "path": ".claude/skills/mysql.md",
+      "description": "MySQL database design, queries, optimization, indexing",
+      "tags": [
+        "mysql",
+        "database",
+        "sql",
+        "optimization",
+        "indexing"
+      ],
+      "triggers": [
+        "sk-mysql",
+        "database design",
+        "query optimization",
+        "index strategy",
+        "mysql performance",
+        "sql query",
+        "migration schema",
+        "database optimization",
+        "innodb configuration",
+        "query plan",
+        "table design",
+        "foreign key",
+        "database schema"
+      ],
+      "related": [
+        "laravel-ecosystem",
+        "performance-profiling"
+      ],
+      "category": "technical-backend"
+    },
+    {
+      "name": "security",
+      "path": ".claude/skills/security.md",
+      "description": "Security practices, authentication, authorization, encryption",
+      "tags": [
+        "security",
+        "auth",
+        "encryption",
+        "permissions",
+        "2fa"
+      ],
+      "triggers": [
+        "sk-security",
+        "security audit",
+        "vulnerability scan",
+        "authentication flow",
+        "authorization policy",
+        "encrypt sensitive",
+        "owasp top 10",
+        "2fa implementation",
+        "security review",
+        "permission check",
+        "csrf protection",
+        "xss prevention",
+        "sql injection",
+        "mass assignment",
+        "access control",
+        "security testing"
+      ],
+      "related": [
+        "laravel-ecosystem",
+        "permission-audit",
+        "laravel-middleware"
+      ],
+      "category": "technical-backend"
+    },
+    {
+      "name": "dutch-bookkeeping",
+      "path": ".claude/skills/dutch-bookkeeping.md",
+      "description": "Dutch accounting rules, BW2, RGS, journal entries",
+      "tags": [
+        "bookkeeping",
+        "accounting",
+        "dutch",
+        "bw2",
+        "rgs",
+        "grootboek"
+      ],
+      "triggers": [
+        "sk-dutch-bookkeeping",
+        "boekhouding",
+        "accounting",
+        "grootboek",
+        "journaal",
+        "balans",
+        "rgs"
+      ],
+      "related": [
+        "dutch-tax-compliance",
+        "accountant"
+      ],
+      "category": "dutch-business"
+    },
+    {
+      "name": "dutch-tax-compliance",
+      "path": ".claude/skills/dutch-tax-compliance.md",
+      "description": "Dutch tax regulations, BTW, ICP, loonheffing",
+      "tags": [
+        "tax",
+        "btw",
+        "vat",
+        "dutch",
+        "icp",
+        "loonheffing"
+      ],
+      "triggers": [
+        "sk-dutch-tax-compliance",
+        "btw",
+        "vat",
+        "tax",
+        "belasting",
+        "aangifte",
+        "icp"
+      ],
+      "related": [
+        "dutch-bookkeeping",
+        "accountant",
+        "receipts-invoices"
+      ],
+      "category": "dutch-business"
+    },
+    {
+      "name": "accountant",
+      "path": ".claude/skills/accountant.md",
+      "description": "Professional accounting practices, audit, financial statements",
+      "tags": [
+        "accountant",
+        "audit",
+        "financial",
+        "jaarrekening",
+        "professional"
+      ],
+      "triggers": [
+        "sk-accountant",
+        "accountant",
+        "audit",
+        "jaarrekening",
+        "balans",
+        "winst verlies"
+      ],
+      "related": [
+        "dutch-bookkeeping",
+        "dutch-tax-compliance"
+      ],
+      "category": "dutch-business"
+    },
+    {
+      "name": "ocr",
+      "path": ".claude/skills/ocr.md",
+      "description": "OCR technologies, document scanning, text extraction",
+      "tags": [
+        "ocr",
+        "scanning",
+        "documents",
+        "receipts",
+        "text-extraction"
+      ],
+      "triggers": [
+        "sk-ocr",
+        "ocr processing",
+        "document scanning",
+        "text extraction",
+        "tesseract ocr",
+        "receipt scanning",
+        "invoice ocr",
+        "image to text",
+        "document digitization",
+        "ocr integration",
+        "scan document"
+      ],
+      "related": [
+        "receipts-invoices",
+        "flutter",
+        "document-keeping"
+      ],
+      "category": "feature"
+    },
+    {
+      "name": "contract",
+      "path": ".claude/skills/contract.md",
+      "description": "Dutch contract law, contract lifecycle management",
+      "tags": [
+        "contracts",
+        "dutch-law",
+        "legal",
+        "compliance",
+        "contract-management"
+      ],
+      "triggers": [
+        "sk-contract",
+        "contract",
+        "overeenkomst",
+        "agreement",
+        "renewal",
+        "verlenging",
+        "milestone"
+      ],
+      "related": [
+        "dutch-corporate-law",
+        "document-keeping",
+        "project-management"
+      ],
+      "category": "feature"
+    },
+    {
+      "name": "receipts-invoices",
+      "path": ".claude/skills/receipts-invoices.md",
+      "description": "Invoice and receipt handling, VAT processing, Dutch requirements",
+      "tags": [
+        "invoices",
+        "receipts",
+        "btw",
+        "facturatie",
+        "billing"
+      ],
+      "triggers": [
+        "sk-receipts-invoices",
+        "invoice",
+        "factuur",
+        "receipt",
+        "bon",
+        "factureren",
+        "billing"
+      ],
+      "related": [
+        "dutch-tax-compliance",
+        "ocr",
+        "dutch-bookkeeping"
+      ],
+      "category": "feature"
+    },
+    {
+      "name": "document-keeping",
+      "path": ".claude/skills/document-keeping.md",
+      "description": "Document retention, archiving, Dutch compliance requirements",
+      "tags": [
+        "documents",
+        "retention",
+        "archiving",
+        "compliance",
+        "bewaarplicht"
+      ],
+      "triggers": [
+        "sk-document-keeping",
+        "document",
+        "archive",
+        "retention",
+        "bewaren",
+        "opslaan",
+        "7 year"
+      ],
+      "related": [
+        "ocr",
+        "contract",
+        "backup-recovery"
+      ],
+      "category": "feature"
+    },
+    {
+      "name": "project-management",
+      "path": ".claude/skills/project-management.md",
+      "description": "Project tracking, time management, billing integration",
+      "tags": [
+        "project",
+        "time-tracking",
+        "billing",
+        "milestones",
+        "resources"
+      ],
+      "triggers": [
+        "sk-project-management",
+        "project",
+        "time tracking",
+        "uren",
+        "urenregistratie",
+        "milestone",
+        "deadline"
+      ],
+      "related": [
+        "receipts-invoices",
+        "contract"
+      ],
+      "category": "feature"
+    },
+    {
+      "name": "ai",
+      "path": ".claude/skills/ai.md",
+      "description": "AI and LLM integration, OpenRouter, prompt engineering",
+      "tags": [
+        "ai",
+        "llm",
+        "openrouter",
+        "machine-learning",
+        "nlp"
+      ],
+      "triggers": [
+        "sk-ai",
+        "implement ai",
+        "llm integration",
+        "openrouter api",
+        "prompt engineering",
+        "ai feature",
+        "machine learning model",
+        "document ai",
+        "invoice extraction",
+        "expense categorization",
+        "natural language",
+        "ai automation",
+        "gpt integration",
+        "claude api"
+      ],
+      "related": [
+        "ocr"
+      ],
+      "category": "feature"
+    },
+    {
+      "name": "ui-ux",
+      "path": ".claude/skills/ui-ux.md",
+      "description": "User experience design, usability, accessibility",
+      "tags": [
+        "ux",
+        "ui",
+        "design",
+        "usability",
+        "accessibility"
+      ],
+      "triggers": [
+        "sk-ui-ux",
+        "user experience design",
+        "ui design pattern",
+        "usability testing",
+        "accessibility audit",
+        "navigation flow",
+        "user interface",
+        "ux improvement",
+        "design system",
+        "user journey",
+        "wireframe",
+        "interaction design"
+      ],
+      "related": [
+        "flutter",
+        "webdesign",
+        "wizard"
+      ],
+      "category": "design"
+    },
+    {
+      "name": "wizard",
+      "path": ".claude/skills/wizard.md",
+      "description": "Multi-step wizard workflows, onboarding, setup flows",
+      "tags": [
+        "wizard",
+        "stepper",
+        "onboarding",
+        "multi-step",
+        "workflow"
+      ],
+      "triggers": [
+        "sk-wizard",
+        "wizard",
+        "stepper",
+        "onboarding",
+        "multi-step",
+        "setup",
+        "flow"
+      ],
+      "related": [
+        "ui-ux",
+        "flutter-app-design"
+      ],
+      "category": "design"
+    },
+    {
+      "name": "webdesign",
+      "path": ".claude/skills/webdesign.md",
+      "description": "Web design patterns, CSS, responsive design",
+      "tags": [
+        "web",
+        "css",
+        "responsive",
+        "design",
+        "layout"
+      ],
+      "triggers": [
+        "sk-webdesign",
+        "web design pattern",
+        "css layout",
+        "responsive design",
+        "tailwind styling",
+        "page layout",
+        "web interface",
+        "design component",
+        "inertia page",
+        "vue layout"
+      ],
+      "related": [
+        "ui-ux"
+      ],
+      "category": "design"
+    },
+    {
+      "name": "flutter-app-design",
+      "path": ".claude/skills/flutter-app-design.md",
+      "description": "Mobile app design patterns for Flutter",
+      "tags": [
+        "flutter",
+        "mobile",
+        "design",
+        "material",
+        "app"
+      ],
+      "triggers": [
+        "sk-flutter-app-design",
+        "mobile design",
+        "app design",
+        "flutter ui",
+        "material design"
+      ],
+      "related": [
+        "flutter",
+        "ui-ux"
+      ],
+      "category": "design"
+    },
+    {
+      "name": "testing",
+      "path": ".claude/skills/testing.md",
+      "description": "Testing strategies, unit tests, integration tests",
+      "tags": [
+        "testing",
+        "unit-test",
+        "integration",
+        "tdd",
+        "quality"
+      ],
+      "triggers": [
+        "sk-testing",
+        "write tests",
+        "test coverage",
+        "unit test",
+        "integration test",
+        "test strategy",
+        "tdd approach",
+        "phpunit test",
+        "pest test",
+        "mock dependency",
+        "feature test",
+        "test suite",
+        "testing framework",
+        "test automation"
+      ],
+      "related": [
+        "laravel-test-suite",
+        "code-quality-standards"
+      ],
+      "category": "quality"
+    },
+    {
+      "name": "laravel-test-suite",
+      "path": ".claude/skills/laravel-test-suite.md",
+      "description": "Laravel testing with PHPUnit and Pest",
+      "tags": [
+        "laravel",
+        "phpunit",
+        "pest",
+        "testing",
+        "feature-test"
+      ],
+      "triggers": [
+        "sk-laravel-test-suite",
+        "phpunit",
+        "pest",
+        "laravel test",
+        "feature test"
+      ],
+      "related": [
+        "testing",
+        "laravel-ecosystem"
+      ],
+      "category": "quality"
+    },
+    {
+      "name": "performance-profiling",
+      "path": ".claude/skills/performance-profiling.md",
+      "description": "Performance optimization and profiling techniques",
+      "tags": [
+        "performance",
+        "optimization",
+        "profiling",
+        "speed",
+        "efficiency"
+      ],
+      "triggers": [
+        "sk-performance-profiling",
+        "performance issue",
+        "slow query",
+        "optimize code",
+        "profile application",
+        "speed improvement",
+        "n+1 queries",
+        "cache strategy",
+        "performance bottleneck",
+        "query optimization",
+        "memory usage",
+        "response time"
+      ],
+      "related": [
+        "mysql",
+        "laravel-ecosystem"
+      ],
+      "category": "quality"
+    },
+    {
+      "name": "code-quality-standards",
+      "path": ".claude/skills/code-quality-standards.md",
+      "description": "Code quality practices, linting, standards",
+      "tags": [
+        "quality",
+        "standards",
+        "lint",
+        "review",
+        "best-practices"
+      ],
+      "triggers": [
+        "sk-code-quality-standards",
+        "code quality",
+        "coding standards",
+        "lint code",
+        "pint format",
+        "phpstan analysis",
+        "code review",
+        "clean code principles",
+        "static analysis",
+        "code style",
+        "refactor code"
+      ],
+      "related": [
+        "testing"
+      ],
+      "category": "quality"
+    },
+    {
+      "name": "deployment-checklist",
+      "path": ".claude/skills/deployment-checklist.md",
+      "description": "Deployment procedures, CI/CD, release management",
+      "tags": [
+        "deployment",
+        "ci-cd",
+        "release",
+        "production",
+        "devops"
+      ],
+      "triggers": [
+        "sk-deployment-checklist",
+        "deploy",
+        "release",
+        "production",
+        "ci/cd",
+        "pipeline"
+      ],
+      "related": [
+        "git-github",
+        "backup-recovery"
+      ],
+      "category": "operations"
+    },
+    {
+      "name": "git-github",
+      "path": ".claude/skills/git-github.md",
+      "description": "Version control with Git and GitHub",
+      "tags": [
+        "git",
+        "github",
+        "version-control",
+        "branching",
+        "pr"
+      ],
+      "triggers": [
+        "sk-git-github",
+        "git",
+        "github",
+        "branch",
+        "merge",
+        "pr",
+        "commit"
+      ],
+      "related": [
+        "deployment-checklist"
+      ],
+      "category": "operations"
+    },
+    {
+      "name": "backup-recovery",
+      "path": ".claude/skills/backup-recovery.md",
+      "description": "Backup strategies and disaster recovery",
+      "tags": [
+        "backup",
+        "recovery",
+        "disaster",
+        "restore",
+        "data-protection"
+      ],
+      "triggers": [
+        "sk-backup-recovery",
+        "backup strategy",
+        "disaster recovery",
+        "restore database",
+        "data corruption",
+        "backup verification",
+        "recovery plan",
+        "data loss prevention",
+        "backup restore",
+        "database backup",
+        "file backup"
+      ],
+      "related": [
+        "document-keeping",
+        "deployment-checklist"
+      ],
+      "category": "operations"
+    },
+    {
+      "name": "laravel-middleware",
+      "path": ".claude/skills/laravel-middleware.md",
+      "description": "Laravel middleware patterns and request handling",
+      "tags": [
+        "laravel",
+        "middleware",
+        "request",
+        "response",
+        "filter"
+      ],
+      "triggers": [
+        "sk-laravel-middleware",
+        "laravel middleware",
+        "request middleware",
+        "response filter",
+        "middleware stack",
+        "http middleware",
+        "route middleware",
+        "middleware group",
+        "before middleware",
+        "after middleware"
+      ],
+      "related": [
+        "laravel-ecosystem",
+        "security"
+      ],
+      "category": "technical-backend"
+    },
+    {
+      "name": "api-documentation",
+      "path": ".claude/skills/api-documentation.md",
+      "description": "API documentation patterns, OpenAPI, Swagger",
+      "tags": [
+        "api",
+        "documentation",
+        "swagger",
+        "openapi",
+        "specs"
+      ],
+      "triggers": [
+        "sk-api-documentation",
+        "api docs",
+        "swagger",
+        "openapi",
+        "documentation"
+      ],
+      "related": [
+        "laravel-ecosystem"
+      ],
+      "category": "technical-backend"
+    },
+    {
+      "name": "digipoort-integration",
+      "path": ".claude/skills/digipoort-integration.md",
+      "description": "Dutch government Digipoort integration",
+      "tags": [
+        "digipoort",
+        "dutch",
+        "government",
+        "sbr",
+        "tax"
+      ],
+      "triggers": [
+        "sk-digipoort-integration",
+        "digipoort",
+        "belastingdienst",
+        "sbr",
+        "government"
+      ],
+      "related": [
+        "dutch-tax-compliance",
+        "pki-certificate-management"
+      ],
+      "category": "integration"
+    },
+    {
+      "name": "eherkenning-integration",
+      "path": ".claude/skills/eherkenning-integration.md",
+      "description": "eHerkenning authentication integration",
+      "tags": [
+        "eherkenning",
+        "digid",
+        "dutch",
+        "government",
+        "authentication"
+      ],
+      "triggers": [
+        "sk-eherkenning-integration",
+        "eherkenning",
+        "digid",
+        "government login",
+        "overheid"
+      ],
+      "related": [
+        "digipoort-integration",
+        "security"
+      ],
+      "category": "integration"
+    },
+    {
+      "name": "pki-certificate-management",
+      "path": ".claude/skills/pki-certificate-management.md",
+      "description": "PKI and certificate management",
+      "tags": [
+        "pki",
+        "certificate",
+        "ssl",
+        "signing",
+        "encryption"
+      ],
+      "triggers": [
+        "sk-pki-certificate-management",
+        "certificate",
+        "ssl",
+        "pki",
+        "signing",
+        "tls"
+      ],
+      "related": [
+        "security",
+        "digipoort-integration"
+      ],
+      "category": "integration"
+    },
+    {
+      "name": "dutch-corporate-law",
+      "path": ".claude/skills/dutch-corporate-law.md",
+      "description": "Dutch business law, entity types, regulations",
+      "tags": [
+        "dutch",
+        "corporate",
+        "law",
+        "bv",
+        "vof",
+        "kvk"
+      ],
+      "triggers": [
+        "sk-dutch-corporate-law",
+        "bv",
+        "vof",
+        "kvk",
+        "rechtspersoon",
+        "corporate",
+        "company law"
+      ],
+      "related": [
+        "contract",
+        "dutch-bookkeeping"
+      ],
+      "category": "dutch-business"
+    },
+    {
+      "name": "dutch-investment",
+      "path": ".claude/skills/dutch-investment.md",
+      "description": "Dutch investment regulations and practices",
+      "tags": [
+        "investment",
+        "dutch",
+        "beleggen",
+        "aandelen",
+        "finance"
+      ],
+      "triggers": [
+        "sk-dutch-investment",
+        "investering",
+        "beleggen",
+        "aandelen",
+        "investment"
+      ],
+      "related": [
+        "dutch-company-investment"
+      ],
+      "category": "dutch-business"
+    },
+    {
+      "name": "dutch-company-investment",
+      "path": ".claude/skills/dutch-company-investment.md",
+      "description": "Company investment structures in Netherlands",
+      "tags": [
+        "holding",
+        "deelneming",
+        "participatie",
+        "dutch",
+        "corporate"
+      ],
+      "triggers": [
+        "sk-dutch-company-investment",
+        "holding",
+        "deelneming",
+        "participatie",
+        "subsidiary"
+      ],
+      "related": [
+        "dutch-investment",
+        "dutch-corporate-law"
+      ],
+      "category": "dutch-business"
+    },
+    {
+      "name": "multi-tenancy-verification",
+      "path": ".claude/skills/multi-tenancy-verification.md",
+      "description": "Multi-tenant isolation verification",
+      "tags": [
+        "multi-tenant",
+        "isolation",
+        "security",
+        "company-scope"
+      ],
+      "triggers": [
+        "sk-multi-tenancy-verification",
+        "tenant",
+        "isolation",
+        "company scope",
+        "multi-tenant"
+      ],
+      "related": [
+        "security",
+        "laravel-ecosystem"
+      ],
+      "category": "quality"
+    },
+    {
+      "name": "permission-audit",
+      "path": ".claude/skills/permission-audit.md",
+      "description": "Permission system auditing and verification",
+      "tags": [
+        "permission",
+        "role",
+        "access",
+        "rbac",
+        "audit"
+      ],
+      "triggers": [
+        "sk-permission-audit",
+        "permission",
+        "role",
+        "access",
+        "rbac",
+        "authorization"
+      ],
+      "related": [
+        "security"
+      ],
+      "category": "quality"
+    },
+    {
+      "name": "database-migration-check",
+      "path": ".claude/skills/database-migration-check.md",
+      "description": "Database migration verification",
+      "tags": [
+        "migration",
+        "database",
+        "schema",
+        "verification"
+      ],
+      "triggers": [
+        "sk-database-migration-check",
+        "migration",
+        "schema",
+        "alter table",
+        "database change"
+      ],
+      "related": [
+        "mysql",
+        "laravel-ecosystem"
+      ],
+      "category": "quality"
+    },
+    {
+      "name": "frontend-debugger",
+      "path": ".claude/skills/frontend-debugger.md",
+      "description": "Frontend debugging techniques",
+      "tags": [
+        "debug",
+        "frontend",
+        "error",
+        "console",
+        "devtools"
+      ],
+      "triggers": [
+        "sk-frontend-debugger",
+        "debug",
+        "error",
+        "console",
+        "devtools",
+        "frontend bug"
+      ],
+      "related": [
+        "flutter"
+      ],
+      "category": "technical-frontend"
+    },
+    {
+      "name": "promotional-text",
+      "path": ".claude/skills/promotional-text.md",
+      "description": "Marketing and promotional content creation",
+      "tags": [
+        "marketing",
+        "promo",
+        "advertising",
+        "copy",
+        "content"
+      ],
+      "triggers": [
+        "sk-promotional-text",
+        "marketing",
+        "promo",
+        "advertising",
+        "copy",
+        "promotional"
+      ],
+      "related": [
+        "seo"
+      ],
+      "category": "marketing"
+    },
+    {
+      "name": "seo",
+      "path": ".claude/skills/seo.md",
+      "description": "Search engine optimization",
+      "tags": [
+        "seo",
+        "search",
+        "google",
+        "ranking",
+        "optimization"
+      ],
+      "triggers": [
+        "sk-seo",
+        "seo",
+        "search",
+        "google",
+        "ranking",
+        "meta tags"
+      ],
+      "related": [
+        "promotional-text",
+        "webdesign"
+      ],
+      "category": "marketing"
+    },
+    {
+      "name": "skill-improver",
+      "path": ".claude/skills/skill-improver.md",
+      "description": "Improve and enhance existing skills",
+      "tags": [
+        "meta",
+        "improvement",
+        "enhancement",
+        "skills"
+      ],
+      "triggers": [
+        "sk-skill-improver",
+        "improve skill",
+        "enhance skill",
+        "better skill",
+        "upgrade skill"
+      ],
+      "related": [
+        "skill-router",
+        "build-error-skill-improver"
+      ],
+      "category": "meta"
+    },
+    {
+      "name": "build-error-skill-improver",
+      "path": ".claude/skills/build-error-skill-improver.md",
+      "description": "Automatically improves programming skills based on build errors and their solutions",
+      "tags": [
+        "meta",
+        "automation",
+        "skills",
+        "error-handling",
+        "continuous-improvement"
+      ],
+      "triggers": [
+        "sk-build-error-skill-improver",
+        "build error",
+        "compilation error",
+        "build failed",
+        "improve from error",
+        "error log"
+      ],
+      "related": [
+        "skill-improver",
+        "skill-router",
+        "git-github",
+        "testing"
+      ],
+      "category": "meta"
+    },
+    {
+      "name": "claude",
+      "path": ".claude/skills/claude.md",
+      "description": "Comprehensive expertise on Claude AI ecosystem, prompt engineering, models, tools, and best practices",
+      "tags": [
+        "claude",
+        "ai",
+        "prompting",
+        "models",
+        "claude-code",
+        "mcp",
+        "best-practices"
+      ],
+      "triggers": [
+        "sk-claude",
+        "claude",
+        "prompt",
+        "prompting",
+        "ai model",
+        "claude code",
+        "mcp",
+        "anthropic"
+      ],
+      "related": [
+        "ai",
+        "skill-router",
+        "skill-improver"
+      ],
+      "category": "meta"
+    }
+  ],
+  "categories": {
+    "meta": {
+      "name": "Meta Skills",
+      "description": "Skills about skills and routing"
+    },
+    "technical-backend": {
+      "name": "Technical (Backend)",
+      "description": "Laravel, PHP, database, API development"
+    },
+    "technical-frontend": {
+      "name": "Technical (Frontend)",
+      "description": "Flutter, Dart, mobile development"
+    },
+    "dutch-business": {
+      "name": "Dutch Business & Compliance",
+      "description": "Dutch accounting, tax, and legal requirements"
+    },
+    "feature": {
+      "name": "Feature Skills",
+      "description": "Domain-specific feature implementation"
+    },
+    "design": {
+      "name": "Design Skills",
+      "description": "UI/UX and design patterns"
+    },
+    "quality": {
+      "name": "Quality & Testing",
+      "description": "Testing, quality, and verification"
+    },
+    "operations": {
+      "name": "Operations",
+      "description": "Deployment, version control, backups"
+    },
+    "integration": {
+      "name": "Integrations",
+      "description": "External system integrations"
+    },
+    "marketing": {
+      "name": "Marketing & Content",
+      "description": "Marketing, SEO, promotional content"
+    }
+  },
+  "workflows": [
+    {
+      "name": "Invoice Processing",
+      "description": "Complete invoice handling workflow",
+      "skills": [
+        "ocr",
+        "receipts-invoices",
+        "dutch-tax-compliance"
+      ]
+    },
+    {
+      "name": "Contract Management",
+      "description": "Contract lifecycle management",
+      "skills": [
+        "contract",
+        "document-keeping",
+        "wizard"
+      ]
+    },
+    {
+      "name": "Project Billing",
+      "description": "Time tracking to invoice workflow",
+      "skills": [
+        "project-management",
+        "receipts-invoices"
+      ]
+    },
+    {
+      "name": "Mobile Feature Development",
+      "description": "Flutter mobile app feature implementation",
+      "skills": [
+        "flutter",
+        "ui-ux",
+        "laravel-ecosystem"
+      ]
+    },
+    {
+      "name": "Security Implementation",
+      "description": "Security feature development",
+      "skills": [
+        "security",
+        "laravel-middleware",
+        "permission-audit"
+      ]
+    },
+    {
+      "name": "Tax Compliance",
+      "description": "Dutch tax compliance features",
+      "skills": [
+        "dutch-tax-compliance",
+        "accountant",
+        "dutch-bookkeeping"
+      ]
+    },
+    {
+      "name": "Performance Optimization",
+      "description": "Application performance tuning",
+      "skills": [
+        "performance-profiling",
+        "mysql",
+        "laravel-ecosystem"
+      ]
+    },
+    {
+      "name": "Government Integration",
+      "description": "Dutch government system integration",
+      "skills": [
+        "digipoort-integration",
+        "pki-certificate-management",
+        "security"
+      ]
+    }
+  ]
+}
