@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: osintweb-app
+    ports:
+      - "8000:8000"
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: osintweb
+      DB_USERNAME: osintuser
+      DB_PASSWORD: password
+    depends_on:
+      - db
+    networks:
+      - osintweb-network
+
+  db:
+    image: mysql:8.0
+    container_name: osintweb-db
+    environment:
+      MYSQL_DATABASE: osintweb
+      MYSQL_USER: osintuser
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - osintweb-network
+
+networks:
+  osintweb-network:
+    driver: bridge
+
+volumes:
+  db-data:
