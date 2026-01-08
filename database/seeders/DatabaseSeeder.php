@@ -37,6 +37,9 @@ class DatabaseSeeder extends Seeder
             // Articles & Comments
             ArticleCategoriesSeeder::class,
             SpamPatternsSeeder::class,
+
+            // Achievements
+            AchievementsSeeder::class,
         ]);
     }
 }

@@ -56,6 +56,14 @@ class SettingsSeeder extends Seeder
                 'description' => 'Default application language',
                 'is_public' => true,
             ],
+        [
+            'key' => 'achievements_enabled',
+            'value' => 'true',
+            'type' => 'boolean',
+            'group' => 'general',
+            'description' => 'Enable or disable the user achievement system',
+            'is_public' => true,
+        ],
             [
                 'key' => 'app.timezone',
                 'value' => 'UTC',

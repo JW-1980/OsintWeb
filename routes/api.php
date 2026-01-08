@@ -303,6 +303,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{slug}/executions/{executionUuid}', [AgentController::class, 'execution']);
         Route::get('/{slug}/stats', [AgentController::class, 'stats']);
     });
+
+    // Admin Routes
+    Route::prefix('admin')->middleware(['role:admin'])->group(function () {
+        Route::apiResource('achievements', \App\Http\Controllers\Api\Admin\AchievementController::class);
+    });
+
+    // User Achievements
+    Route::get('/user/achievements', function (Request $request) {
+        return $request->user()->achievements;
+    });
 });
 
 // Health check endpoint (public)

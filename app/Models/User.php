@@ -322,6 +322,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Get user's earned achievements
+     */
+    public function achievements(): BelongsToMany
+    {
+        return $this->belongsToMany(Achievement::class, 'user_achievements')
+            ->withPivot('awarded_at')
+            ->withTimestamps();
+    }
+
+    /**
      * Check if user has active subscription
      */
     public function hasActiveSubscription(): bool

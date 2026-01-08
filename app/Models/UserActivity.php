@@ -85,7 +85,7 @@ class UserActivity extends Model
         ?string $ipAddress = null,
         ?string $userAgent = null
     ): self {
-        return self::create([
+        $activity = self::create([
             'user_id' => $user->id,
             'activity_type' => $type,
             'description' => $description,
@@ -94,6 +94,18 @@ class UserActivity extends Model
             'user_agent' => $userAgent ? substr($userAgent, 0, 500) : null,
             'created_at' => now(),
         ]);
+
+        // Trigger achievement check
+        try {
+            /** @var \App\Services\AchievementService $service */
+            $service = app(\App\Services\AchievementService::class);
+            $service->checkAchievements($user, $type);
+        } catch (\Exception $e) {
+            // Silently fail to not disrupt the activity log
+            \Illuminate\Support\Facades\Log::error('Achievement check failed: ' . $e->getMessage());
+        }
+
+        return $activity;
     }
 
     /**
