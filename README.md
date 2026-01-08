@@ -2,6 +2,33 @@
 
 A comprehensive Open Source Intelligence (OSINT) platform for tracking, analyzing, and documenting military conflicts and geopolitical events. Built for analysts, researchers, journalists, and the OSINT community.
 
+## 📑 Table of Contents
+- [🚀 Quick Start (Local Demo)](#-quick-start-local-demo)
+- [✨ Features](#-features)
+- [🛠️ Technology Stack](#-technology-stack)
+- [📚 Documentation](#-documentation)
+- [📦 Installation](#-installation)
+
+## 🚀 Quick Start (Local Demo)
+
+Want to see OsintWeb in action immediately? You can run a fully functional demo with mock data using a single command (requires Docker).
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/osintweb.git
+cd osintweb
+
+# Run the demo script
+./start-demo.sh
+```
+
+**What this does:**
+1.  Builds the application container (PHP, Composer, Node.js).
+2.  Starts a local MySQL database.
+3.  Installs all dependencies.
+4.  **Seeds the database** with sample actors, conflicts, and equipment.
+5.  Launches the platform at `http://localhost:8000`.
+
 ## Overview
 
 OsintWeb provides powerful tools for:
@@ -12,272 +39,64 @@ OsintWeb provides powerful tools for:
 - **Timeline Analysis** - Historical playback, date comparisons, and change tracking
 - **Collaborative Intelligence** - Multi-source verification, community contributions, and audit trails
 
-## Key Features
+## ✨ Features
 
-### Core Mapping
-- Interactive map with OpenStreetMap and satellite layers
-- Draw and color-code control zones with faction assignments
-- Dynamic legend system
-- Click-to-add events or enter coordinates manually
-- Export to Google Maps/KML/GeoJSON
-- **Map Export**: Export maps as PNG, JPG, PDF, or SVG with customizable options
-- Multiple resolution options (72/150/300 DPI) for screen, print, or high-quality output
+### 🗺️ Interactive Mapping
+*   **Control Zones**: Draw and color-code control zones with faction assignments to track territorial changes.
+*   **Dynamic Legend**: Automatically generated legend based on visible map elements.
+*   **Export Options**: Export high-quality maps as PNG, JPG, PDF, or SVG (up to 300 DPI).
+*   **Satellite Layers**: Toggle between OpenStreetMap, Satellite, and hybrid views.
 
-### Military Equipment Database
-**140+ Pre-loaded Equipment Items with Full CRUD Operations:**
-- **Naval**: Aircraft carriers (Ford, Nimitz, Queen Elizabeth, Liaoning), submarines (Virginia, Borei, Astute), destroyers (Arleigh Burke, Type 055, Zumwalt), frigates (FREMM, Type 26)
-- **Land**: Main battle tanks (M1A2, Leopard 2, T-90M, K2, Challenger 3), IFVs (Bradley, CV90, BMP-3), artillery (Archer, K9, Koalitsiya-SV, TOS-1A)
-- **Aircraft**: 5th-gen fighters (F-35, F-22, Su-57, J-20), 4th-gen (F-16, Rafale, Typhoon, Gripen), bombers (B-2, B-21, Tu-160)
-- **Helicopters**: Attack (AH-64E, Ka-52, Mi-28N, Tiger), transport (Black Hawk, Chinook, Mi-8)
-- **Missiles & Drones**: Cruise missiles (Kh-101, Tomahawk), ballistic (Iskander, ATACMS, PrSM), drones (MQ-9, Bayraktar, Lancet)
+### 🚜 Military Equipment Database
+*   **Comprehensive Catalog**: 140+ pre-loaded items including ships, tanks, aircraft, and drones.
+*   **Detailed Specs**: Track dimensions, armament, range, and production numbers.
+*   **Inventory Tracking**: Monitor per-country inventory levels and loss statistics.
+*   **CRUD Operations**: Full management capabilities via API and admin panel.
 
-Per-country inventory tracking with loss statistics. Full CRUD operations via API and admin panel.
+### 💥 Event Documentation
+*   **49+ Event Types**: Templates for combat, sightings, infrastructure damage, and more.
+*   **Attribution**: Link events to specific perpetrators, victims, and equipment owners.
+*   **Evidence Handling**: Attach images, videos, and documents to verify events.
 
-### Event Types (49 Templates)
+### 🕵️ Actor Attribution
+*   **Multi-Actor Support**: Track state actors (197 countries) and non-state groups (militias, terrorist orgs).
+*   **Smart Autocomplete**: Priority-based sorting for active conflict parties.
+*   **Aliases & Search**: Real-time fuzzy search with support for alternate names.
 
-**Original 24 Events:** Combat events (airstrikes, artillery, missiles, drones, ground battles, naval engagements), equipment status (destroyed, damaged, captured, abandoned, sightings), troop/convoy movements, infrastructure damage, fortifications, civilian casualties, evacuations, territory changes, ceasefires, announcements, explosions, fires, cyber attacks, POW events.
+### ⏱️ Timeline Analysis
+*   **Historical Playback**: Animate map changes over time to visualize conflict progression.
+*   **Diff Views**: Compare map states between any two dates.
+*   **Chronological Builder**: Construct custom investigation timelines linked to events.
 
-**25 New Events:** Assassination, chemical/biological attacks, IED/landmine incidents, sabotage operations, electronic warfare, reconnaissance missions, economic sanctions, naval blockades, airspace violations, border incidents, propaganda campaigns, foreign fighter movements, military defections, refugee movements, weapons shipments, arms cache discoveries, humanitarian aid delivery, hostage situations, war crime allegations, siege operations, military base construction, training exercises, protests/civil unrest.
+### 🔒 Role-Based Access Control (RBAC)
+*   **Granular Permissions**: 50+ permission types for fine-grained access control.
+*   **Hierarchical Roles**: Admin, Moderator, Analyst, and Viewer roles with inheritance.
+*   **Team Management**: Group-based permissions and time-limited access grants.
 
-Each event includes **actor attribution** (perpetrator, victim, equipment owner).
+### 📝 News & CMS
+*   **Publishing System**: Create analysis, reports, and tutorials with rich text editing.
+*   **Premium Content**: Monetize content with subscription-based access barriers.
+*   **SEO Optimization**: Built-in support for meta tags, slugs, and social sharing.
 
-### Actor Attribution System
-- Track **WHO attacked** (perpetrator) and **WHO was targeted** (victim)
-- Support for both countries AND non-state actors:
-  - State actors (197 countries)
-  - Terrorist organizations (Hamas, ISIS, Al-Qaeda, Hezbollah, etc.)
-  - Militias and PMCs (Wagner Group, RSF, etc.)
-  - Rebel groups, cartels, separatist movements
-- Equipment ownership tracking
-- 6 certainty levels (confirmed → unconfirmed)
-- Multi-actor events (coalitions, proxy warfare)
+### 💬 Community & Engagement
+*   **Threaded Comments**: Deep nesting support with moderation tools.
+*   **Anti-Spam**: Advanced protection using honeypots, rate limiting, and spam scoring.
+*   **User Profiles**: Customizable profiles with unique generated avatars.
 
-### Conflict Party Autocomplete System
-- **Smart actor selection** with priority-based sorting
-- Active conflict parties appear first (Russia, Ukraine, Hamas, Wagner Group, etc.)
-- 200+ pre-loaded actors: countries, terrorist organizations, militias, cartels, rebel groups
-- Real-time fuzzy search with alias support (Hamas = "Harakat al-Muqawama al-Islamiya")
-- Visual indicators: activity levels, designations (US/EU/UN terror lists), conflict badges
-- Automatic priority scoring based on:
-  - Current conflict involvement (high/medium/low intensity)
-  - Recent activity (last 7/30/90 days)
-  - Global significance (UN/US/EU designations)
-  - Actor type (state actors, terrorist groups, militias)
-- Covers 20+ active conflicts: Russia-Ukraine War, Israel-Gaza, Sudan Civil War, Myanmar, Sahel insurgency, Mexican cartels, and more
+### 🤖 AI & Automation
+*   **AI Agents**: Deploy agents for tasks like geolocation and image verification.
+*   **Smart Skills**: Keyword-triggered capabilities that enhance investigation workflows.
+*   **Transcription**: AI-powered audio transcription with speaker identification (via OpenRouter).
 
-### Timeline System
-- Historical playback with date range selection
-- Compare map states between dates
-- Track all changes over time
-- Export timeline as reports
-- **Chronological Timeline Builder**: Create custom investigation timelines
-- Link timeline entries to events, zones, and other entities
-- Case management integration for investigation workflows
+### 🛡️ Privacy & Security
+*   **GDPR Compliance**: Built-in tools for consent management, data export, and "right to be forgotten".
+*   **Audit Trail**: Cryptographic logging of all changes for data integrity.
+*   **Session Management**: Track and terminate active user sessions.
 
-### Audit Trail System
-- **Complete change tracking** for all entities
-- Cryptographic chain (blockchain-style tamper detection)
-- Point-in-time queries (view any entity at any date)
-- Version comparison with diff visualization
-- Safe rollback functionality
-- Session and export logging
-- GDPR-compliant with retention policies
-
-### Role-Based Access Control (RBAC)
-- **Fine-grained permissions** with 50+ granular permission types
-- Hierarchical role system with priority-based resolution
-- Built-in roles: Administrator, Moderator, Editor, Analyst, Viewer
-- Direct user permissions that override role permissions
-- Time-limited role/permission assignments with expiration dates
-- User groups for team-based access management
-- Permission caching for performance
-
-### Event Workflow System
-- **Draft events** - Save work-in-progress events
-- **Approval workflow** - Submit events for moderator review
-- **Scheduled publishing** - Set future publication dates
-- **Event versioning** - Track all changes with rollback capability
-- **Visibility controls** - Public, private, restricted, or internal events
-
-### News & Articles System
-- **Content types**: News, articles, analysis, reports, tutorials
-- **Premium content** with subscription-based access control
-- **10 categories**: Breaking News, Conflict Analysis, Equipment & Technology, OSINT Techniques, Geopolitics, Investigative Reports, Humanitarian, Cyber & Information Warfare, Opinion, Regional Focus
-- **Tag system** with automatic slug generation
-- **Publishing workflow**: Draft, pending review, published, archived
-- **Reading metrics**: View count, reading time, progress tracking
-- **Bookmarks** with folder organization and notes
-- **SEO support**: Meta title, description, keywords
-
-### Advanced Comment System
-- **Threaded comments** with configurable depth (up to 5 levels)
-- **Time-limited editing** (default 15 minutes) with full revision history
-- **Upvote/downvote** system with score calculation
-- **Report system** with 8 reason types (spam, harassment, hate speech, etc.)
-- **Moderation queue** with spam score visibility
-- **Bulk moderation** actions for efficiency
-- **Author reply highlighting** and pinned comments
-
-### Anti-Spam Protection
-- **Honeypot fields** to catch bots
-- **Form timing analysis** (blocks rapid submissions)
-- **Spam scoring** with keyword, regex, and domain pattern matching
-- **Rate limiting**: Cooldown between comments, hourly/daily limits
-- **IP blocking** and user-based restrictions
-- **Configurable thresholds** for auto-approval and rejection
-
-### User Account System
-- **Profile Management**: Name, bio, organization, location, website, timezone, locale
-- **Default Random Avatars**: Unique generated avatars for every user
-  - Geometric patterns based on user seed
-  - Initials-based avatars
-  - Gravatar integration
-  - Custom image upload support
-  - Multiple color palettes (vibrant, pastel, earth, ocean)
-- **Session Management**: View active sessions, device info, terminate other sessions
-- **Activity Log**: Complete history of user actions
-- **Account Security**: Password changes, failed login tracking, account locking
-
-### Onboarding System
-- **Guided Setup**: 9-step onboarding flow for new users
-- **Progress Tracking**: Step-by-step completion with percentage
-- **Customizable Steps**: Welcome, Profile, Avatar, Privacy, Preferences, Explore Map, Browse Events, Explore Equipment, Complete
-- **Skip Option**: Users can skip onboarding if preferred
-- **Reset Capability**: Re-run onboarding at any time
-
-### Privacy & GDPR Compliance
-- **Consent Management**: Track all consent changes with full audit trail
-- **Consent Types**: Terms of service, privacy policy, marketing, analytics, data processing, cookies
-- **Data Export (Right to Portability)**: Request and download all personal data in JSON/CSV/XML
-- **Account Deletion (Right to be Forgotten)**: Request account deletion with 14-day grace period
-- **Consent History**: View complete consent change log
-- **Email Preferences**: Granular email notification controls
-
-### AI Skills & Agents System
-- **Keyword-Triggered Skills**: Skills automatically activate based on prompt keywords
-  - Name, slug, keywords, and aliases all trigger skill matching
-  - Configurable match thresholds per skill
-  - Match score calculation with weighted keyword importance
-  - User preference overrides for skill priorities
-- **15 Pre-built OSINT Skills**:
-  - Geolocation Analysis: Identify locations from images/videos
-  - Image Verification: Detect manipulation and verify authenticity
-  - Video Analysis: Extract evidence and verify footage
-  - Military Equipment Identification: Identify vehicles, weapons, and gear
-  - Social Media Investigation: Analyze accounts and connections
-  - Timeline Reconstruction: Build chronological event sequences
-  - Language Translation: Multi-language support
-  - Satellite Imagery Analysis: Detect changes and structures
-  - Document Analysis: Extract and verify document content
-  - Conflict Mapping: Map front lines and territorial control
-  - Casualty Verification: Verify reported losses
-  - Network Analysis: Map entity relationships
-  - Open Source Research: Multi-source investigation
-  - Weather/Environmental Analysis: Chronolocation verification
-  - Unit & Insignia Identification: Military unit recognition
-- **Skill-Based AI Agents**: Create intelligent agents from skills
-  - Auto-generate agents from single or multiple skills
-  - Combine skills for composite agent capabilities
-  - Agent execution with skill context enhancement
-  - OpenRouter.ai integration for AI-powered responses
-- **Execution Tracking**: Full audit trail of agent runs
-  - Matched skills per execution
-  - Token usage and cost tracking
-  - Step-by-step execution logs
-  - Confidence scoring
-
-### Audio & Transcription System
-- **Audio File Management**: Upload, organize, and share audio files
-  - Support for MP3, WAV, OGG, FLAC, AAC, M4A, WebM formats
-  - Visibility controls: public, private, unlisted
-  - Play count tracking
-  - Audio collections/playlists
-  - Link audio to conflict events as evidence
-- **Manual Transcription**: Create and edit transcripts manually
-  - Timed segments with speaker identification
-  - Segment-by-segment editing with timestamps
-  - Full revision history with diff tracking
-  - Multiple transcriptions per audio file
-- **AI Transcription via OpenRouter.ai**
-  - Automatic speech-to-text transcription
-  - Multiple AI model support (OpenAI Whisper, Google Gemini)
-  - Speaker diarization (multi-speaker identification)
-  - Confidence scoring
-  - Cost tracking per transcription
-- **Transcript Export**: VTT, SRT, and plain text formats
-- **User-Facing Presentation**: Display audio with synchronized transcripts
-
-### Extended Equipment Properties
-- **Flexible property system** - Add custom fields to any equipment
-- Property types: text, rich text, numbers, links, images, videos, dates, locations
-- Property categories for organization (Performance, Armament, Protection, etc.)
-- **Full version history** - Every change is tracked with diff visualization
-- Rollback to any previous version
-- Image galleries with primary image selection
-- Video embeds (YouTube, Vimeo, Dailymotion)
-- External link management with link health checking
-- Property verification workflow
-
-### Configurable Application
-- **Customizable application name** - Set during installation
-- Configurable logo, favicon, and branding
-- Default map center and zoom settings
-- Timezone and locale preferences
-- Registration and security settings
-- Event approval requirements
-- All settings editable from admin panel
-
-### Installation Wizard
-- **One-time setup wizard** for easy deployment (locked after completion)
-- Automatic requirements check (PHP 8.2+, extensions, directory permissions)
-- Database configuration with live connection testing
-- Interactive migration runner with real-time progress
-- Admin account creation with strong password validation
-- Optional email configuration (SMTP, Mailgun, Postmark, SES) with test email
-- Optional search engine setup (MySQL full-text, Meilisearch, Algolia)
-- Application settings (timezone, map defaults, user registration, security)
-- CLI alternative for automated deployments and CI/CD pipelines
-
-### 35 OSINT-Focused Features
-
-**Original 15 Features:**
-1. Source Verification System
-2. Geolocation Verification Tools
-3. Equipment Loss Tracking (Oryx-style)
-4. Collaborative Verification Workflow
-5. Real-time Alert System
-6. Advanced Search & Filtering
-7. Attribution & Chronolocation
-8. Satellite Imagery Integration
-9. Social Media Monitoring
-10. Network Analysis
-11. Report Generation
-12. API & Data Pipeline
-13. Crowdsourced Intelligence
-14. Offline Capability
-15. Evidence Preservation (Legal-Grade)
-
-**20 New Features:**
-16. Flight Tracking Integration (ADS-B)
-17. Maritime Vessel Tracking (AIS)
-18. Supply Chain Disruption Tracking
-19. Video Frame Analysis & Extraction
-20. Reverse Image Search Aggregator
-21. Audio Analysis & Authentication
-22. Multi-Language Translation Engine
-23. OCR & Document Analysis Suite
-24. Facial Recognition Assistant
-25. Vehicle Identification Database
-26. Weather & Environmental Data Overlay
-27. Data Quality & Confidence Scoring
-28. Disinformation Pattern Detection
-29. Cross-Platform Content Correlation
-30. Radio Frequency Signal Monitoring
-31. Dark Web & Alternative Platform Monitoring
-32. Case Management Workspaces
-33. Chronological Timeline Builder
-34. Communication Network Mapping
-35. OSINT Training & Simulation Mode
+### 🚀 Deployment & Config
+*   **Installation Wizard**: Web-based setup for database, admin user, and basic settings.
+*   **Docker Ready**: Compatible with containerized environments.
+*   **Customizable**: Configure branding, map defaults, and system preferences easily.
 
 ## Technology Stack
 
@@ -310,7 +129,9 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 ### Quick References
 - [Actor Attribution Quick Reference](docs/ACTOR_ATTRIBUTION_QUICK_REFERENCE.md) - Developer cheat sheet
 
-## Getting Started
+## 📦 Installation
+
+This section covers detailed installation for production or development environments without Docker.
 
 ### Prerequisites
 
@@ -324,7 +145,7 @@ Each event includes **actor attribution** (perpetrator, victim, equipment owner)
 - Meilisearch (for better search, can use MySQL full-text instead)
 - Supervisor (for queue workers on VPS)
 
-### Installation
+### Installation Methods
 
 #### Option 1: Web-Based Installation Wizard (Recommended)
 
