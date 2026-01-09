@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             PermissionsSeeder::class,
 
             // Base data
-            CountriesSeeder::class,
+            // CountriesSeeder::class, // Removed as file is missing
 
             // Actors (countries, groups, organizations)
             ActorsSeeder::class,
@@ -37,6 +37,9 @@ class DatabaseSeeder extends Seeder
             // Articles & Comments
             ArticleCategoriesSeeder::class,
             SpamPatternsSeeder::class,
+
+            // Achievements
+            AchievementsSeeder::class,
         ]);
     }
 }
