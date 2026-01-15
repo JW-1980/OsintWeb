@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ActorsSeeder extends Seeder
 {
@@ -905,6 +906,7 @@ class ActorsSeeder extends Seeder
 
         foreach ($actors as $actor) {
             DB::table('actors')->insert(array_merge($actor, [
+                'uuid' => (string) Str::uuid(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));

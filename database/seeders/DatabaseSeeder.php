@@ -18,11 +18,14 @@ class DatabaseSeeder extends Seeder
             // RBAC - Permissions and Roles
             PermissionsSeeder::class,
 
-            // Base data
-            // CountriesSeeder::class, // Removed as file is missing
+            // Base data - Countries (required by Actors and MilitaryEquipment)
+            CountriesSeeder::class,
 
             // Actors (countries, groups, organizations)
             ActorsSeeder::class,
+
+            // Conflicts (requires Actors)
+            ConflictsSeeder::class,
 
             // Equipment property categories
             EquipmentPropertyCategoriesSeeder::class,
@@ -33,6 +36,7 @@ class DatabaseSeeder extends Seeder
             // OSINT Skills and Intelligence Agents
             OsintSkillsSeeder::class,
             IntelligenceAgentsSeeder::class,
+            SkillSeeder::class,
 
             // Articles & Comments
             ArticleCategoriesSeeder::class,

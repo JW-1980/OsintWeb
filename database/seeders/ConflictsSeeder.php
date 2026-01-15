@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ConflictsSeeder extends Seeder
 {
@@ -200,6 +201,7 @@ class ConflictsSeeder extends Seeder
 
         foreach ($conflicts as $conflict) {
             DB::table('conflicts')->insert(array_merge($conflict, [
+                'uuid' => (string) Str::uuid(),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
