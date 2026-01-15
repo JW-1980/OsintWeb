@@ -67,21 +67,8 @@ return new class extends Migration
             $table->check("action IN ('create', 'update', 'delete', 'restore', 'view', 'export', 'login', 'logout', 'failed_login', 'password_change', 'verify', 'dispute', 'approve', 'reject', 'rollback')");
         });
 
-        // Add GIN indexes for JSONB and array columns
-        DB::statement('CREATE INDEX audit_logs_old_values_idx ON audit_logs USING GIN(old_values)');
-        DB::statement('CREATE INDEX audit_logs_new_values_idx ON audit_logs USING GIN(new_values)');
-        DB::statement('CREATE INDEX audit_logs_metadata_idx ON audit_logs USING GIN(metadata)');
-
-        // Convert text columns to PostgreSQL arrays
-        DB::statement('ALTER TABLE audit_logs ALTER COLUMN changed_fields TYPE text[] USING string_to_array(changed_fields, \',\')::text[]');
-        DB::statement('ALTER TABLE audit_logs ALTER COLUMN tags TYPE text[] USING string_to_array(tags, \',\')::text[]');
-
-        // Add array indexes
-        DB::statement('CREATE INDEX audit_logs_changed_fields_idx ON audit_logs USING GIN(changed_fields)');
-        DB::statement('CREATE INDEX audit_logs_tags_idx ON audit_logs USING GIN(tags)');
-
-        // Full-text search index
-        DB::statement("CREATE INDEX audit_logs_search_idx ON audit_logs USING GIN(to_tsvector('english', coalesce(reason, '') || ' ' || coalesce(old_values::text, '') || ' ' || coalesce(new_values::text, '')))");
+        // Note: GIN/GIST indexes and PostgreSQL arrays not available in MySQL
+        // JSON columns can be indexed using generated columns if needed
     }
 
     /**
