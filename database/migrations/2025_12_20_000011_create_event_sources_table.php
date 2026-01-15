@@ -35,7 +35,7 @@ return new class extends Migration
 
             // Indexes
             $table->index('event_id');
-            $table->index('source_type');
+            // Note: 'source_type' already indexed on line 29
             $table->index('reliability');
         });
     }

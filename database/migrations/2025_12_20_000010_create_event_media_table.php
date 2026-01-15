@@ -26,7 +26,7 @@ return new class extends Migration
 
             // Indexes
             $table->index('event_id');
-            $table->index('type');
+            // Note: 'type' already indexed on line 17
             $table->index('created_at');
         });
     }
