@@ -78,7 +78,7 @@ return new class extends Migration
             $table->softDeletes();
 
             // Full-text search index
-            $table->fullText(['name', 'short_name', 'description']);
+            $table->fullText(['name', 'short_name', 'description'], 'actors_search_idx');
         });
 
         // Add composite indexes

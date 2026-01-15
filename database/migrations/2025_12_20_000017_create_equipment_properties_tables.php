@@ -68,7 +68,7 @@ return new class extends Migration
             $table->index('sort_order');
             $table->index('is_public');
             $table->index('is_verified');
-            $table->fullText(['name', 'value']);
+            $table->fullText(['name', 'value'], 'props_search_idx');
         });
 
         // Equipment property versions - audit trail with full history

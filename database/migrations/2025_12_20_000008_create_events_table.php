@@ -38,7 +38,7 @@ return new class extends Migration
             $table->index('status');
             $table->index('verification_score');
             $table->index('created_at');
-            $table->fullText(['title', 'description', 'location_name']);
+            $table->fullText(['title', 'description', 'location_name'], 'events_search_idx');
         });
 
         // Add spatial index on location
