@@ -74,8 +74,8 @@ return new class extends Migration
             $table->index(['category', 'is_active']);
         });
 
-        // Agent execution logs
-        Schema::create('agent_executions', function (Blueprint $table) {
+        // Intelligence agent execution logs
+        Schema::create('intelligence_agent_executions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('agent_id')->constrained('intelligence_agents')->onDelete('cascade');
             $table->foreignId('triggered_by')->nullable()->constrained('users')->onDelete('set null');
@@ -97,7 +97,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->foreignId('agent_id')->constrained('intelligence_agents')->onDelete('cascade');
-            $table->foreignId('execution_id')->nullable()->constrained('agent_executions')->onDelete('set null');
+            $table->foreignId('execution_id')->nullable()->constrained('intelligence_agent_executions')->onDelete('set null');
             $table->string('source_type'); // twitter, telegram, adsb, ais, news, etc.
             $table->string('source_id')->nullable(); // Original source identifier
             $table->string('source_url')->nullable();
@@ -142,7 +142,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('user_skill_assessments');
         Schema::dropIfExists('agent_data_points');
-        Schema::dropIfExists('agent_executions');
+        Schema::dropIfExists('intelligence_agent_executions');
         Schema::dropIfExists('intelligence_agents');
         Schema::dropIfExists('osint_skills');
         Schema::dropIfExists('osint_skill_categories');
