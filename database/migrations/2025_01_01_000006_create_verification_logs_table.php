@@ -49,8 +49,7 @@ return new class extends Migration
             $table->index(['verified_by', 'created_at']);
             $table->index(['action', 'created_at']);
 
-            // Check constraint
-            $table->check("confidence_level IS NULL OR (confidence_level >= 1 AND confidence_level <= 100)");
+            // Note: Confidence level validation (1-100) handled in application layer
         });
 
         // Note: PostgreSQL arrays and GIN indexes not available in MySQL
