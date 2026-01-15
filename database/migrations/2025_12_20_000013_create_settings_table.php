@@ -21,9 +21,7 @@ return new class extends Migration
             $table->boolean('is_public')->default(false)->index()->comment('Whether setting is accessible to frontend');
             $table->timestamps();
 
-            // Indexes
-            $table->index('key');
-            $table->index('group');
+            // Note: 'key' has unique constraint, 'group' and 'is_public' already indexed inline
         });
     }
 
