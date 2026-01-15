@@ -244,6 +244,104 @@ npm run build
 php artisan serve
 ```
 
+#### Option 3: Shared Hosting (No CLI Access)
+
+For shared hosting environments without SSH/CLI access, follow these steps:
+
+**Step 1: Prepare locally**
+
+On your local machine (requires PHP 8.2+, Composer, Node.js):
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/osintweb.git
+cd osintweb
+
+# Install PHP dependencies
+composer install --optimize-autoloader --no-dev
+
+# Install and build frontend
+npm install
+npm run build
+
+# Generate application key
+cp .env.example .env
+php artisan key:generate
+```
+
+**Step 2: Configure .env**
+
+Edit the `.env` file with your shared hosting database credentials:
+
+```env
+APP_NAME=OsintWeb
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://yourdomain.com
+
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_database_password
+
+SESSION_DRIVER=database
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+```
+
+**Step 3: Upload files**
+
+Upload the entire project folder to your hosting account via FTP/SFTP.
+
+**Step 4: Configure document root**
+
+Point your domain's document root to the `public/` folder:
+
+| Hosting Panel | Setting Location |
+|---------------|------------------|
+| cPanel | Domains > Modify > Document Root |
+| Plesk | Domains > Hosting Settings > Document Root |
+| DirectAdmin | Domain Setup > Document Root |
+
+Set it to: `/home/username/osintweb/public` (adjust path as needed)
+
+**Alternative: Use .htaccess redirect**
+
+If you cannot change the document root, add this to your root `.htaccess`:
+
+```apache
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+```
+
+**Step 5: Set permissions**
+
+Via your hosting file manager, set these folder permissions to `755` or `775`:
+- `storage/`
+- `bootstrap/cache/`
+
+**Step 6: Run the installer**
+
+Visit your domain in a browser. The installation wizard will:
+1. Check system requirements
+2. Configure database connection
+3. Run migrations automatically
+4. Create your admin account
+5. Configure basic settings
+
+**Troubleshooting Shared Hosting:**
+
+| Issue | Solution |
+|-------|----------|
+| 500 Error | Check `storage/logs/laravel.log` for details |
+| Blank page | Enable `APP_DEBUG=true` temporarily in `.env` |
+| Session errors | Ensure `storage/framework/sessions` is writable |
+| CSS/JS not loading | Verify document root points to `public/` |
+
 ---
 
 *OsintWeb is built for the community. Join us in bringing transparency to global conflicts.*
