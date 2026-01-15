@@ -41,8 +41,7 @@ return new class extends Migration
             $table->fullText(['title', 'description', 'location_name'], 'events_search_idx');
         });
 
-        // Add spatial index on location
-        DB::statement('ALTER TABLE events ADD SPATIAL INDEX events_location_spatial(location)');
+        // Note: Spatial index requires NOT NULL column, skipped for nullable location
     }
 
     /**
