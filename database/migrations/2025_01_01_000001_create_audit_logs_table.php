@@ -22,8 +22,8 @@ return new class extends Migration
             $table->foreignId('impersonator_id')->nullable()->constrained('users')->nullOnDelete();
 
             // When
-            $table->timestamp('created_at')->index();
-            $table->timestamp('occurred_at')->index();
+            $table->timestamp('created_at')->useCurrent()->index();
+            $table->timestamp('occurred_at')->useCurrent()->index();
 
             // Where (network context)
             $table->ipAddress('ip_address')->index();
