@@ -39,7 +39,7 @@ return new class extends Migration
             $table->timestamp('peer_review_timestamp')->nullable();
 
             // Metadata
-            $table->timestamp('created_at')->index();
+            $table->timestamp('created_at')->useCurrent()->index();
             $table->ipAddress('ip_address');
 
             // Audit log reference

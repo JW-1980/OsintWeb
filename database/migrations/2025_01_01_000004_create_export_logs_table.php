@@ -45,7 +45,7 @@ return new class extends Migration
             $table->text('reason')->nullable();
 
             // Audit
-            $table->timestamp('created_at')->index();
+            $table->timestamp('created_at')->useCurrent()->index();
             $table->integer('accessed_count')->default(0);
             $table->timestamp('last_accessed_at')->nullable();
 

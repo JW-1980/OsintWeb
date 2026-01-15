@@ -109,7 +109,7 @@ return new class extends Migration
             $table->longText('full_text'); // Full text at this revision
             $table->json('changes')->nullable(); // Diff from previous revision
             $table->string('comment')->nullable(); // Editor's comment
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->unique(['transcription_id', 'revision_number']);
             $table->index('created_at');

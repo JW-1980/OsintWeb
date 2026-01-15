@@ -29,7 +29,7 @@ return new class extends Migration
 
             // Metadata
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->timestamp('created_at')->index();
+            $table->timestamp('created_at')->useCurrent()->index();
 
             // Change summary
             $table->text('change_summary')->nullable();

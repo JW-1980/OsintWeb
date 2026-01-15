@@ -139,7 +139,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
             $table->string('title');
             $table->text('description')->nullable();
-            $table->timestamp('occurred_at');
+            $table->timestamp('occurred_at')->useCurrent();
             $table->timestamp('end_at')->nullable(); // For duration events
             $table->string('type'); // event, observation, analysis, milestone
             $table->string('category')->nullable();

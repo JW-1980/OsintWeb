@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
 
             // Session lifecycle
-            $table->timestamp('started_at')->index();
-            $table->timestamp('last_activity_at')->index();
+            $table->timestamp('started_at')->useCurrent()->index();
+            $table->timestamp('last_activity_at')->useCurrent()->index();
             $table->timestamp('ended_at')->nullable();
 
             // Session context

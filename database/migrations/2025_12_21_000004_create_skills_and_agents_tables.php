@@ -138,7 +138,7 @@ return new class extends Migration
             $table->float('match_score'); // How strong the match was
             $table->boolean('was_executed')->default(true);
             $table->string('trigger_source', 50)->nullable(); // api, chat, webhook, etc.
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->index(['skill_id', 'created_at']);
             $table->index('match_score');

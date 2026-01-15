@@ -88,7 +88,7 @@ return new class extends Migration
             $table->json('diff')->nullable()->comment('JSON diff from previous version');
             $table->string('ip_address', 45)->nullable();
             $table->string('user_agent', 500)->nullable();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->unique(['property_id', 'version_number']);
             $table->index('created_at');
