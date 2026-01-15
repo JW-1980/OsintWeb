@@ -63,8 +63,7 @@ return new class extends Migration
             $table->index(['user_id', 'created_at']);
             $table->index(['action', 'created_at']);
 
-            // Check constraint
-            $table->check("action IN ('create', 'update', 'delete', 'restore', 'view', 'export', 'login', 'logout', 'failed_login', 'password_change', 'verify', 'dispute', 'approve', 'reject', 'rollback')");
+            // Note: Action validation handled in application layer
         });
 
         // Note: GIN/GIST indexes and PostgreSQL arrays not available in MySQL
