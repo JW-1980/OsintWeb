@@ -43,8 +43,8 @@ return new class extends Migration
 
             // Composite indexes
             $table->unique(['versionable_type', 'versionable_id', 'version_number'], 'entity_versions_unique');
-            $table->index(['versionable_type', 'versionable_id', 'version_number']);
-            $table->index(['created_by', 'created_at']);
+            $table->index(['versionable_type', 'versionable_id', 'version_number'], 'entity_versions_composite_idx');
+            $table->index(['created_by', 'created_at'], 'entity_versions_creator_idx');
         });
 
         // Note: GIN indexes not available in MySQL
