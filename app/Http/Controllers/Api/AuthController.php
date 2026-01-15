@@ -111,12 +111,12 @@ class AuthController extends Controller
     }
 
     /**
-     * Get authenticated user
+     * Get authenticated user profile
      *
      * @param Request $request
      * @return JsonResponse
      */
-    public function user(Request $request): JsonResponse
+    public function profile(Request $request): JsonResponse
     {
         return $this->success($request->user());
     }
