@@ -20,7 +20,7 @@ return new class extends Migration
 
             // Retention periods
             $table->integer('hot_storage_days')->default(90);
-            $table->integer('warm_storage_days')->default(730); // 2 years
+            $table->integer('warm_storage_days')->nullable()->default(730); // 2 years
             $table->integer('cold_storage_years')->nullable();
 
             // Archive settings
