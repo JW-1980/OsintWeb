@@ -56,14 +56,7 @@ return new class extends Migration
             $table->index(['ip_address', 'started_at']);
         });
 
-        // Convert suspicious_reasons to PostgreSQL array
-        DB::statement('ALTER TABLE session_logs ALTER COLUMN suspicious_reasons TYPE text[] USING string_to_array(suspicious_reasons, \',\')::text[]');
-
-        // Add GIN index for metadata
-        DB::statement('CREATE INDEX session_logs_metadata_idx ON session_logs USING GIN(metadata)');
-
-        // Add partial index for suspicious sessions
-        DB::statement('CREATE INDEX session_logs_suspicious_idx ON session_logs(suspicious_activity) WHERE suspicious_activity = true');
+        // Note: PostgreSQL arrays and GIN/partial indexes not available in MySQL
     }
 
     /**

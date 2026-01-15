@@ -53,11 +53,7 @@ return new class extends Migration
             $table->check("confidence_level IS NULL OR (confidence_level >= 1 AND confidence_level <= 100)");
         });
 
-        // Convert evidence_urls to PostgreSQL array
-        DB::statement('ALTER TABLE verification_logs ALTER COLUMN evidence_urls TYPE text[] USING string_to_array(evidence_urls, \',\')::text[]');
-
-        // Add GIN index for verifier expertise
-        DB::statement('CREATE INDEX verification_logs_verifier_expertise_idx ON verification_logs USING GIN(verifier_expertise)');
+        // Note: PostgreSQL arrays and GIN indexes not available in MySQL
     }
 
     /**

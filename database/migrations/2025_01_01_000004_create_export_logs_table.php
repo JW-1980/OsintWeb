@@ -60,14 +60,7 @@ return new class extends Migration
             $table->index(['entity_type', 'created_at']);
         });
 
-        // Add GIN index for filter criteria
-        DB::statement('CREATE INDEX export_logs_filter_criteria_idx ON export_logs USING GIN(filter_criteria)');
-
-        // Add spatial index for geographic bounds
-        DB::statement('CREATE INDEX export_logs_geographic_bounds_idx ON export_logs USING GIST(geographic_bounds)');
-
-        // Add partial index for expiring exports
-        DB::statement('CREATE INDEX export_logs_expires_at_idx ON export_logs(expires_at) WHERE expires_at IS NOT NULL');
+        // Note: GIN/GIST and partial indexes not available in MySQL
     }
 
     /**

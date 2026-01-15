@@ -37,11 +37,8 @@ return new class extends Migration
             $table->unique(['actor_id', 'alias']);
         });
 
-        // Create trigram index for fuzzy search on aliases
-        DB::statement('CREATE INDEX actor_aliases_alias_trgm_idx ON actor_aliases USING GIN(alias gin_trgm_ops)');
-
-        // Create composite index for actor lookups
-        DB::statement('CREATE INDEX actor_aliases_actor_alias_idx ON actor_aliases(actor_id, alias)');
+        // Composite index for actor lookups (MySQL compatible)
+        // Note: Trigram/GIN indexes not available in MySQL - use FULLTEXT for text search if needed
     }
 
     /**

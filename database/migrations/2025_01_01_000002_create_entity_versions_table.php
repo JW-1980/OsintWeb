@@ -47,8 +47,7 @@ return new class extends Migration
             $table->index(['created_by', 'created_at']);
         });
 
-        // Add GIN index for snapshot JSONB
-        DB::statement('CREATE INDEX entity_versions_snapshot_idx ON entity_versions USING GIN(snapshot)');
+        // Note: GIN indexes not available in MySQL
     }
 
     /**

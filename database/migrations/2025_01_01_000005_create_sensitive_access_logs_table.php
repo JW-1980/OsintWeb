@@ -53,8 +53,7 @@ return new class extends Migration
             $table->index(['sensitivity_level', 'created_at']);
         });
 
-        // Add partial index for flagged entries
-        DB::statement('CREATE INDEX sensitive_access_logs_flagged_idx ON sensitive_access_logs(flagged_for_review) WHERE flagged_for_review = true');
+        // Note: Partial indexes not available in MySQL
     }
 
     /**
