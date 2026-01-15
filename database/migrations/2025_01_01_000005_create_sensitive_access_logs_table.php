@@ -39,7 +39,7 @@ return new class extends Migration
             $table->string('session_id')->nullable();
 
             // Audit
-            $table->timestamp('created_at')->index();
+            $table->timestamp('created_at')->useCurrent()->index();
 
             // Alert if flagged
             $table->boolean('flagged_for_review')->default(false)->index();

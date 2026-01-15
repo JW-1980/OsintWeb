@@ -161,7 +161,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('revision_number');
             $table->string('ip_address', 45)->nullable();
             $table->string('edit_reason')->nullable();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->index(['comment_id', 'revision_number']);
         });
@@ -172,7 +172,7 @@ return new class extends Migration
             $table->foreignId('comment_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->tinyInteger('vote'); // 1 = upvote, -1 = downvote
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->unique(['comment_id', 'user_id']);
         });
@@ -228,7 +228,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('ip_address', 45)->nullable();
             $table->string('fingerprint', 64)->nullable(); // Browser fingerprint
-            $table->timestamp('last_comment_at');
+            $table->timestamp('last_comment_at')->useCurrent();
             $table->unsignedSmallInteger('comment_count_hour')->default(1);
             $table->unsignedSmallInteger('comment_count_day')->default(1);
             $table->boolean('is_blocked')->default(false);
@@ -247,7 +247,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->enum('plan', ['free', 'basic', 'premium', 'enterprise'])->default('free');
             $table->enum('status', ['active', 'cancelled', 'expired', 'suspended'])->default('active');
-            $table->timestamp('starts_at');
+            $table->timestamp('starts_at')->useCurrent();
             $table->timestamp('ends_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
             $table->string('cancellation_reason')->nullable();
@@ -267,7 +267,7 @@ return new class extends Migration
             $table->string('session_id', 100)->nullable();
             $table->unsignedSmallInteger('read_percentage')->default(0);
             $table->unsignedSmallInteger('time_spent_seconds')->default(0);
-            $table->timestamp('started_at');
+            $table->timestamp('started_at')->useCurrent();
             $table->timestamp('completed_at')->nullable();
 
             $table->index(['article_id', 'user_id']);

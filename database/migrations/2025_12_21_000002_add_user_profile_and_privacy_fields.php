@@ -112,7 +112,7 @@ return new class extends Migration
             $table->string('download_token', 64)->nullable()->unique();
             $table->string('file_path')->nullable();
             $table->unsignedBigInteger('file_size')->nullable();
-            $table->timestamp('requested_at');
+            $table->timestamp('requested_at')->useCurrent();
             $table->timestamp('processing_started_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamp('expires_at')->nullable();
@@ -164,8 +164,8 @@ return new class extends Migration
             $table->string('platform', 50)->nullable();
             $table->string('location')->nullable();
             $table->boolean('is_current')->default(false);
-            $table->timestamp('last_activity_at');
-            $table->timestamp('expires_at');
+            $table->timestamp('last_activity_at')->useCurrent();
+            $table->timestamp('expires_at')->useCurrent();
             $table->timestamps();
 
             $table->index(['user_id', 'is_current']);
@@ -182,7 +182,7 @@ return new class extends Migration
             $table->json('properties')->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->string('user_agent', 500)->nullable();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->index(['user_id', 'activity_type']);
             $table->index(['activity_type', 'created_at']);
@@ -213,7 +213,7 @@ return new class extends Migration
             $table->text('old_value')->nullable();
             $table->text('new_value')->nullable();
             $table->string('ip_address', 45)->nullable();
-            $table->timestamp('created_at');
+            $table->timestamp('created_at')->useCurrent();
 
             $table->index(['user_id', 'preference_key']);
             $table->index('created_at');
