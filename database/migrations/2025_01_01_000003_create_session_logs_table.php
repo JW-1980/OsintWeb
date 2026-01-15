@@ -49,7 +49,7 @@ return new class extends Migration
             $table->string('end_reason', 50)->nullable();
 
             // Metadata
-            $table->jsonb('metadata')->nullable();
+            $table->json('metadata')->nullable();
 
             // Indexes
             $table->index(['user_id', 'started_at']);

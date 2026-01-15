@@ -24,7 +24,7 @@ return new class extends Migration
 
             // Verifier
             $table->foreignId('verified_by')->constrained('users')->cascadeOnDelete();
-            $table->jsonb('verifier_expertise')->nullable();
+            $table->json('verifier_expertise')->nullable();
 
             // Evidence
             $table->string('verification_method', 100)->nullable();

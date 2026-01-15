@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('conflicts', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->unique()->default(DB::raw('uuid_generate_v4()'));
+            $table->uuid('uuid')->unique();
 
             // Basic Information
             $table->string('name', 500)->index();
@@ -51,7 +51,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true)->index();
 
             // Casualty Estimates
-            $table->jsonb('estimated_casualties')->nullable();
+            $table->json('estimated_casualties')->nullable();
             // {military: 10000, civilian: 5000, total: 15000, last_updated: '2024-12-01'}
 
             // Metadata

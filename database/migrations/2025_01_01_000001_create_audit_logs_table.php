@@ -39,14 +39,14 @@ return new class extends Migration
             $table->uuid('auditable_uuid')->nullable()->index();
 
             // Changes
-            $table->jsonb('old_values')->nullable();
-            $table->jsonb('new_values')->nullable();
+            $table->json('old_values')->nullable();
+            $table->json('new_values')->nullable();
             $table->text('changed_fields')->nullable(); // PostgreSQL text array
 
             // Context
             $table->text('reason')->nullable();
             $table->text('tags')->nullable(); // PostgreSQL text array
-            $table->jsonb('metadata')->nullable();
+            $table->json('metadata')->nullable();
 
             // Request context
             $table->text('url')->nullable();
