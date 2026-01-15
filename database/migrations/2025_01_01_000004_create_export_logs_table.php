@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('entity_type')->nullable();
 
             // Scope
-            $table->jsonb('filter_criteria')->nullable();
+            $table->json('filter_criteria')->nullable();
             $table->timestamp('date_range_start')->nullable();
             $table->timestamp('date_range_end')->nullable();
             $table->geography('geographic_bounds', 'polygon', 4326)->nullable();

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('version_hash', 64);
 
             // Complete state at this version
-            $table->jsonb('snapshot');
+            $table->json('snapshot');
 
             // Metadata
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
