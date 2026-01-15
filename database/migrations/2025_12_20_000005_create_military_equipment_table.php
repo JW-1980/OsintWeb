@@ -33,7 +33,7 @@ return new class extends Migration
             $table->index('country_id');
             $table->index('category_id');
             $table->index('introduced_year');
-            $table->fullText(['designation', 'nato_designation', 'common_name', 'description']);
+            $table->fullText(['designation', 'nato_designation', 'common_name', 'description'], 'equipment_search_idx');
         });
     }
 
