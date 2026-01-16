@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\WeatherData;
 
 /**
  * Event Model
@@ -192,6 +193,14 @@ class Event extends Model
     }
 
     /**
+     * Get the geolocation verifications for this event
+     */
+    public function geolocationVerifications(): HasMany
+    {
+        return $this->hasMany(GeolocationVerification::class);
+    }
+
+    /**
      * Get the actors involved in this event
      */
     public function actors(): BelongsToMany
@@ -229,6 +238,38 @@ class Event extends Model
         return $this->belongsToMany(Role::class, 'event_role_access')
             ->withPivot(['access_level', 'granted_by', 'expires_at'])
             ->withTimestamps();
+    }
+
+    /**
+     * Get weather data linked to this event
+     */
+    public function weatherData(): BelongsToMany
+    {
+        return $this->belongsToMany(WeatherData::class, 'event_weather')
+            ->withPivot([
+                'link_type',
+                'distance_km',
+                'time_diff_minutes',
+                'shadow_verified',
+                'claimed_shadow_angle',
+                'calculated_shadow_angle',
+                'shadow_angle_deviation',
+                'shadow_matches',
+                'verification_notes',
+                'linked_by_user_id',
+                'linked_at',
+            ])
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the primary weather data for this event
+     */
+    public function primaryWeather(): ?WeatherData
+    {
+        return $this->weatherData()
+            ->orderByPivot('created_at', 'asc')
+            ->first();
     }
 
     /**

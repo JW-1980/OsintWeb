@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 // Include installation routes
 require __DIR__.'/install.php';
 
+// Offline page for service worker
+Route::get('/offline', function () {
+    return view('offline');
+})->name('offline');
+
 Route::get('/{any?}', function () {
     // If installed, show the Vue SPA
     if (file_exists(storage_path('installed'))) {

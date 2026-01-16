@@ -215,6 +215,58 @@ OsintWeb provides powerful tools for:
 *   **Skills Administration**: Manage skills with triggers, configurations, and agent assignments.
 *   **Transcription**: AI-powered audio transcription with speaker identification (via OpenRouter).
 
+### 🔊 Audio Analysis & Spectrogram
+*   **Spectrogram Generation**: Create detailed frequency-time visualizations using sox/ffmpeg for audio forensic analysis.
+*   **Waveform Visualization**: Generate waveform images to visualize amplitude patterns over time.
+*   **Edit Detection**: Identify potential cuts, splices, and overdubs through analysis of silence patterns, phase discontinuities, and click artifacts.
+*   **Manipulation Scoring**: Calculate authenticity scores (0-100) based on detected edits, suspicious silence patterns, and frequency anomalies.
+*   **Voice Activity Detection**: Identify regions with speech activity and calculate voice activity percentage.
+*   **Silence Analysis**: Detect silence gaps and flag suspicious patterns that may indicate content removal.
+*   **Frequency Analysis**: Analyze dominant frequencies, harmonics, and bandwidth to detect processing artifacts.
+*   **Audio Comparison**: Compare two audio files using acoustic fingerprinting to detect similarity and common sources.
+*   **Background Processing**: Queue-based analysis for long audio files with progress tracking and automatic retries.
+
+### 🚨 Disinformation Pattern Detection
+*   **Analysis Types**: Detect five categories of disinformation: coordinated inauthentic behavior, propaganda, fake accounts, manipulated media, and false narratives.
+*   **Pattern Library**: Comprehensive library of known disinformation tactics with linguistic, behavioral, temporal, network, and media patterns.
+*   **Threat Scoring**: Automated threat scoring (0-100) based on detected indicators with confidence metrics.
+*   **AI-Powered Analysis**: Optional integration with OpenRouter.ai free models (Llama, Gemma, Mistral) for advanced text analysis.
+*   **Coordinated Behavior Detection**: Analyze multiple posts for synchronized posting, content similarity, hashtag coordination, and network anomalies.
+*   **Propaganda Indicators**: Detect loaded language, fear appeals, bandwagon effects, black-and-white thinking, and whataboutism patterns.
+*   **Temporal Analysis**: Identify unusual posting times, burst activity, and bot-like regular intervals.
+*   **Source Credibility**: Check sources against known reliable/unreliable domain lists with typosquatting detection.
+*   **Content Flagging**: Flag suspicious content with priority levels (low to critical) and detailed audit trail.
+*   **Review Workflow**: Multi-stage review process with pending, confirmed, rejected, and needs-review statuses.
+*   **Appeal System**: Allow appeals on flagged content with dedicated review workflow.
+*   **Statistics & Trends**: Dashboard with threat trends, pattern match statistics, and common indicator analysis.
+*   **Configurable Thresholds**: Customize auto-flag thresholds, threat weights, and moderation settings.
+
+### 🌤️ Weather & Environmental Data
+*   **Historical Weather Lookup**: Fetch weather conditions for any location and time via OpenWeatherMap or Visual Crossing APIs.
+*   **Sun Position Calculator**: Precise astronomical calculations for sun azimuth and elevation at any coordinates and datetime.
+*   **Shadow Verification**: Verify if shadow angles in images match expected sun position for claimed time and location.
+*   **Chronolocation Analysis**: Find possible times when a photo was taken based on shadow direction and length.
+*   **Event Weather Linking**: Automatically or manually link weather data to events for verification context.
+*   **Shadow Analysis Reports**: Detailed analysis including confidence scoring, deviation calculations, and verification notes.
+*   **Multi-Provider Support**: Configurable weather data providers with automatic caching to reduce API calls.
+*   **OSINT Integration**: Weather conditions and sun position data support for verifying the authenticity of imagery.
+
+### 🚢 Maritime Vessel Tracking (AIS)
+*   **Vessel Database**: Track vessels by MMSI, IMO number, name, and callsign with comprehensive specifications including dimensions, tonnage, and build year.
+*   **Vessel Classification**: Categorize vessels by type (cargo, tanker, passenger, fishing, military, tug, yacht) with priority-based monitoring (1-5 levels).
+*   **AIS Position Tracking**: Record vessel positions with speed, course, heading, navigation status, destination, and ETA from multiple data sources.
+*   **Multi-Provider Support**: Integrate with MarineTraffic, VesselFinder, MyShipTracking, FleetMon, or direct AIS receiver feeds.
+*   **Track Building**: Automatically build voyage tracks from position data with distance calculations and average speed metrics.
+*   **Port Call History**: Track vessel arrivals and departures at ports with duration, call type (loading, unloading, bunkering, repair), and voyage context.
+*   **Dark Activity Detection**: Identify AIS gaps that may indicate intentional signal concealment with configurable thresholds by vessel type.
+*   **STS Transfer Detection**: Detect potential ship-to-ship transfers based on proximity patterns and speed anomalies between vessels.
+*   **Geofencing Alerts**: Create zone-based alerts for strategic chokepoints (Strait of Hormuz, Suez Canal, Panama Canal) with custom polygon definitions.
+*   **Alert Types**: Monitor for vessel spotted, zone entry/exit, port calls, dark activity, STS transfers, speed anomalies, and route deviations.
+*   **Live Tracking**: Real-time vessel positions with geographic filtering, vessel type filters, and bounding box queries.
+*   **Event Correlation**: Link vessel tracks to OSINT events for comprehensive maritime intelligence analysis.
+*   **Background Fetching**: Scheduled position updates with priority-based fetch intervals (high: 5min, medium: 15min, low: 60min).
+*   **Spatial Queries**: MySQL spatial extensions for efficient zone containment and proximity searches.
+
 ### 🏆 Achievement System
 *   **Achievement Management**: Full admin CRUD for creating and managing achievements.
 *   **Categories & Rarity**: Organize achievements by contribution, verification, engagement types.

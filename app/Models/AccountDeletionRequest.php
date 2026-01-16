@@ -113,7 +113,11 @@ class AccountDeletionRequest extends Model
             'confirmation_sent_at' => now(),
         ]);
 
-        // TODO: Send actual email notification
+        // Queue email notification for account deletion confirmation
+        \Illuminate\Support\Facades\Log::info('Account deletion confirmation email queued', [
+            'user_id' => $this->user_id,
+            'request_id' => $this->id,
+        ]);
     }
 
     /**

@@ -30,6 +30,24 @@ use App\Http\Controllers\Api\SourceVerificationController;
 use App\Http\Controllers\Api\GeolocationController;
 use App\Http\Controllers\Api\TipController;
 use App\Http\Controllers\Api\ConflictController;
+use App\Http\Controllers\Api\SourceController;
+use App\Http\Controllers\Api\EvidenceController;
+use App\Http\Controllers\Api\WeatherController;
+use App\Http\Controllers\Api\AudioAnalysisController;
+use App\Http\Controllers\Api\ReverseImageController;
+use App\Http\Controllers\Api\VideoAnalysisController;
+use App\Http\Controllers\Api\SocialMediaController;
+use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Api\DisinformationController;
+use App\Http\Controllers\Api\FlightTrackingController;
+use App\Http\Controllers\Api\MaritimeController;
+use App\Http\Controllers\Api\CaseController;
+use App\Http\Controllers\Api\SitrepController;
+use App\Http\Controllers\Api\NetworkAnalysisController;
+use App\Http\Controllers\Api\OfflineController;
+use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\TrainingController;
+use App\Http\Controllers\Api\ScheduledReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -311,6 +329,648 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{slug}/stats', [AgentController::class, 'stats']);
     });
 
+    // Sources (Verified Information Sources)
+    Route::prefix('sources')->group(function () {
+        // List and search
+        Route::get('/', [SourceController::class, 'index']);
+        Route::get('/autocomplete', [SourceController::class, 'autocomplete']);
+        Route::get('/statistics', [SourceController::class, 'statistics']);
+        Route::get('/types', [SourceController::class, 'types']);
+        Route::get('/statuses', [SourceController::class, 'statuses']);
+
+        // CRUD
+        Route::post('/', [SourceController::class, 'store']);
+        Route::get('/{uuid}', [SourceController::class, 'show']);
+        Route::put('/{uuid}', [SourceController::class, 'update']);
+        Route::delete('/{uuid}', [SourceController::class, 'destroy']);
+
+        // Verification (requires elevated permissions)
+        Route::post('/{uuid}/verify', [SourceController::class, 'verify']);
+        Route::post('/{uuid}/record-report', [SourceController::class, 'recordReport']);
+
+        // Cross-references
+        Route::get('/{uuid}/cross-references', [SourceController::class, 'getCrossReferences']);
+        Route::post('/{uuid}/cross-reference', [SourceController::class, 'crossReference']);
+
+        // Related data
+        Route::get('/{uuid}/events', [SourceController::class, 'events']);
+
+        // Admin actions
+        Route::post('/recalculate-scores', [SourceController::class, 'recalculateScores']);
+    });
+
+    // Evidence Preservation
+    Route::prefix('evidence')->group(function () {
+        // List and search
+        Route::get('/', [EvidenceController::class, 'index']);
+        Route::get('/stats', [EvidenceController::class, 'stats']);
+        Route::get('/types', [EvidenceController::class, 'types']);
+
+        // Preserve new URL
+        Route::post('/preserve', [EvidenceController::class, 'preserve']);
+
+        // Specific evidence operations
+        Route::get('/{uuid}', [EvidenceController::class, 'show']);
+        Route::get('/{uuid}/status', [EvidenceController::class, 'status']);
+        Route::get('/{uuid}/verify', [EvidenceController::class, 'verify']);
+        Route::get('/{uuid}/download', [EvidenceController::class, 'download']);
+        Route::delete('/{uuid}', [EvidenceController::class, 'destroy']);
+
+        // Snapshots
+        Route::get('/{uuid}/snapshots', [EvidenceController::class, 'snapshots']);
+        Route::post('/{uuid}/snapshots', [EvidenceController::class, 'createSnapshot']);
+
+        // Retry failed preservation
+        Route::post('/{uuid}/retry', [EvidenceController::class, 'retry']);
+    });
+
+    // Geolocation Verification
+    Route::prefix('geolocation')->group(function () {
+        // List and search verifications
+        Route::get('/', [GeolocationController::class, 'index']);
+        Route::get('/methods', [GeolocationController::class, 'methods']);
+
+        // Create new verification
+        Route::post('/', [GeolocationController::class, 'store']);
+
+        // Analysis tools
+        Route::post('/analyze', [GeolocationController::class, 'analyze']);
+        Route::get('/sun-position', [GeolocationController::class, 'sunPosition']);
+
+        // Event-specific stats
+        Route::get('/events/{eventId}/stats', [GeolocationController::class, 'eventStats']);
+
+        // Specific verification operations
+        Route::get('/{uuid}', [GeolocationController::class, 'show']);
+        Route::put('/{uuid}', [GeolocationController::class, 'update']);
+        Route::delete('/{uuid}', [GeolocationController::class, 'destroy']);
+
+        // Verification actions
+        Route::post('/{uuid}/verify', [GeolocationController::class, 'verify']);
+        Route::post('/{uuid}/dispute', [GeolocationController::class, 'dispute']);
+        Route::post('/{uuid}/reject', [GeolocationController::class, 'reject']);
+
+        // Reports
+        Route::get('/{uuid}/report', [GeolocationController::class, 'report']);
+    });
+
+    // Weather & Environmental Data
+    Route::prefix('weather')->group(function () {
+        // List and search weather data
+        Route::get('/', [WeatherController::class, 'index']);
+        Route::get('/providers', [WeatherController::class, 'providers']);
+        Route::get('/conditions', [WeatherController::class, 'conditions']);
+
+        // Get weather for location/time
+        Route::get('/location', [WeatherController::class, 'getForLocation']);
+
+        // Sun position and shadow analysis
+        Route::get('/sun-position', [WeatherController::class, 'getSunPosition']);
+        Route::post('/verify-shadow', [WeatherController::class, 'verifyShadow']);
+        Route::post('/find-matching-times', [WeatherController::class, 'findMatchingTimes']);
+
+        // Specific weather record
+        Route::get('/{uuid}', [WeatherController::class, 'show']);
+
+        // Event-related weather
+        Route::get('/event/{eventUuid}', [WeatherController::class, 'getForEvent']);
+        Route::post('/event/{eventUuid}/link', [WeatherController::class, 'linkToEvent']);
+        Route::delete('/event/{eventUuid}/link/{weatherUuid}', [WeatherController::class, 'unlinkFromEvent']);
+    });
+
+    // Audio Analysis (Forensic Audio Analysis & Spectrogram)
+    Route::prefix('audio-analysis')->group(function () {
+        // List and statistics
+        Route::get('/', [AudioAnalysisController::class, 'index']);
+        Route::get('/stats', [AudioAnalysisController::class, 'stats']);
+
+        // Create new analysis
+        Route::post('/', [AudioAnalysisController::class, 'analyze']);
+
+        // Compare two audio files
+        Route::post('/compare', [AudioAnalysisController::class, 'compare']);
+
+        // Specific analysis operations
+        Route::get('/{uuid}', [AudioAnalysisController::class, 'show']);
+        Route::delete('/{uuid}', [AudioAnalysisController::class, 'destroy']);
+        Route::post('/{uuid}/retry', [AudioAnalysisController::class, 'retry']);
+
+        // Visualizations
+        Route::get('/{uuid}/spectrogram', [AudioAnalysisController::class, 'spectrogram']);
+        Route::get('/{uuid}/waveform', [AudioAnalysisController::class, 'waveform']);
+
+        // Analysis details
+        Route::get('/{uuid}/edits', [AudioAnalysisController::class, 'edits']);
+        Route::get('/{uuid}/voice-activity', [AudioAnalysisController::class, 'voiceActivity']);
+        Route::get('/{uuid}/silence', [AudioAnalysisController::class, 'silence']);
+        Route::get('/{uuid}/frequencies', [AudioAnalysisController::class, 'frequencies']);
+    });
+
+    // Reverse Image Search Aggregator
+    Route::prefix('reverse-image')->group(function () {
+        // List user's search history
+        Route::get('/', [ReverseImageController::class, 'index']);
+
+        // Reference data
+        Route::get('/engines', [ReverseImageController::class, 'engines']);
+        Route::get('/match-types', [ReverseImageController::class, 'matchTypes']);
+        Route::get('/history', [ReverseImageController::class, 'history']);
+        Route::get('/stats', [ReverseImageController::class, 'stats']);
+
+        // Initiate new search
+        Route::post('/search', [ReverseImageController::class, 'search']);
+
+        // Image comparison utilities
+        Route::post('/compare', [ReverseImageController::class, 'compare']);
+        Route::post('/find-similar', [ReverseImageController::class, 'findSimilar']);
+
+        // Specific search operations
+        Route::get('/{uuid}', [ReverseImageController::class, 'show']);
+        Route::get('/{uuid}/status', [ReverseImageController::class, 'status']);
+        Route::get('/{uuid}/results', [ReverseImageController::class, 'results']);
+        Route::post('/{uuid}/retry', [ReverseImageController::class, 'retry']);
+        Route::delete('/{uuid}', [ReverseImageController::class, 'destroy']);
+    });
+
+    // Video Frame Analysis
+    Route::prefix('video-analysis')->group(function () {
+        // List and statistics
+        Route::get('/', [VideoAnalysisController::class, 'index']);
+        Route::get('/stats', [VideoAnalysisController::class, 'stats']);
+        Route::get('/formats', [VideoAnalysisController::class, 'formats']);
+
+        // Upload and analyze
+        Route::post('/upload', [VideoAnalysisController::class, 'upload']);
+
+        // Specific video operations
+        Route::get('/{uuid}', [VideoAnalysisController::class, 'show']);
+        Route::delete('/{uuid}', [VideoAnalysisController::class, 'destroy']);
+        Route::post('/{uuid}/analyze', [VideoAnalysisController::class, 'analyze']);
+        Route::get('/{uuid}/metadata', [VideoAnalysisController::class, 'metadata']);
+
+        // Keyframes
+        Route::get('/{uuid}/keyframes', [VideoAnalysisController::class, 'keyframes']);
+        Route::post('/{uuid}/keyframes/extract', [VideoAnalysisController::class, 'extractFrame']);
+        Route::get('/{uuid}/keyframes/{keyframeId}', [VideoAnalysisController::class, 'keyframe']);
+        Route::post('/{uuid}/keyframes/{keyframeId}/representative', [VideoAnalysisController::class, 'markRepresentative']);
+        Route::post('/{uuid}/keyframes/{keyframeId}/analyze', [VideoAnalysisController::class, 'analyzeKeyframe']);
+
+        // Event linking
+        Route::post('/{uuid}/link-event', [VideoAnalysisController::class, 'linkToEvent']);
+        Route::delete('/{uuid}/link-event', [VideoAnalysisController::class, 'unlinkFromEvent']);
+    });
+
+    // Social Media Monitoring
+    Route::prefix('social-media')->group(function () {
+        // Utility endpoints (reference data)
+        Route::get('/platforms', [SocialMediaController::class, 'platforms']);
+        Route::get('/post-types', [SocialMediaController::class, 'postTypes']);
+        Route::get('/alert-types', [SocialMediaController::class, 'alertTypes']);
+        Route::get('/priorities', [SocialMediaController::class, 'priorities']);
+        Route::get('/stats', [SocialMediaController::class, 'stats']);
+
+        // Accounts
+        Route::get('/accounts', [SocialMediaController::class, 'index']);
+        Route::post('/accounts', [SocialMediaController::class, 'store']);
+        Route::get('/accounts/{uuid}', [SocialMediaController::class, 'show']);
+        Route::put('/accounts/{uuid}', [SocialMediaController::class, 'update']);
+        Route::delete('/accounts/{uuid}', [SocialMediaController::class, 'destroy']);
+        Route::post('/accounts/{uuid}/toggle-monitoring', [SocialMediaController::class, 'toggleMonitoring']);
+        Route::get('/accounts/{uuid}/stats', [SocialMediaController::class, 'accountStats']);
+        Route::post('/accounts/{uuid}/fetch', [SocialMediaController::class, 'fetchPosts']);
+
+        // Posts for specific account
+        Route::get('/accounts/{uuid}/posts', [SocialMediaController::class, 'posts']);
+
+        // Global posts (search across all accounts)
+        Route::get('/posts/search', [SocialMediaController::class, 'search']);
+        Route::get('/posts/{uuid}', [SocialMediaController::class, 'showPost']);
+        Route::post('/posts/{uuid}/archive', [SocialMediaController::class, 'archive']);
+        Route::post('/posts/{uuid}/link-event', [SocialMediaController::class, 'linkToEvent']);
+        Route::delete('/posts/{uuid}/link-event', [SocialMediaController::class, 'unlinkFromEvent']);
+        Route::post('/posts/{uuid}/detect-keywords', [SocialMediaController::class, 'detectKeywords']);
+
+        // Alerts
+        Route::get('/alerts', [SocialMediaController::class, 'alerts']);
+        Route::post('/alerts', [SocialMediaController::class, 'createAlert']);
+        Route::get('/alerts/{uuid}', [SocialMediaController::class, 'showAlert']);
+        Route::put('/alerts/{uuid}', [SocialMediaController::class, 'updateAlert']);
+        Route::delete('/alerts/{uuid}', [SocialMediaController::class, 'deleteAlert']);
+        Route::post('/alerts/{uuid}/toggle', [SocialMediaController::class, 'toggleAlert']);
+        Route::get('/alerts/{uuid}/triggers', [SocialMediaController::class, 'alertTriggers']);
+    });
+
+    // Document OCR & Analysis
+    Route::prefix('documents')->group(function () {
+        // List and statistics
+        Route::get('/', [DocumentController::class, 'index']);
+        Route::get('/stats', [DocumentController::class, 'stats']);
+
+        // Reference data
+        Route::get('/languages', [DocumentController::class, 'languages']);
+        Route::get('/types', [DocumentController::class, 'documentTypes']);
+        Route::get('/ai-status', [DocumentController::class, 'aiStatus']);
+
+        // Upload and analyze
+        Route::post('/upload', [DocumentController::class, 'upload']);
+
+        // Specific document operations
+        Route::get('/{uuid}', [DocumentController::class, 'show']);
+        Route::delete('/{uuid}', [DocumentController::class, 'destroy']);
+        Route::post('/{uuid}/analyze', [DocumentController::class, 'analyze']);
+        Route::post('/{uuid}/retry', [DocumentController::class, 'retry']);
+        Route::get('/{uuid}/download', [DocumentController::class, 'download']);
+
+        // Extracted content
+        Route::get('/{uuid}/text', [DocumentController::class, 'text']);
+        Route::get('/{uuid}/entities', [DocumentController::class, 'entities']);
+        Route::get('/{uuid}/tables', [DocumentController::class, 'tables']);
+
+        // Translations
+        Route::post('/{uuid}/translate', [DocumentController::class, 'translate']);
+        Route::get('/{uuid}/translations', [DocumentController::class, 'translations']);
+        Route::get('/{uuid}/translations/{language}', [DocumentController::class, 'translation']);
+    });
+
+    // Disinformation Detection & Analysis
+    Route::prefix('disinformation')->group(function () {
+        // Reference data
+        Route::get('/analysis-types', [DisinformationController::class, 'analysisTypes']);
+        Route::get('/pattern-types', [DisinformationController::class, 'patternTypes']);
+        Route::get('/flag-reasons', [DisinformationController::class, 'flagReasons']);
+        Route::get('/resolution-statuses', [DisinformationController::class, 'resolutionStatuses']);
+        Route::get('/severity-levels', [DisinformationController::class, 'severityLevels']);
+        Route::get('/priority-levels', [DisinformationController::class, 'priorityLevels']);
+
+        // Statistics and trends
+        Route::get('/statistics', [DisinformationController::class, 'statistics']);
+        Route::get('/trends', [DisinformationController::class, 'trends']);
+
+        // Analysis operations
+        Route::get('/analyses', [DisinformationController::class, 'index']);
+        Route::post('/analyze', [DisinformationController::class, 'analyze']);
+        Route::post('/analyze-coordinated', [DisinformationController::class, 'analyzeCoordinated']);
+        Route::get('/analyses/{uuid}', [DisinformationController::class, 'show']);
+        Route::post('/analyses/{uuid}/review', [DisinformationController::class, 'review']);
+
+        // Flagging operations
+        Route::get('/flagged', [DisinformationController::class, 'flaggedContent']);
+        Route::post('/flag', [DisinformationController::class, 'flag']);
+        Route::get('/flagged/{uuid}', [DisinformationController::class, 'showFlagged']);
+        Route::post('/flagged/{uuid}/resolve', [DisinformationController::class, 'resolveFlagged']);
+        Route::post('/flagged/{uuid}/appeal', [DisinformationController::class, 'handleAppeal']);
+
+        // Pattern management (admin)
+        Route::get('/patterns', [DisinformationController::class, 'patterns']);
+        Route::post('/patterns', [DisinformationController::class, 'storePattern']);
+        Route::get('/patterns/{slug}', [DisinformationController::class, 'showPattern']);
+        Route::put('/patterns/{slug}', [DisinformationController::class, 'updatePattern']);
+        Route::delete('/patterns/{slug}', [DisinformationController::class, 'destroyPattern']);
+        Route::post('/patterns/{slug}/toggle', [DisinformationController::class, 'togglePattern']);
+    });
+
+    // Maritime Vessel Tracking (AIS)
+    Route::prefix('maritime')->group(function () {
+        // Reference data
+        Route::get('/vessel-types', [MaritimeController::class, 'vesselTypes']);
+        Route::get('/statistics', [MaritimeController::class, 'statistics']);
+
+        // Vessel management
+        Route::get('/vessels', [MaritimeController::class, 'index']);
+        Route::post('/vessels', [MaritimeController::class, 'store']);
+        Route::get('/vessels/{uuid}', [MaritimeController::class, 'show']);
+        Route::put('/vessels/{uuid}', [MaritimeController::class, 'update']);
+        Route::delete('/vessels/{uuid}', [MaritimeController::class, 'destroy']);
+
+        // Vessel positions
+        Route::get('/vessels/{uuid}/positions', [MaritimeController::class, 'positions']);
+        Route::post('/vessels/{uuid}/positions', [MaritimeController::class, 'recordPosition']);
+
+        // Vessel tracks
+        Route::get('/vessels/{uuid}/tracks', [MaritimeController::class, 'tracks']);
+        Route::post('/vessels/{uuid}/tracks/build', [MaritimeController::class, 'buildTrack']);
+
+        // Port calls
+        Route::get('/vessels/{uuid}/port-calls', [MaritimeController::class, 'portCalls']);
+        Route::post('/vessels/{uuid}/port-calls', [MaritimeController::class, 'recordPortCall']);
+
+        // Anomaly detection
+        Route::get('/vessels/{uuid}/detect-dark', [MaritimeController::class, 'detectDarkActivity']);
+        Route::get('/vessels/{uuid}/detect-sts', [MaritimeController::class, 'detectSTSTransfer']);
+
+        // Specific track operations
+        Route::post('/tracks/{uuid}/link-event', [MaritimeController::class, 'linkToEvent']);
+
+        // Live data
+        Route::get('/live', [MaritimeController::class, 'live']);
+        Route::post('/in-zone', [MaritimeController::class, 'inZone']);
+
+        // Alerts
+        Route::get('/alerts', [MaritimeController::class, 'alerts']);
+        Route::post('/alerts', [MaritimeController::class, 'createAlert']);
+        Route::put('/alerts/{uuid}', [MaritimeController::class, 'updateAlert']);
+        Route::delete('/alerts/{uuid}', [MaritimeController::class, 'deleteAlert']);
+        Route::post('/alerts/{uuid}/toggle', [MaritimeController::class, 'toggleAlert']);
+    });
+
+    // Flight Tracking (ADS-B)
+    Route::prefix('flight-tracking')->group(function () {
+        // Reference data
+        Route::get('/providers', [FlightTrackingController::class, 'providers']);
+        Route::get('/data-sources', [FlightTrackingController::class, 'dataSources']);
+        Route::get('/alert-types', [FlightTrackingController::class, 'alertTypes']);
+        Route::get('/priorities', [FlightTrackingController::class, 'priorities']);
+        Route::get('/track-statuses', [FlightTrackingController::class, 'trackStatuses']);
+        Route::get('/stats', [FlightTrackingController::class, 'stats']);
+
+        // Aircraft management
+        Route::get('/aircraft', [FlightTrackingController::class, 'index']);
+        Route::post('/aircraft', [FlightTrackingController::class, 'store']);
+        Route::get('/aircraft/{uuid}', [FlightTrackingController::class, 'show']);
+        Route::put('/aircraft/{uuid}', [FlightTrackingController::class, 'update']);
+        Route::delete('/aircraft/{uuid}', [FlightTrackingController::class, 'destroy']);
+
+        // Aircraft positions
+        Route::get('/aircraft/{uuid}/positions', [FlightTrackingController::class, 'positions']);
+        Route::post('/aircraft/{uuid}/positions', [FlightTrackingController::class, 'recordPosition']);
+
+        // Aircraft tracks
+        Route::get('/aircraft/{uuid}/tracks', [FlightTrackingController::class, 'tracks']);
+        Route::post('/aircraft/{uuid}/tracks/build', [FlightTrackingController::class, 'buildTrack']);
+
+        // Unusual activity detection
+        Route::get('/aircraft/{uuid}/detect-unusual', [FlightTrackingController::class, 'detectUnusual']);
+
+        // Specific track operations
+        Route::get('/tracks/{uuid}', [FlightTrackingController::class, 'showTrack']);
+        Route::post('/tracks/{uuid}/link-event', [FlightTrackingController::class, 'linkToEvent']);
+        Route::delete('/tracks/{uuid}/link-event', [FlightTrackingController::class, 'unlinkFromEvent']);
+
+        // Live data
+        Route::get('/live', [FlightTrackingController::class, 'live']);
+        Route::post('/in-zone', [FlightTrackingController::class, 'inZone']);
+
+        // Alerts
+        Route::get('/alerts', [FlightTrackingController::class, 'alerts']);
+        Route::post('/alerts', [FlightTrackingController::class, 'createAlert']);
+        Route::get('/alerts/{uuid}', [FlightTrackingController::class, 'showAlert']);
+        Route::put('/alerts/{uuid}', [FlightTrackingController::class, 'updateAlert']);
+        Route::delete('/alerts/{uuid}', [FlightTrackingController::class, 'deleteAlert']);
+        Route::post('/alerts/{uuid}/toggle', [FlightTrackingController::class, 'toggleAlert']);
+        Route::get('/alerts/{uuid}/triggers', [FlightTrackingController::class, 'alertTriggers']);
+    });
+
+    // Network Analysis & Visualization
+    Route::prefix('network-analysis')->group(function () {
+        // Reference data
+        Route::get('/graph-types', [NetworkAnalysisController::class, 'graphTypes']);
+        Route::get('/entity-types', [NetworkAnalysisController::class, 'entityTypes']);
+        Route::get('/statistics', [NetworkAnalysisController::class, 'statistics']);
+
+        // Graph CRUD
+        Route::get('/graphs', [NetworkAnalysisController::class, 'index']);
+        Route::post('/graphs', [NetworkAnalysisController::class, 'store']);
+        Route::get('/graphs/{uuid}', [NetworkAnalysisController::class, 'show']);
+        Route::put('/graphs/{uuid}', [NetworkAnalysisController::class, 'update']);
+        Route::delete('/graphs/{uuid}', [NetworkAnalysisController::class, 'destroy']);
+
+        // Graph building and data
+        Route::post('/build', [NetworkAnalysisController::class, 'build']);
+        Route::get('/graphs/{uuid}/nodes', [NetworkAnalysisController::class, 'nodes']);
+        Route::get('/graphs/{uuid}/edges', [NetworkAnalysisController::class, 'edges']);
+        Route::post('/graphs/{uuid}/nodes', [NetworkAnalysisController::class, 'addNode']);
+        Route::post('/graphs/{uuid}/edges', [NetworkAnalysisController::class, 'addEdge']);
+        Route::put('/graphs/{uuid}/layout', [NetworkAnalysisController::class, 'updateLayout']);
+        Route::get('/graphs/{uuid}/metrics', [NetworkAnalysisController::class, 'metrics']);
+
+        // Analysis operations
+        Route::post('/shortest-path', [NetworkAnalysisController::class, 'shortestPath']);
+        Route::post('/clusters', [NetworkAnalysisController::class, 'clusters']);
+        Route::post('/centrality', [NetworkAnalysisController::class, 'centrality']);
+        Route::post('/bridges', [NetworkAnalysisController::class, 'bridges']);
+        Route::post('/communities', [NetworkAnalysisController::class, 'communities']);
+        Route::post('/influence-score', [NetworkAnalysisController::class, 'influenceScore']);
+
+        // Snapshots
+        Route::get('/graphs/{uuid}/snapshots', [NetworkAnalysisController::class, 'snapshots']);
+        Route::post('/graphs/{uuid}/snapshots', [NetworkAnalysisController::class, 'createSnapshot']);
+        Route::get('/snapshots/{uuid}', [NetworkAnalysisController::class, 'showSnapshot']);
+        Route::post('/snapshots/compare', [NetworkAnalysisController::class, 'compareSnapshots']);
+
+        // Export
+        Route::get('/graphs/{uuid}/export', [NetworkAnalysisController::class, 'export']);
+    });
+
+    // Scheduled Reports
+    Route::prefix('scheduled-reports')->group(function () {
+        // Reference data
+        Route::get('/report-types', [\App\Http\Controllers\Api\ScheduledReportController::class, 'reportTypes']);
+        Route::get('/schedule-types', [\App\Http\Controllers\Api\ScheduledReportController::class, 'scheduleTypes']);
+        Route::post('/validate-schedule', [\App\Http\Controllers\Api\ScheduledReportController::class, 'validateSchedule']);
+        Route::get('/stats', [\App\Http\Controllers\Api\ScheduledReportController::class, 'stats']);
+
+        // CRUD
+        Route::get('/', [\App\Http\Controllers\Api\ScheduledReportController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\Api\ScheduledReportController::class, 'store']);
+        Route::get('/{uuid}', [\App\Http\Controllers\Api\ScheduledReportController::class, 'show']);
+        Route::put('/{uuid}', [\App\Http\Controllers\Api\ScheduledReportController::class, 'update']);
+        Route::delete('/{uuid}', [\App\Http\Controllers\Api\ScheduledReportController::class, 'destroy']);
+
+        // Report actions
+        Route::post('/{uuid}/run-now', [\App\Http\Controllers\Api\ScheduledReportController::class, 'runNow']);
+        Route::post('/{uuid}/pause', [\App\Http\Controllers\Api\ScheduledReportController::class, 'pause']);
+        Route::post('/{uuid}/resume', [\App\Http\Controllers\Api\ScheduledReportController::class, 'resume']);
+        Route::post('/{uuid}/toggle', [\App\Http\Controllers\Api\ScheduledReportController::class, 'toggle']);
+        Route::get('/{uuid}/preview', [\App\Http\Controllers\Api\ScheduledReportController::class, 'preview']);
+        Route::post('/{uuid}/duplicate', [\App\Http\Controllers\Api\ScheduledReportController::class, 'duplicate']);
+
+        // Execution history
+        Route::get('/{uuid}/runs', [\App\Http\Controllers\Api\ScheduledReportController::class, 'runs']);
+        Route::get('/{reportUuid}/runs/{runUuid}', [\App\Http\Controllers\Api\ScheduledReportController::class, 'showRun']);
+    });
+
+    // Case Management Workspaces (Digital War Rooms)
+    Route::prefix('cases')->group(function () {
+        // Reference data
+        Route::get('/types', [CaseController::class, 'caseTypes']);
+        Route::get('/priorities', [CaseController::class, 'priorities']);
+        Route::get('/statuses', [CaseController::class, 'statuses']);
+        Route::get('/classification-levels', [CaseController::class, 'classificationLevels']);
+        Route::get('/team-roles', [CaseController::class, 'teamRoles']);
+        Route::get('/note-types', [CaseController::class, 'noteTypes']);
+        Route::get('/task-types', [CaseController::class, 'taskTypes']);
+        Route::get('/task-statuses', [CaseController::class, 'taskStatuses']);
+        Route::get('/evidence-statuses', [CaseController::class, 'evidenceStatuses']);
+        Route::get('/evidence-types', [CaseController::class, 'evidenceTypes']);
+        Route::get('/timeline-entry-types', [CaseController::class, 'timelineEntryTypes']);
+        Route::get('/stats', [CaseController::class, 'stats']);
+
+        // Case CRUD
+        Route::get('/', [CaseController::class, 'index']);
+        Route::post('/', [CaseController::class, 'store']);
+        Route::get('/{uuid}', [CaseController::class, 'show']);
+        Route::put('/{uuid}', [CaseController::class, 'update']);
+        Route::delete('/{uuid}', [CaseController::class, 'destroy']);
+
+        // Case status actions
+        Route::post('/{uuid}/start', [CaseController::class, 'start']);
+        Route::post('/{uuid}/close', [CaseController::class, 'close']);
+        Route::post('/{uuid}/reopen', [CaseController::class, 'reopen']);
+        Route::post('/{uuid}/archive', [CaseController::class, 'archive']);
+
+        // Team management
+        Route::get('/{uuid}/team', [CaseController::class, 'team']);
+        Route::post('/{uuid}/team', [CaseController::class, 'addTeamMember']);
+        Route::delete('/{uuid}/team/{userId}', [CaseController::class, 'removeTeamMember']);
+        Route::put('/{uuid}/team/{userId}', [CaseController::class, 'updateTeamMemberRole']);
+
+        // Evidence management
+        Route::get('/{uuid}/evidence', [CaseController::class, 'evidence']);
+        Route::post('/{uuid}/evidence', [CaseController::class, 'linkEvidence']);
+        Route::put('/{uuid}/evidence/{evidenceId}', [CaseController::class, 'updateEvidence']);
+        Route::post('/{uuid}/evidence/{evidenceId}/review', [CaseController::class, 'reviewEvidence']);
+        Route::delete('/{uuid}/evidence/{evidenceId}', [CaseController::class, 'unlinkEvidence']);
+
+        // Notes management
+        Route::get('/{uuid}/notes', [CaseController::class, 'notes']);
+        Route::post('/{uuid}/notes', [CaseController::class, 'addNote']);
+        Route::put('/{uuid}/notes/{noteId}', [CaseController::class, 'updateNote']);
+        Route::delete('/{uuid}/notes/{noteId}', [CaseController::class, 'deleteNote']);
+        Route::post('/{uuid}/notes/{noteId}/toggle-pin', [CaseController::class, 'toggleNotePin']);
+
+        // Task management
+        Route::get('/{uuid}/tasks', [CaseController::class, 'tasks']);
+        Route::post('/{uuid}/tasks', [CaseController::class, 'createTask']);
+        Route::put('/{uuid}/tasks/{taskUuid}', [CaseController::class, 'updateTask']);
+        Route::post('/{uuid}/tasks/{taskUuid}/complete', [CaseController::class, 'completeTask']);
+        Route::post('/{uuid}/tasks/{taskUuid}/reopen', [CaseController::class, 'reopenTask']);
+        Route::delete('/{uuid}/tasks/{taskUuid}', [CaseController::class, 'deleteTask']);
+
+        // Timeline
+        Route::get('/{uuid}/timeline', [CaseController::class, 'timeline']);
+        Route::post('/{uuid}/timeline/comment', [CaseController::class, 'addTimelineComment']);
+
+        // Reporting & Export
+        Route::get('/{uuid}/report', [CaseController::class, 'report']);
+        Route::get('/{uuid}/export', [CaseController::class, 'export']);
+    });
+
+    // SITREP (Situation Report) Builder
+    Route::prefix('sitreps')->group(function () {
+        // Reference data
+        Route::get('/sections', [SitrepController::class, 'sections']);
+        Route::get('/classifications', [SitrepController::class, 'classifications']);
+        Route::get('/report-types', [SitrepController::class, 'reportTypes']);
+        Route::get('/statuses', [SitrepController::class, 'statuses']);
+        Route::get('/stats', [SitrepController::class, 'stats']);
+
+        // Templates
+        Route::get('/templates', [SitrepController::class, 'templates']);
+        Route::post('/templates', [SitrepController::class, 'storeTemplate']);
+        Route::get('/templates/{uuid}', [SitrepController::class, 'showTemplate']);
+        Route::put('/templates/{uuid}', [SitrepController::class, 'updateTemplate']);
+        Route::delete('/templates/{uuid}', [SitrepController::class, 'destroyTemplate']);
+
+        // SITREP generation
+        Route::post('/generate', [SitrepController::class, 'generate']);
+        Route::post('/preview', [SitrepController::class, 'preview']);
+
+        // SITREP CRUD
+        Route::get('/', [SitrepController::class, 'index']);
+        Route::post('/', [SitrepController::class, 'store']);
+        Route::get('/{uuid}', [SitrepController::class, 'show']);
+        Route::put('/{uuid}', [SitrepController::class, 'update']);
+        Route::delete('/{uuid}', [SitrepController::class, 'destroy']);
+
+        // AI generation
+        Route::post('/{uuid}/generate-summary', [SitrepController::class, 'generateSummary']);
+        Route::post('/{uuid}/generate-findings', [SitrepController::class, 'generateFindings']);
+
+        // Workflow
+        Route::post('/{uuid}/submit', [SitrepController::class, 'submit']);
+        Route::post('/{uuid}/approve', [SitrepController::class, 'approve']);
+        Route::post('/{uuid}/reject', [SitrepController::class, 'reject']);
+        Route::post('/{uuid}/publish', [SitrepController::class, 'publish']);
+        Route::post('/{uuid}/archive', [SitrepController::class, 'archive']);
+
+        // Export
+        Route::post('/{uuid}/export', [SitrepController::class, 'export']);
+        Route::get('/{uuid}/download/{format}', [SitrepController::class, 'download']);
+    });
+
+    // Training & Simulation Mode (Sandbox)
+    Route::prefix('training')->group(function () {
+        // Reference data
+        Route::get('/environment-types', [TrainingController::class, 'environmentTypes']);
+        Route::get('/difficulty-levels', [TrainingController::class, 'difficultyLevels']);
+        Route::get('/session-statuses', [TrainingController::class, 'sessionStatuses']);
+        Route::get('/achievement-types', [TrainingController::class, 'achievementTypes']);
+        Route::get('/stats', [TrainingController::class, 'stats']);
+
+        // Active session check
+        Route::get('/active-session', [TrainingController::class, 'activeSession']);
+
+        // Environments CRUD
+        Route::get('/environments', [TrainingController::class, 'environments']);
+        Route::post('/environments', [TrainingController::class, 'createEnvironment']);
+        Route::get('/environments/{uuid}', [TrainingController::class, 'showEnvironment']);
+        Route::put('/environments/{uuid}', [TrainingController::class, 'updateEnvironment']);
+        Route::delete('/environments/{uuid}', [TrainingController::class, 'deleteEnvironment']);
+        Route::get('/environments/{uuid}/leaderboard', [TrainingController::class, 'leaderboard']);
+
+        // Sessions
+        Route::get('/sessions', [TrainingController::class, 'sessions']);
+        Route::post('/sessions/start', [TrainingController::class, 'start']);
+        Route::get('/sessions/{uuid}', [TrainingController::class, 'status']);
+        Route::post('/sessions/{uuid}/pause', [TrainingController::class, 'pause']);
+        Route::post('/sessions/{uuid}/resume', [TrainingController::class, 'resume']);
+        Route::post('/sessions/{uuid}/complete', [TrainingController::class, 'complete']);
+        Route::post('/sessions/{uuid}/abandon', [TrainingController::class, 'abandon']);
+        Route::post('/sessions/{uuid}/reset', [TrainingController::class, 'reset']);
+        Route::post('/sessions/{uuid}/log-action', [TrainingController::class, 'logAction']);
+        Route::post('/sessions/{uuid}/complete-objective', [TrainingController::class, 'completeObjective']);
+
+        // Achievements
+        Route::get('/achievements', [TrainingController::class, 'achievements']);
+
+        // Certificates
+        Route::get('/sessions/{uuid}/certificate', [TrainingController::class, 'certificate']);
+        Route::get('/certificates/{certificateId}/verify', [TrainingController::class, 'verifyCertificate']);
+    });
+
+    // Offline Capability & Sync
+    Route::prefix('offline')->group(function () {
+        // Reference data
+        Route::get('/entity-types', [OfflineController::class, 'entityTypes']);
+        Route::get('/operations', [OfflineController::class, 'operations']);
+
+        // Cache manifest and data
+        Route::get('/manifest', [OfflineController::class, 'manifest']);
+        Route::post('/cache-data', [OfflineController::class, 'cacheData']);
+        Route::get('/priority-entities', [OfflineController::class, 'priorityEntities']);
+
+        // Sync queue
+        Route::post('/queue', [OfflineController::class, 'queueChange']);
+        Route::post('/queue/batch', [OfflineController::class, 'queueBatch']);
+        Route::get('/pending', [OfflineController::class, 'pending']);
+        Route::get('/history', [OfflineController::class, 'history']);
+
+        // Sync operations
+        Route::post('/sync', [OfflineController::class, 'sync']);
+        Route::get('/status', [OfflineController::class, 'status']);
+        Route::get('/storage', [OfflineController::class, 'storage']);
+        Route::post('/clear', [OfflineController::class, 'clear']);
+
+        // Conflict resolution
+        Route::get('/conflicts', [OfflineController::class, 'conflicts']);
+        Route::get('/conflicts/{uuid}', [OfflineController::class, 'showConflict']);
+        Route::post('/conflicts/{uuid}/resolve', [OfflineController::class, 'resolveConflict']);
+
+        // Individual sync items
+        Route::post('/{uuid}/retry', [OfflineController::class, 'retry']);
+        Route::delete('/{uuid}', [OfflineController::class, 'cancel']);
+    });
+
     // Admin Routes
     Route::prefix('admin')->middleware(['role:admin'])->group(function () {
         Route::apiResource('achievements', \App\Http\Controllers\Api\Admin\AchievementController::class);
@@ -425,11 +1085,22 @@ Route::prefix('public')->group(function () {
     Route::get('/conflicts/{slug}', [ConflictController::class, 'show']);
 });
 
-// Health check endpoint (public)
-Route::get('/health', function () {
-    return response()->json([
-        'status' => 'healthy',
-        'timestamp' => now()->toIso8601String(),
-        'service' => 'OsintWeb API',
-    ]);
+// Health check endpoints
+// Public endpoints (no authentication required)
+Route::prefix('health')->group(function () {
+    Route::get('/', [HealthController::class, 'health']);
+    Route::get('/live', [HealthController::class, 'liveness']);
+    Route::get('/ready', [HealthController::class, 'readiness']);
+});
+
+// Protected health endpoints (require authentication)
+Route::middleware('auth:sanctum')->prefix('health')->group(function () {
+    Route::get('/full', [HealthController::class, 'healthFull']);
+    Route::get('/metrics', [HealthController::class, 'metrics']);
+    Route::get('/history', [HealthController::class, 'history']);
+    Route::get('/statistics', [HealthController::class, 'statistics']);
+    Route::get('/system', [HealthController::class, 'systemMetrics']);
+    Route::get('/types', [HealthController::class, 'types']);
+    Route::get('/component/{component}', [HealthController::class, 'healthComponent']);
+    Route::post('/cleanup', [HealthController::class, 'cleanup']);
 });

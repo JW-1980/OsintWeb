@@ -294,3 +294,97 @@ export interface LegendItem {
   visible: boolean;
   type: 'actor' | 'event' | 'equipment';
 }
+
+// Offline capability types
+export type OfflineEntityType =
+  | 'events'
+  | 'equipment'
+  | 'countries'
+  | 'factions'
+  | 'actors'
+  | 'articles'
+  | 'sources';
+
+export type SyncOperation = 'create' | 'update' | 'delete';
+
+export type SyncStatus = 'pending' | 'processing' | 'synced' | 'failed' | 'conflict';
+
+export type SyncPriority = 1 | 2 | 3 | 4 | 5;
+
+export interface SyncQueueItem {
+  id: string;
+  uuid: string;
+  clientId: string;
+  operation: SyncOperation;
+  entityType: OfflineEntityType;
+  entityId?: number;
+  payload: Record<string, unknown>;
+  priority: SyncPriority;
+  status: SyncStatus;
+  conflictData?: ConflictData;
+  attempts: number;
+  lastAttemptAt?: string;
+  syncedAt?: string;
+  errorMessage?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ConflictData {
+  serverVersion: Record<string, unknown>;
+  clientVersion: Record<string, unknown>;
+  serverUpdatedAt: string;
+  clientUpdatedAt: string;
+}
+
+export interface OfflineCacheManifest {
+  version: string;
+  generatedAt: string;
+  routes: CacheableRoute[];
+  priorityEntities: Record<string, unknown>;
+  currentCache: {
+    routes: string[];
+    entities: Record<string, (number | string)[]>;
+  };
+  syncStatus: 'synced' | 'pending' | 'error';
+  pendingChangesCount: number;
+  storageUsed: number;
+  storageUsedHuman: string;
+  lastSyncAt?: string;
+}
+
+export interface CacheableRoute {
+  path: string;
+  method: string;
+  cacheable: boolean;
+}
+
+export interface OfflineStatus {
+  isOnline: boolean;
+  pendingCount: number;
+  conflictCount: number;
+  lastSyncAt?: string;
+  storageUsed: number;
+  storageUsedHuman: string;
+}
+
+export interface SyncResult {
+  synced: number;
+  failed: number;
+  conflicts: number;
+  items: Array<{
+    uuid: string;
+    clientId?: string;
+    status: SyncStatus;
+    entityId?: number;
+    message?: string;
+  }>;
+}
+
+export interface CachedEntity<T = Record<string, unknown>> {
+  id: number | string;
+  type: OfflineEntityType;
+  data: T;
+  cachedAt: number;
+  updatedAt?: string;
+}

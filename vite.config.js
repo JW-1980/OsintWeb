@@ -2,6 +2,40 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import { fileURLToPath, URL } from 'node:url';
+import { resolve } from 'node:path';
+import fs from 'node:fs';
+
+// Plugin to copy service worker to public directory
+function serviceWorkerPlugin() {
+    return {
+        name: 'service-worker-plugin',
+        writeBundle() {
+            // Copy service worker to public directory after build
+            const swSource = resolve(__dirname, 'resources/js/service-worker.js');
+            const swDest = resolve(__dirname, 'public/service-worker.js');
+
+            if (fs.existsSync(swSource)) {
+                fs.copyFileSync(swSource, swDest);
+                console.log('Service worker copied to public directory');
+            }
+        },
+        configureServer(server) {
+            // Serve service worker during development
+            server.middlewares.use((req, res, next) => {
+                if (req.url === '/service-worker.js') {
+                    const swPath = resolve(__dirname, 'resources/js/service-worker.js');
+                    if (fs.existsSync(swPath)) {
+                        res.setHeader('Content-Type', 'application/javascript');
+                        res.setHeader('Service-Worker-Allowed', '/');
+                        fs.createReadStream(swPath).pipe(res);
+                        return;
+                    }
+                }
+                next();
+            });
+        },
+    };
+}
 
 export default defineConfig({
     plugins: [
@@ -17,6 +51,7 @@ export default defineConfig({
                 },
             },
         }),
+        serviceWorkerPlugin(),
     ],
     resolve: {
         alias: {

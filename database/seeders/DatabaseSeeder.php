@@ -21,11 +21,17 @@ class DatabaseSeeder extends Seeder
             // Base data - Countries (required by Actors and MilitaryEquipment)
             CountriesSeeder::class,
 
+            // Verified Information Sources (requires Countries)
+            SourcesSeeder::class,
+
             // Actors (countries, groups, organizations)
             ActorsSeeder::class,
 
             // Conflicts (requires Actors)
             ConflictsSeeder::class,
+
+            // Event Types (required by Events)
+            EventTypesSeeder::class,
 
             // Equipment property categories
             EquipmentPropertyCategoriesSeeder::class,
@@ -57,6 +63,15 @@ class DatabaseSeeder extends Seeder
 
             // Achievements
             AchievementsSeeder::class,
+
+            // Disinformation Detection Patterns
+            DisinformationPatternsSeeder::class,
+
+            // SITREP Report Templates
+            SitrepTemplatesSeeder::class,
+
+            // Training Environments and Scenarios
+            TrainingEnvironmentsSeeder::class,
         ]);
     }
 }
