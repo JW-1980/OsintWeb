@@ -1,0 +1,345 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+class ConflictController extends Controller
+{
+    /**
+     * List all conflicts.
+     */
+    public function index(Request $request): JsonResponse
+    {
+        $query = DB::table('conflicts')
+            ->orderBy('start_date', 'desc');
+
+        if ($request->has('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->has('region')) {
+            $query->where('region', $request->input('region'));
+        }
+
+        if ($request->has('intensity')) {
+            $query->where('intensity', $request->input('intensity'));
+        }
+
+        if ($request->has('type')) {
+            $query->where('type', $request->input('type'));
+        }
+
+        $conflicts = $query->paginate($request->input('per_page', 25));
+
+        return response()->json([
+            'data' => $conflicts->items(),
+            'meta' => [
+                'current_page' => $conflicts->currentPage(),
+                'total' => $conflicts->total(),
+                'active_count' => DB::table('conflicts')->where('status', 'active')->count(),
+            ],
+        ]);
+    }
+
+    /**
+     * Get active conflicts only.
+     */
+    public function active(): JsonResponse
+    {
+        $conflicts = DB::table('conflicts')
+            ->whereIn('status', ['active', 'tension'])
+            ->orderBy('intensity', 'desc')
+            ->get();
+
+        return response()->json([
+            'data' => $conflicts,
+            'count' => $conflicts->count(),
+        ]);
+    }
+
+    /**
+     * Show a specific conflict.
+     */
+    public function show(string $slug): JsonResponse
+    {
+        $conflict = DB::table('conflicts')
+            ->where('slug', $slug)
+            ->orWhere('uuid', $slug)
+            ->first();
+
+        if (!$conflict) {
+            return response()->json(['message' => 'Conflict not found'], 404);
+        }
+
+        // Get related data
+        $events = DB::table('events')
+            ->where('conflict_id', $conflict->id)
+            ->orderBy('date', 'desc')
+            ->limit(20)
+            ->get();
+
+        $zones = DB::table('zones')
+            ->where('conflict_id', $conflict->id)
+            ->get();
+
+        $eventStats = DB::table('events')
+            ->select([
+                DB::raw('COUNT(*) as total'),
+                DB::raw('SUM(casualties_military) as military_casualties'),
+                DB::raw('SUM(casualties_civilian) as civilian_casualties'),
+            ])
+            ->where('conflict_id', $conflict->id)
+            ->first();
+
+        return response()->json([
+            'data' => $conflict,
+            'recent_events' => $events,
+            'zones' => $zones,
+            'statistics' => [
+                'total_events' => $eventStats->total ?? 0,
+                'military_casualties' => $eventStats->military_casualties ?? 0,
+                'civilian_casualties' => $eventStats->civilian_casualties ?? 0,
+                'zones_count' => $zones->count(),
+            ],
+        ]);
+    }
+
+    /**
+     * Get conflict events.
+     */
+    public function events(Request $request, string $slug): JsonResponse
+    {
+        $conflict = DB::table('conflicts')
+            ->where('slug', $slug)
+            ->orWhere('uuid', $slug)
+            ->first();
+
+        if (!$conflict) {
+            return response()->json(['message' => 'Conflict not found'], 404);
+        }
+
+        $query = DB::table('events')
+            ->where('conflict_id', $conflict->id)
+            ->orderBy('date', 'desc');
+
+        if ($request->has('event_type')) {
+            $query->where('event_type', $request->input('event_type'));
+        }
+
+        if ($request->has('date_from')) {
+            $query->where('date', '>=', $request->input('date_from'));
+        }
+
+        if ($request->has('date_to')) {
+            $query->where('date', '<=', $request->input('date_to'));
+        }
+
+        $events = $query->paginate($request->input('per_page', 25));
+
+        return response()->json([
+            'data' => $events->items(),
+            'meta' => [
+                'current_page' => $events->currentPage(),
+                'total' => $events->total(),
+            ],
+        ]);
+    }
+
+    /**
+     * Get conflict zones.
+     */
+    public function zones(string $slug): JsonResponse
+    {
+        $conflict = DB::table('conflicts')
+            ->where('slug', $slug)
+            ->orWhere('uuid', $slug)
+            ->first();
+
+        if (!$conflict) {
+            return response()->json(['message' => 'Conflict not found'], 404);
+        }
+
+        $zones = DB::table('zones')
+            ->where('conflict_id', $conflict->id)
+            ->get();
+
+        return response()->json(['data' => $zones]);
+    }
+
+    /**
+     * Get conflict statistics.
+     */
+    public function statistics(string $slug): JsonResponse
+    {
+        $conflict = DB::table('conflicts')
+            ->where('slug', $slug)
+            ->orWhere('uuid', $slug)
+            ->first();
+
+        if (!$conflict) {
+            return response()->json(['message' => 'Conflict not found'], 404);
+        }
+
+        $eventsByType = DB::table('events')
+            ->select('event_type', DB::raw('COUNT(*) as count'))
+            ->where('conflict_id', $conflict->id)
+            ->groupBy('event_type')
+            ->get();
+
+        $eventsByMonth = DB::table('events')
+            ->select(
+                DB::raw('DATE_FORMAT(date, "%Y-%m") as month'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('conflict_id', $conflict->id)
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
+            ->get();
+
+        $casualties = DB::table('events')
+            ->select([
+                DB::raw('SUM(casualties_military) as military'),
+                DB::raw('SUM(casualties_civilian) as civilian'),
+            ])
+            ->where('conflict_id', $conflict->id)
+            ->first();
+
+        $zonesByController = DB::table('zones')
+            ->select('controller', DB::raw('COUNT(*) as count'), DB::raw('SUM(area_sq_km) as total_area'))
+            ->where('conflict_id', $conflict->id)
+            ->groupBy('controller')
+            ->get();
+
+        return response()->json([
+            'conflict' => $conflict->name,
+            'events_by_type' => $eventsByType,
+            'events_by_month' => $eventsByMonth,
+            'casualties' => [
+                'military' => $casualties->military ?? 0,
+                'civilian' => $casualties->civilian ?? 0,
+            ],
+            'territorial_control' => $zonesByController,
+        ]);
+    }
+
+    /**
+     * Get conflict actors.
+     */
+    public function actors(string $slug): JsonResponse
+    {
+        $conflict = DB::table('conflicts')
+            ->where('slug', $slug)
+            ->orWhere('uuid', $slug)
+            ->first();
+
+        if (!$conflict) {
+            return response()->json(['message' => 'Conflict not found'], 404);
+        }
+
+        $primaryParties = json_decode($conflict->primary_parties ?? '[]', true);
+        $secondaryParties = json_decode($conflict->secondary_parties ?? '[]', true);
+
+        // Try to find actor details
+        $actorDetails = [];
+        $allParties = array_merge($primaryParties, $secondaryParties);
+
+        foreach ($allParties as $party) {
+            $actor = DB::table('actors')
+                ->where('name', 'like', '%' . $party . '%')
+                ->first();
+
+            if ($actor) {
+                $actorDetails[] = $actor;
+            } else {
+                // Check if it's a country
+                $country = DB::table('countries')
+                    ->where('name', 'like', '%' . $party . '%')
+                    ->first();
+
+                if ($country) {
+                    $actorDetails[] = [
+                        'name' => $country->name,
+                        'type' => 'state',
+                        'iso_code' => $country->iso_code,
+                    ];
+                }
+            }
+        }
+
+        return response()->json([
+            'primary_parties' => $primaryParties,
+            'secondary_parties' => $secondaryParties,
+            'actor_details' => $actorDetails,
+        ]);
+    }
+
+    /**
+     * Get regions.
+     */
+    public function regions(): JsonResponse
+    {
+        $regions = DB::table('conflicts')
+            ->select('region', DB::raw('COUNT(*) as count'))
+            ->whereNotNull('region')
+            ->groupBy('region')
+            ->orderBy('count', 'desc')
+            ->get();
+
+        return response()->json(['data' => $regions]);
+    }
+
+    /**
+     * Get conflict types.
+     */
+    public function types(): JsonResponse
+    {
+        return response()->json([
+            'types' => [
+                'interstate' => 'Interstate War',
+                'civil_war' => 'Civil War',
+                'insurgency' => 'Insurgency',
+                'territorial' => 'Territorial Dispute',
+                'asymmetric' => 'Asymmetric Conflict',
+                'proxy' => 'Proxy War',
+            ],
+            'intensities' => [
+                'high' => 'High Intensity',
+                'medium' => 'Medium Intensity',
+                'low' => 'Low Intensity',
+            ],
+            'statuses' => [
+                'active' => 'Active Combat',
+                'tension' => 'Elevated Tensions',
+                'frozen' => 'Frozen Conflict',
+                'concluded' => 'Concluded',
+            ],
+        ]);
+    }
+
+    /**
+     * Search conflicts.
+     */
+    public function search(Request $request): JsonResponse
+    {
+        $query = $request->input('q');
+
+        if (!$query || strlen($query) < 2) {
+            return response()->json(['data' => []]);
+        }
+
+        $conflicts = DB::table('conflicts')
+            ->where('name', 'like', '%' . $query . '%')
+            ->orWhere('description', 'like', '%' . $query . '%')
+            ->orWhere('keywords', 'like', '%' . $query . '%')
+            ->limit(10)
+            ->get();
+
+        return response()->json(['data' => $conflicts]);
+    }
+}
