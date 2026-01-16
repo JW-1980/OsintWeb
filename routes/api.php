@@ -23,6 +23,13 @@ use App\Http\Controllers\Api\OnboardingController;
 use App\Http\Controllers\Api\AudioController;
 use App\Http\Controllers\Api\SkillController;
 use App\Http\Controllers\Api\AgentController;
+use App\Http\Controllers\Api\AlertController;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\TimelineController;
+use App\Http\Controllers\Api\SourceVerificationController;
+use App\Http\Controllers\Api\GeolocationController;
+use App\Http\Controllers\Api\TipController;
+use App\Http\Controllers\Api\ConflictController;
 
 /*
 |--------------------------------------------------------------------------
@@ -313,6 +320,109 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user/achievements', function (Request $request) {
         return $request->user()->achievements;
     });
+
+    // Alerts & Notifications
+    Route::prefix('alerts')->group(function () {
+        Route::get('/', [AlertController::class, 'index']);
+        Route::post('/', [AlertController::class, 'store']);
+        Route::get('/{uuid}', [AlertController::class, 'show']);
+        Route::put('/{uuid}', [AlertController::class, 'update']);
+        Route::delete('/{uuid}', [AlertController::class, 'destroy']);
+        Route::get('/{uuid}/history', [AlertController::class, 'history']);
+        Route::post('/{uuid}/test', [AlertController::class, 'test']);
+    });
+
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [AlertController::class, 'notifications']);
+        Route::post('/{uuid}/read', [AlertController::class, 'markRead']);
+        Route::post('/read-all', [AlertController::class, 'markAllRead']);
+    });
+
+    // Reports & SITREP Generation
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [ReportController::class, 'index']);
+        Route::get('/templates', [ReportController::class, 'templates']);
+        Route::post('/generate', [ReportController::class, 'generate']);
+        Route::get('/{uuid}', [ReportController::class, 'show']);
+        Route::get('/{uuid}/download', [ReportController::class, 'download']);
+        Route::delete('/{uuid}', [ReportController::class, 'destroy']);
+        Route::post('/schedule', [ReportController::class, 'schedule']);
+        Route::get('/schedules', [ReportController::class, 'schedules']);
+        Route::delete('/schedules/{uuid}', [ReportController::class, 'deleteSchedule']);
+    });
+
+    // Timeline & Temporal Analysis
+    Route::prefix('timeline')->group(function () {
+        Route::get('/', [TimelineController::class, 'index']);
+        Route::post('/compare', [TimelineController::class, 'compare']);
+        Route::get('/territorial', [TimelineController::class, 'territorial']);
+        Route::get('/playback', [TimelineController::class, 'playback']);
+        Route::post('/investigation', [TimelineController::class, 'investigation']);
+        Route::get('/milestones', [TimelineController::class, 'milestones']);
+    });
+
+    // Source Verification
+    Route::prefix('sources')->group(function () {
+        Route::get('/trusted', [SourceVerificationController::class, 'trustedSources']);
+        Route::post('/check', [SourceVerificationController::class, 'checkSource']);
+        Route::post('/submit', [SourceVerificationController::class, 'submitSource']);
+        Route::post('/grade', [SourceVerificationController::class, 'gradeInformation']);
+        Route::post('/cross-reference', [SourceVerificationController::class, 'crossReference']);
+        Route::get('/types', [SourceVerificationController::class, 'sourceTypes']);
+    });
+
+    // Geolocation & Verification Tools
+    Route::prefix('geolocation')->group(function () {
+        Route::get('/projects', [GeolocationController::class, 'projects']);
+        Route::post('/projects', [GeolocationController::class, 'createProject']);
+        Route::get('/projects/{uuid}', [GeolocationController::class, 'showProject']);
+        Route::post('/projects/{uuid}/markers', [GeolocationController::class, 'addMarker']);
+        Route::post('/projects/{uuid}/result', [GeolocationController::class, 'submitResult']);
+        Route::post('/sun-position', [GeolocationController::class, 'sunPosition']);
+        Route::post('/reverse-geocode', [GeolocationController::class, 'reverseGeocode']);
+        Route::post('/weather', [GeolocationController::class, 'weatherData']);
+        Route::get('/satellite-layers', [GeolocationController::class, 'satelliteLayers']);
+    });
+
+    // Tips (moderation - requires auth)
+    Route::prefix('tips')->group(function () {
+        Route::get('/', [TipController::class, 'index']);
+        Route::get('/{uuid}', [TipController::class, 'show']);
+        Route::put('/{uuid}/status', [TipController::class, 'updateStatus']);
+        Route::post('/{uuid}/convert', [TipController::class, 'convertToEvent']);
+    });
+
+    // Conflicts
+    Route::prefix('conflicts')->group(function () {
+        Route::get('/', [ConflictController::class, 'index']);
+        Route::get('/active', [ConflictController::class, 'active']);
+        Route::get('/regions', [ConflictController::class, 'regions']);
+        Route::get('/types', [ConflictController::class, 'types']);
+        Route::get('/search', [ConflictController::class, 'search']);
+        Route::get('/{slug}', [ConflictController::class, 'show']);
+        Route::get('/{slug}/events', [ConflictController::class, 'events']);
+        Route::get('/{slug}/zones', [ConflictController::class, 'zones']);
+        Route::get('/{slug}/statistics', [ConflictController::class, 'statistics']);
+        Route::get('/{slug}/actors', [ConflictController::class, 'actors']);
+    });
+});
+
+// ===================================
+// PUBLIC ROUTES (No Authentication)
+// ===================================
+
+// Public tip submission
+Route::prefix('tips')->group(function () {
+    Route::post('/submit', [TipController::class, 'submit']);
+    Route::get('/types', [TipController::class, 'types']);
+    Route::get('/status/{uuid}', [TipController::class, 'status']);
+});
+
+// Public conflict information
+Route::prefix('public')->group(function () {
+    Route::get('/conflicts', [ConflictController::class, 'index']);
+    Route::get('/conflicts/active', [ConflictController::class, 'active']);
+    Route::get('/conflicts/{slug}', [ConflictController::class, 'show']);
 });
 
 // Health check endpoint (public)

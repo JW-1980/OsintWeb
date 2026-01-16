@@ -33,6 +33,18 @@ class DatabaseSeeder extends Seeder
             // Military equipment categories and items
             MilitaryEquipmentSeeder::class,
             ExtendedEquipmentSeeder::class,
+            AdditionalEquipmentSeeder::class,
+
+            // Extended Conflicts and Non-State Actors
+            ConflictSeeder::class,
+            ActorSeeder::class,
+
+            // Events and Control Zones
+            EventSeeder::class,
+            ZoneSeeder::class,
+
+            // Crowdsourced Intelligence (sample tips)
+            TipSeeder::class,
 
             // OSINT Skills and Intelligence Agents
             OsintSkillsSeeder::class,

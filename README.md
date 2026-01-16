@@ -75,7 +75,7 @@ Access a military encyclopedia at your fingertips. The platform comes pre-loaded
 Document the reality of war with precision. Utilize **49+ specialized event templates** covering everything from airstrikes and naval engagements to cyber attacks and humanitarian crises. Every event supports rich media attachments—images, videos, and documents—creating a verifiable chain of evidence. Link specific equipment losses to events to build a forensic record of the battlefield.
 
 ### 🕵️ Advanced Actor Attribution
-Modern warfare is complex. OsintWeb creates a clear web of attribution, tracking **197 state actors** alongside hundreds of non-state groups, PMCs (like Wagner), militias, and terrorist organizations. Our smart system understands alliances and proxies, allowing you to attribute actions correctly—whether it's a state army or a shadow group. Real-time fuzzy search ensures you never miss a connection.
+Modern warfare is complex. OsintWeb creates a clear web of attribution, tracking **197 state actors** alongside **28+ non-state groups** including PMCs (Wagner), militias (Houthis, RSF), terrorist organizations (ISIS, Al-Qaeda), and rebel forces (SDF, Arakan Army). Our smart system understands alliances and proxies, allowing you to attribute actions correctly—whether it's a state army or a shadow group. Real-time fuzzy search ensures you never miss a connection.
 
 ### ⏱️ Temporal Analysis & Time-Travel
 History is a sequence of events. Our **Timeline Analysis** tools let you scrub through time, watching frontlines shift and battles unfold day-by-day. Use the **Chronological Builder** to construct custom investigation timelines, linking disparate events into a cohesive narrative to understand the cause and effect of military operations.
@@ -111,7 +111,13 @@ cd osintweb
 **What this does:**
 1.  Builds the secure application container.
 2.  Initializes the database and installs dependencies.
-3.  **Seeds the system** with realistic actors, conflicts, and equipment data.
+3.  **Seeds the system** with:
+    - 230+ military equipment items with detailed specifications
+    - 17 active global conflicts (Ukraine, Gaza, Syria, Yemen, etc.)
+    - 225+ state and non-state actors (including Wagner, Hamas, Hezbollah, SDF)
+    - 20+ sample events with geolocation data
+    - 13 control zones with territorial boundaries
+    - 10 sample anonymous intelligence tips
 4.  Launches your personal intelligence platform at `http://localhost:8000`.
 
 ---
@@ -122,7 +128,11 @@ For production environments or manual setup without Docker, follow these steps.
 1.  Builds the application container (PHP, Composer, Node.js).
 2.  Starts a local MySQL database.
 3.  Installs all dependencies.
-4.  **Seeds the database** with sample actors, conflicts, and equipment.
+4.  **Seeds the database** with comprehensive sample data:
+    - 230+ military equipment items with detailed descriptions
+    - 17 global conflicts covering all major active war zones
+    - 225+ state actors (countries) and non-state armed groups
+    - Sample events, control zones, and anonymous tips
 5.  Launches the platform at `http://localhost:8000`.
 
 ## Overview
@@ -150,7 +160,7 @@ OsintWeb provides powerful tools for:
 *   **Contact & About**: Professional landing pages for community engagement.
 
 ### 🚜 Military Equipment Database
-*   **Comprehensive Catalog**: 190+ pre-loaded items including ships, tanks, aircraft, helicopters, drones, and **50+ detailed missile systems**.
+*   **Comprehensive Catalog**: 230+ pre-loaded items including ships, tanks, aircraft, helicopters, drones, artillery systems, air defense systems, support vehicles, and **50+ detailed missile systems**.
 *   **Detailed Specs**: Track dimensions, armament, range, and production numbers.
 *   **Inventory Tracking**: Monitor per-country inventory levels and loss statistics.
 *   **CRUD Operations**: Full management capabilities via API and admin panel.
@@ -211,10 +221,35 @@ OsintWeb provides powerful tools for:
 *   **Point System**: Configurable point values and rarity tiers (common to legendary).
 *   **User Rewards**: Track and display user achievements on profiles.
 
+### 🌍 Conflict Tracking
+*   **Global Conflicts Database**: 17+ pre-loaded active conflicts with detailed metadata.
+*   **Actor Attribution**: 225+ state and non-state actors (militias, PMCs, insurgent groups).
+*   **Control Zones**: Track territorial control with conflict-linked zones.
+*   **Event Correlation**: Link events to specific conflicts for comprehensive analysis.
+
+### 🕵️ Crowdsourced Intelligence
+*   **Anonymous Tip Submission**: Public API for submitting intelligence tips without authentication.
+*   **Moderation Workflow**: Review, verify, and escalate tips through status stages.
+*   **Tip Types**: Military movement, infrastructure damage, air/naval activity, war crimes, disinformation.
+*   **Conversion to Events**: Transform verified tips into official events with one click.
+
 ### 🛡️ Privacy & Security
 *   **GDPR Compliance**: Built-in tools for consent management, data export, and "right to be forgotten".
 *   **Audit Trail**: Cryptographic logging of all changes for data integrity.
 *   **Session Management**: Track and terminate active user sessions.
+
+### 🔍 Source Verification
+*   **NATO Admiralty System**: Grade sources using the A-F reliability and 1-6 credibility scale.
+*   **Trusted Sources Database**: Maintain a list of verified and trusted intelligence sources.
+*   **Cross-Reference Tool**: Check claims against multiple independent sources.
+*   **Source Type Classification**: Categorize sources as official, journalistic, social media, satellite, etc.
+
+### 📍 Geolocation Tools
+*   **Verification Projects**: Create collaborative geolocation investigations.
+*   **Sun Position Calculator**: Determine exact time of footage using shadow analysis.
+*   **Reverse Geocoding**: Convert coordinates to human-readable locations.
+*   **Weather Data Integration**: Verify claims using historical weather conditions.
+*   **Satellite Layer Access**: Multiple imagery providers for comparison.
 
 ### 🚀 Deployment & Config
 *   **Installation Wizard**: Web-based setup for database, admin user, and basic settings.
@@ -230,6 +265,48 @@ OsintWeb provides powerful tools for:
 - **Cache**: Laravel file/database cache (no Redis)
 - **Search**: Meilisearch or MySQL full-text
 - **Hosting**: Shared hosting compatible ($5-15/month)
+
+## API Endpoints
+
+OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platform features.
+
+### Public Endpoints (No Authentication)
+| Endpoint | Description |
+|----------|-------------|
+| `POST /api/tips/submit` | Submit anonymous intelligence tip |
+| `GET /api/tips/types` | Get available tip categories |
+| `GET /api/tips/status/{uuid}` | Check tip status |
+| `GET /api/public/conflicts` | List all conflicts |
+| `GET /api/public/conflicts/active` | Get active conflicts |
+| `GET /api/public/conflicts/{slug}` | Get conflict details |
+| `GET /api/health` | Service health check |
+
+### Core Data APIs (Authenticated)
+| Category | Base Path | Key Operations |
+|----------|-----------|----------------|
+| Events | `/api/events` | CRUD, verify, dispute, media, sources |
+| Equipment | `/api/equipment` | CRUD, categories, stats, by-country |
+| Zones | `/api/zones` | CRUD, history, at-date snapshots |
+| Countries | `/api/countries` | List, equipment, factions |
+| Actors | `/api/actors` | Search, autocomplete, details |
+| Conflicts | `/api/conflicts` | List, events, zones, statistics, actors |
+
+### Intelligence & Analysis APIs
+| Category | Base Path | Key Operations |
+|----------|-----------|----------------|
+| Alerts | `/api/alerts` | CRUD, history, test notifications |
+| Reports | `/api/reports` | Templates, generate, download, schedule |
+| Timeline | `/api/timeline` | Compare, territorial, playback, milestones |
+| Sources | `/api/sources` | Grade, cross-reference, trusted list |
+| Geolocation | `/api/geolocation` | Projects, sun-position, reverse-geocode |
+| Tips | `/api/tips` | Moderation workflow, convert to events |
+
+### AI & Automation APIs
+| Category | Base Path | Key Operations |
+|----------|-----------|----------------|
+| Audio | `/api/audio` | Upload, transcriptions (manual/AI), export |
+| Skills | `/api/skills` | Match, trigger, preferences |
+| Agents | `/api/agents` | Create, run, executions |
 
 ## Documentation
 
