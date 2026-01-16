@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 // Include installation routes
 require __DIR__.'/install.php';
 
-Route::get('/', function () {
+Route::get('/{any?}', function () {
+    // If installed, show the Vue SPA
+    if (file_exists(storage_path('installed'))) {
+        return view('app');
+    }
+    // Otherwise show the installation welcome page
     return view('welcome');
-});
+})->where('any', '^(?!api|install|sanctum).*$');
