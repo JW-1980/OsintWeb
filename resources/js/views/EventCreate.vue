@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, watch } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useEventsStore } from '@/stores/events';
 import type { Event, EventType, ConfidenceLevel } from '@/types';
@@ -8,10 +8,8 @@ import ActorSelector from '@/components/events/ActorSelector.vue';
 const router = useRouter();
 const eventsStore = useEventsStore();
 
-const loading = ref(false);
 const saving = ref(false);
 const showPreview = ref(false);
-const mapReady = ref(false);
 const selectedLocation = ref<{ lat: number; lng: number } | null>(null);
 
 const formData = reactive({
@@ -20,7 +18,7 @@ const formData = reactive({
   description: '',
   occurred_at: new Date().toISOString().slice(0, 16),
   location_name: '',
-  coordinates: null as { type: 'Point'; coordinates: [number, number] } | null,
+  coordinates: undefined as { type: 'Point'; coordinates: [number, number] } | undefined,
   actor_id: undefined as number | undefined,
   conflict_id: undefined as number | undefined,
   confidence_level: 'unconfirmed' as ConfidenceLevel,
@@ -119,12 +117,6 @@ const updateCoordinates = () => {
   }
 };
 
-const handleMapClick = (lat: number, lng: number) => {
-  coordinatesInput.lat = lat.toFixed(6);
-  coordinatesInput.lng = lng.toFixed(6);
-  updateCoordinates();
-};
-
 const handleSubmit = async (asDraft: boolean = false) => {
   if (!isFormValid.value) return;
 
@@ -162,10 +154,6 @@ const handleCancel = () => {
 watch(coordinatesInput, () => {
   updateCoordinates();
 }, { deep: true });
-
-onMounted(() => {
-  mapReady.value = true;
-});
 </script>
 
 <template>

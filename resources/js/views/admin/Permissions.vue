@@ -158,7 +158,7 @@
                 <div class="flex items-center">
                   <span class="text-sm text-gray-900 dark:text-white">{{ permission.roles_count }}</span>
                   <div v-if="permission.roles && permission.roles.length > 0" class="flex -space-x-1 ml-2">
-                    <div v-for="(role, index) in permission.roles.slice(0, 3)" :key="role.id" :class="getRoleColorClass(role.color)" class="w-5 h-5 rounded-full text-white text-xs flex items-center justify-center border border-white dark:border-gray-800" :title="role.name">
+                    <div v-for="role in permission.roles.slice(0, 3)" :key="role.id" :class="getRoleColorClass(role.color)" class="w-5 h-5 rounded-full text-white text-xs flex items-center justify-center border border-white dark:border-gray-800" :title="role.name">
                       {{ role.name.charAt(0) }}
                     </div>
                     <div v-if="permission.roles.length > 3" class="w-5 h-5 rounded-full bg-gray-400 text-white text-xs flex items-center justify-center border border-white dark:border-gray-800">
@@ -296,14 +296,9 @@ interface Permission {
   updated_at: string;
 }
 
-interface PermissionGroup {
-  name: string;
-  permissions: Permission[];
-}
-
 // State
 const permissions = ref<Permission[]>([]);
-const loading = ref(false);
+const _loading = ref(false);
 const currentPage = ref(1);
 const perPage = ref(15);
 const viewMode = ref<'grouped' | 'table'>('grouped');
@@ -354,7 +349,7 @@ const filteredGroupedPermissions = computed(() => {
     if (!groups[perm.group]) {
       groups[perm.group] = [];
     }
-    groups[perm.group].push(perm);
+    groups[perm.group]!.push(perm);
   });
   return Object.entries(groups).map(([name, permissions]) => ({
     name,
@@ -371,7 +366,7 @@ const paginatedPermissions = computed(() => {
 
 // Methods
 const fetchPermissions = async () => {
-  loading.value = true;
+  _loading.value = true;
   try {
     const roles: Role[] = [
       { id: 1, name: 'Administrator', slug: 'admin', color: 'red', is_system: true, users_count: 3 },
@@ -387,9 +382,9 @@ const fetchPermissions = async () => {
       { id: 4, name: 'Delete Events', slug: 'events.delete', group: 'Events', description: 'Remove events from the system', is_system: true, roles_count: 2, roles: roles.slice(0, 2), created_at: '2024-01-01', updated_at: '2024-01-01' },
       { id: 5, name: 'Verify Events', slug: 'events.verify', group: 'Events', description: 'Mark events as verified after review', is_system: true, roles_count: 2, roles: roles.slice(0, 2), created_at: '2024-01-01', updated_at: '2024-01-01' },
       { id: 6, name: 'View Users', slug: 'users.view', group: 'Users', description: 'View user profiles and information', is_system: true, roles_count: 2, roles: roles.slice(0, 2), created_at: '2024-01-01', updated_at: '2024-01-01' },
-      { id: 7, name: 'Create Users', slug: 'users.create', group: 'Users', description: 'Create new user accounts', is_system: true, roles_count: 1, roles: [roles[0]], created_at: '2024-01-01', updated_at: '2024-01-01' },
-      { id: 8, name: 'Edit Users', slug: 'users.edit', group: 'Users', description: 'Modify user account information', is_system: true, roles_count: 1, roles: [roles[0]], created_at: '2024-01-01', updated_at: '2024-01-01' },
-      { id: 9, name: 'Delete Users', slug: 'users.delete', group: 'Users', description: 'Remove user accounts', is_system: true, roles_count: 1, roles: [roles[0]], created_at: '2024-01-01', updated_at: '2024-01-01' },
+      { id: 7, name: 'Create Users', slug: 'users.create', group: 'Users', description: 'Create new user accounts', is_system: true, roles_count: 1, roles: [roles[0]!], created_at: '2024-01-01', updated_at: '2024-01-01' },
+      { id: 8, name: 'Edit Users', slug: 'users.edit', group: 'Users', description: 'Modify user account information', is_system: true, roles_count: 1, roles: [roles[0]!], created_at: '2024-01-01', updated_at: '2024-01-01' },
+      { id: 9, name: 'Delete Users', slug: 'users.delete', group: 'Users', description: 'Remove user accounts', is_system: true, roles_count: 1, roles: [roles[0]!], created_at: '2024-01-01', updated_at: '2024-01-01' },
       { id: 10, name: 'View Actors', slug: 'actors.view', group: 'Actors', description: 'View actor profiles', is_system: true, roles_count: 4, roles: roles, created_at: '2024-01-01', updated_at: '2024-01-01' },
       { id: 11, name: 'Manage Actors', slug: 'actors.manage', group: 'Actors', description: 'Create, edit, and delete actors', is_system: true, roles_count: 2, roles: roles.slice(0, 2), created_at: '2024-01-01', updated_at: '2024-01-01' },
       { id: 12, name: 'View Reports', slug: 'reports.view', group: 'Reports', description: 'View generated reports', is_system: true, roles_count: 3, roles: roles.slice(0, 3), created_at: '2024-01-01', updated_at: '2024-01-01' },
@@ -397,20 +392,20 @@ const fetchPermissions = async () => {
       { id: 14, name: 'Export Reports', slug: 'reports.export', group: 'Reports', description: 'Export reports to PDF/DOCX', is_system: true, roles_count: 2, roles: roles.slice(0, 2), created_at: '2024-01-01', updated_at: '2024-01-01' },
       { id: 15, name: 'View Analytics', slug: 'analytics.view', group: 'Analytics', description: 'View analytics dashboards', is_system: true, roles_count: 3, roles: roles.slice(0, 3), created_at: '2024-01-01', updated_at: '2024-01-01' },
       { id: 16, name: 'Export Analytics', slug: 'analytics.export', group: 'Analytics', description: 'Export analytics data', is_system: true, roles_count: 2, roles: roles.slice(0, 2), created_at: '2024-01-01', updated_at: '2024-01-01' },
-      { id: 17, name: 'Admin Panel Access', slug: 'admin.access', group: 'Administration', description: 'Access the admin panel', is_system: true, roles_count: 1, roles: [roles[0]], created_at: '2024-01-01', updated_at: '2024-01-01' },
-      { id: 18, name: 'Manage Roles', slug: 'roles.manage', group: 'Administration', description: 'Create and manage roles', is_system: true, roles_count: 1, roles: [roles[0]], created_at: '2024-01-01', updated_at: '2024-01-01' },
-      { id: 19, name: 'System Settings', slug: 'settings.manage', group: 'Administration', description: 'Manage system settings', is_system: true, roles_count: 1, roles: [roles[0]], created_at: '2024-01-01', updated_at: '2024-01-01' },
-      { id: 20, name: 'View Audit Logs', slug: 'audit.view', group: 'Administration', description: 'View audit log entries', is_system: true, roles_count: 1, roles: [roles[0]], created_at: '2024-01-01', updated_at: '2024-01-01' },
+      { id: 17, name: 'Admin Panel Access', slug: 'admin.access', group: 'Administration', description: 'Access the admin panel', is_system: true, roles_count: 1, roles: [roles[0]!], created_at: '2024-01-01', updated_at: '2024-01-01' },
+      { id: 18, name: 'Manage Roles', slug: 'roles.manage', group: 'Administration', description: 'Create and manage roles', is_system: true, roles_count: 1, roles: [roles[0]!], created_at: '2024-01-01', updated_at: '2024-01-01' },
+      { id: 19, name: 'System Settings', slug: 'settings.manage', group: 'Administration', description: 'Manage system settings', is_system: true, roles_count: 1, roles: [roles[0]!], created_at: '2024-01-01', updated_at: '2024-01-01' },
+      { id: 20, name: 'View Audit Logs', slug: 'audit.view', group: 'Administration', description: 'View audit log entries', is_system: true, roles_count: 1, roles: [roles[0]!], created_at: '2024-01-01', updated_at: '2024-01-01' },
     ];
 
     // Expand first group by default
-    if (permissionGroups.value.length > 0) {
+    if (permissionGroups.value.length > 0 && permissionGroups.value[0]) {
       expandedGroups.value = [permissionGroups.value[0]];
     }
   } catch (error) {
     console.error('Failed to fetch permissions:', error);
   } finally {
-    loading.value = false;
+    _loading.value = false;
   }
 };
 

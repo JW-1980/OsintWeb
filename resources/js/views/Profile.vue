@@ -121,10 +121,6 @@ const uploadAvatar = () => {
   input.click();
 };
 
-const removeAvatar = () => {
-  profile.avatarUrl = '';
-};
-
 const enableTwoFactor = async () => {
   twoFactor.qrCode = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
   showTwoFactorModal.value = true;

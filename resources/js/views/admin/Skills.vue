@@ -374,14 +374,9 @@ interface Skill {
   updated_at: string;
 }
 
-interface CategoryGroup {
-  name: string;
-  skills: Skill[];
-}
-
 // State
 const skills = ref<Skill[]>([]);
-const loading = ref(false);
+const _loading = ref(false);
 const saving = ref(false);
 const deleting = ref(false);
 
@@ -442,7 +437,7 @@ const filteredCategories = computed(() => {
     if (!groups[skill.category]) {
       groups[skill.category] = [];
     }
-    groups[skill.category].push(skill);
+    groups[skill.category]!.push(skill);
   });
   return Object.entries(groups).map(([name, skills]) => ({
     name,
@@ -452,7 +447,7 @@ const filteredCategories = computed(() => {
 
 // Methods
 const fetchSkills = async () => {
-  loading.value = true;
+  _loading.value = true;
   try {
     skills.value = [
       { id: 1, name: 'Twitter Scraper', slug: 'twitter-scraper', description: 'Scrapes Twitter/X for conflict-related posts using keywords and hashtags', icon: 'bird', category: 'Social Media', triggers: ['ukraine', 'russia', 'war', 'military', 'attack', 'strike'], is_active: true, agents_count: 3, executions_count: 1542, assigned_agents: [{ id: 1, name: 'Twitter OSINT Bot', status: 'running' }], created_at: '2024-01-01', updated_at: '2024-01-01' },
@@ -469,7 +464,7 @@ const fetchSkills = async () => {
   } catch (error) {
     console.error('Failed to fetch skills:', error);
   } finally {
-    loading.value = false;
+    _loading.value = false;
   }
 };
 
@@ -533,7 +528,7 @@ const saveSkill = async () => {
           ...form,
           triggers: [...form.triggers],
           updated_at: new Date().toISOString()
-        };
+        } as Skill;
       }
     } else {
       const newSkill: Skill = {

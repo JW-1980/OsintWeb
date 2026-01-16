@@ -405,7 +405,7 @@ interface Achievement {
 
 // State
 const achievements = ref<Achievement[]>([]);
-const loading = ref(false);
+const _loading = ref(false);
 const saving = ref(false);
 const deleting = ref(false);
 const currentPage = ref(1);
@@ -470,7 +470,7 @@ const paginatedAchievements = computed(() => {
 
 // Methods
 const fetchAchievements = async () => {
-  loading.value = true;
+  _loading.value = true;
   try {
     achievements.value = [
       { id: 1, name: 'First Steps', description: 'Create your first event', icon: '1', category: 'contribution', rarity: 'common', points: 10, requirement_type: 'events_created', requirement_value: 1, requirement_description: 'Create 1 event', is_active: true, awarded_count: 245, recent_recipients: [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }], created_at: '2024-01-01', updated_at: '2024-01-01' },
@@ -485,7 +485,7 @@ const fetchAchievements = async () => {
   } catch (error) {
     console.error('Failed to fetch achievements:', error);
   } finally {
-    loading.value = false;
+    _loading.value = false;
   }
 };
 
@@ -541,7 +541,7 @@ const saveAchievement = async () => {
           ...achievements.value[index],
           ...form,
           updated_at: new Date().toISOString()
-        };
+        } as Achievement;
       }
     } else {
       const newAchievement: Achievement = {

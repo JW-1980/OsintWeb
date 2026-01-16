@@ -384,7 +384,7 @@ interface Role {
 // State
 const roles = ref<Role[]>([]);
 const permissions = ref<Permission[]>([]);
-const loading = ref(false);
+const _loading = ref(false);
 const saving = ref(false);
 const deleting = ref(false);
 const currentPage = ref(1);
@@ -449,14 +449,14 @@ const groupedPermissions = computed(() => {
     if (!groups[perm.group]) {
       groups[perm.group] = [];
     }
-    groups[perm.group].push(perm);
+    groups[perm.group]!.push(perm);
   });
   return groups;
 });
 
 // Methods
 const fetchData = async () => {
-  loading.value = true;
+  _loading.value = true;
   try {
     // Mock data
     permissions.value = [
@@ -489,7 +489,7 @@ const fetchData = async () => {
   } catch (error) {
     console.error('Failed to fetch data:', error);
   } finally {
-    loading.value = false;
+    _loading.value = false;
   }
 };
 
@@ -542,7 +542,7 @@ const saveRole = async () => {
           permissions: selectedPermissions,
           permissions_count: selectedPermissions.length,
           updated_at: new Date().toISOString()
-        };
+        } as Role;
       }
     } else {
       const newRole: Role = {
@@ -611,7 +611,9 @@ const getRoleColorClass = (color: string) => {
 };
 
 const toggleGroup = (groupName: string) => {
-  const groupPermIds = groupedPermissions.value[groupName].map(p => p.id);
+  const groupPerms = groupedPermissions.value[groupName];
+  if (!groupPerms) return;
+  const groupPermIds = groupPerms.map(p => p.id);
   const allSelected = groupPermIds.every(id => form.permission_ids.includes(id));
 
   if (allSelected) {
@@ -623,7 +625,9 @@ const toggleGroup = (groupName: string) => {
 };
 
 const isGroupSelected = (groupName: string) => {
-  const groupPermIds = groupedPermissions.value[groupName].map(p => p.id);
+  const groupPerms = groupedPermissions.value[groupName];
+  if (!groupPerms) return false;
+  const groupPermIds = groupPerms.map(p => p.id);
   return groupPermIds.every(id => form.permission_ids.includes(id));
 };
 

@@ -411,7 +411,7 @@ interface Agent {
 const agents = ref<Agent[]>([]);
 const availableSkills = ref<Skill[]>([]);
 const executionHistory = ref<Execution[]>([]);
-const loading = ref(false);
+const _loading = ref(false);
 const saving = ref(false);
 const deleting = ref(false);
 const currentPage = ref(1);
@@ -471,7 +471,7 @@ const paginatedAgents = computed(() => {
 
 // Methods
 const fetchAgents = async () => {
-  loading.value = true;
+  _loading.value = true;
   try {
     availableSkills.value = [
       { id: 1, name: 'Twitter Scraper', category: 'Social Media' },
@@ -495,7 +495,7 @@ const fetchAgents = async () => {
   } catch (error) {
     console.error('Failed to fetch agents:', error);
   } finally {
-    loading.value = false;
+    _loading.value = false;
   }
 };
 
@@ -549,7 +549,7 @@ const saveAgent = async () => {
           ...form,
           skills: selectedSkills,
           updated_at: new Date().toISOString()
-        };
+        } as Agent;
       }
     } else {
       const newAgent: Agent = {

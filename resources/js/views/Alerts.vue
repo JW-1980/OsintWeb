@@ -26,7 +26,6 @@ interface AlertHistory {
 
 const activeTab = ref<'alerts' | 'history' | 'preferences'>('alerts');
 const showCreateModal = ref(false);
-const loading = ref(false);
 
 const alerts = ref<Alert[]>([
   { id: 1, name: 'Ukraine Combat Events', type: 'region', criteria: 'Ukraine', enabled: true, createdAt: '2026-01-10', triggeredCount: 45, lastTriggered: '2026-01-16 09:30' },
@@ -159,7 +158,7 @@ const createAlert = () => {
     type: newAlert.type,
     criteria,
     enabled: true,
-    createdAt: new Date().toISOString().split('T')[0],
+    createdAt: new Date().toISOString().split('T')[0]!,
     triggeredCount: 0
   });
 
