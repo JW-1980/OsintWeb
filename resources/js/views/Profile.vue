@@ -13,12 +13,29 @@ const showDeleteModal = ref(false);
 const showTwoFactorModal = ref(false);
 
 const profile = reactive({
+  // Basic Info
   name: '',
   email: '',
   phone: '',
+  avatarUrl: '',
+  // Professional Info
+  jobTitle: '',
   organization: '',
-  bio: '',
-  avatarUrl: ''
+  department: '',
+  // Location & Availability
+  country: '',
+  timezone: '',
+  // Online Presence
+  website: '',
+  twitterHandle: '',
+  linkedinUrl: '',
+  // Expertise
+  expertiseAreas: [] as string[],
+  languages: '',
+  // Preferences
+  publicProfile: true,
+  // Bio
+  bio: ''
 });
 
 const passwordForm = reactive({
@@ -62,6 +79,52 @@ const sessions = ref([
   { id: 1, device: 'Chrome on Windows', location: 'Amsterdam, NL', lastActive: 'Now', current: true },
   { id: 2, device: 'Safari on iPhone', location: 'Amsterdam, NL', lastActive: '2 hours ago', current: false }
 ]);
+
+// Expertise area options for OSINT analysts
+const expertiseOptions = [
+  'Conflict Analysis',
+  'Military Equipment',
+  'Geolocation',
+  'Social Media Intelligence',
+  'Satellite Imagery',
+  'Open Source Research',
+  'Data Verification',
+  'Disinformation Analysis',
+  'Crisis Monitoring',
+  'Maritime Tracking',
+  'Aviation Tracking',
+  'Cybersecurity'
+];
+
+// Common timezones
+const timezoneOptions = [
+  'UTC-12:00', 'UTC-11:00', 'UTC-10:00', 'UTC-09:00', 'UTC-08:00', 'UTC-07:00',
+  'UTC-06:00', 'UTC-05:00', 'UTC-04:00', 'UTC-03:00', 'UTC-02:00', 'UTC-01:00',
+  'UTC+00:00', 'UTC+01:00', 'UTC+02:00', 'UTC+03:00', 'UTC+04:00', 'UTC+05:00',
+  'UTC+06:00', 'UTC+07:00', 'UTC+08:00', 'UTC+09:00', 'UTC+10:00', 'UTC+11:00', 'UTC+12:00'
+];
+
+// Countries list
+const countryOptions = [
+  'Afghanistan', 'Albania', 'Algeria', 'Argentina', 'Australia', 'Austria', 'Bangladesh',
+  'Belgium', 'Brazil', 'Bulgaria', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia',
+  'Czech Republic', 'Denmark', 'Egypt', 'Estonia', 'Finland', 'France', 'Germany', 'Greece',
+  'Hungary', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan',
+  'Kenya', 'Latvia', 'Lithuania', 'Malaysia', 'Mexico', 'Morocco', 'Netherlands', 'New Zealand',
+  'Nigeria', 'Norway', 'Pakistan', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Romania',
+  'Russia', 'Saudi Arabia', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea',
+  'Spain', 'Sweden', 'Switzerland', 'Taiwan', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates',
+  'United Kingdom', 'United States', 'Venezuela', 'Vietnam'
+];
+
+const toggleExpertise = (area: string) => {
+  const index = profile.expertiseAreas.indexOf(area);
+  if (index === -1) {
+    profile.expertiseAreas.push(area);
+  } else {
+    profile.expertiseAreas.splice(index, 1);
+  }
+};
 
 const userInitials = computed(() => {
   const name = profile.name || 'User';
@@ -307,23 +370,26 @@ onMounted(() => {
 
       <!-- Profile Tab -->
       <div v-if="activeTab === 'profile'" class="space-y-6">
+        <!-- Basic Information -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Profile Information</h2>
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Basic Information</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name *</label>
               <input
                 v-model="profile.name"
                 type="text"
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Your full name"
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email *</label>
               <input
                 v-model="profile.email"
                 type="email"
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="you@example.com"
               />
             </div>
             <div>
@@ -332,6 +398,52 @@ onMounted(() => {
                 v-model="profile.phone"
                 type="tel"
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="+1 234 567 8900"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Country</label>
+              <select
+                v-model="profile.country"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select country</option>
+                <option v-for="country in countryOptions" :key="country" :value="country">{{ country }}</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Timezone</label>
+              <select
+                v-model="profile.timezone"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Select timezone</option>
+                <option v-for="tz in timezoneOptions" :key="tz" :value="tz">{{ tz }}</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Languages</label>
+              <input
+                v-model="profile.languages"
+                type="text"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="English, Dutch, German"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Professional Information -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Professional Information</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Job Title</label>
+              <input
+                v-model="profile.jobTitle"
+                type="text"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="e.g. OSINT Analyst, Researcher"
               />
             </div>
             <div>
@@ -340,27 +452,112 @@ onMounted(() => {
                 v-model="profile.organization"
                 type="text"
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Company or institution name"
               />
             </div>
-            <div class="md:col-span-2">
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
-              <textarea
-                v-model="profile.bio"
-                rows="3"
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Department</label>
+              <input
+                v-model="profile.department"
+                type="text"
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Tell us about yourself..."
-              ></textarea>
+                placeholder="e.g. Research, Analysis"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Website</label>
+              <input
+                v-model="profile.website"
+                type="url"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://yourwebsite.com"
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Twitter/X Handle</label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">@</span>
+                <input
+                  v-model="profile.twitterHandle"
+                  type="text"
+                  class="w-full pl-8 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="username"
+                />
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">LinkedIn URL</label>
+              <input
+                v-model="profile.linkedinUrl"
+                type="url"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="https://linkedin.com/in/username"
+              />
             </div>
           </div>
-          <div class="mt-4 flex justify-end">
+        </div>
+
+        <!-- Areas of Expertise -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Areas of Expertise</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Select the areas you specialize in (helps match you with relevant content)</p>
+          <div class="flex flex-wrap gap-2">
             <button
-              @click="saveProfile"
-              :disabled="saving"
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+              v-for="area in expertiseOptions"
+              :key="area"
+              @click="toggleExpertise(area)"
+              :class="[
+                'px-3 py-1.5 rounded-full text-sm font-medium transition-colors border',
+                profile.expertiseAreas.includes(area)
+                  ? 'bg-blue-600 text-white border-blue-600'
+                  : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-blue-400'
+              ]"
             >
-              {{ saving ? 'Saving...' : 'Save Changes' }}
+              {{ area }}
             </button>
           </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Biography</h2>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">About You</label>
+            <textarea
+              v-model="profile.bio"
+              rows="5"
+              class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Tell the community about yourself, your background, interests, and what brought you to OSINT research..."
+            ></textarea>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">This will be visible on your public profile if enabled.</p>
+          </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Profile Visibility</h2>
+          <label class="flex items-center space-x-3 cursor-pointer">
+            <input
+              v-model="profile.publicProfile"
+              type="checkbox"
+              class="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <div>
+              <span class="text-gray-900 dark:text-white font-medium">Make my profile public</span>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Allow other users to see your profile, expertise, and contributions</p>
+            </div>
+          </label>
+        </div>
+
+        <!-- Save Button -->
+        <div class="flex justify-end">
+          <button
+            @click="saveProfile"
+            :disabled="saving"
+            class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50"
+          >
+            {{ saving ? 'Saving...' : 'Save All Changes' }}
+          </button>
         </div>
 
         <!-- Achievements -->

@@ -224,6 +224,14 @@
           </div>
         </div>
 
+        <!-- Comments Section -->
+        <div v-if="event" class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+          <Comments
+            commentable-type="events"
+            :commentable-id="event.id"
+          />
+        </div>
+
         <!-- Related Events -->
         <div v-if="relatedEvents.length > 0" class="mt-8">
           <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Related Events</h2>
@@ -251,6 +259,7 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useThemeStore } from '@/stores/theme';
+import Comments from '@/components/Comments.vue';
 
 const route = useRoute();
 const themeStore = useThemeStore();

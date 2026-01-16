@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import AppSidebar from '@/components/layout/AppSidebar.vue';
 import MapView from '@/components/map/MapView.vue';
 import MapLegend from '@/components/map/MapLegend.vue';
 import DrawingTools from '@/components/map/DrawingTools.vue';
 import TimelineBar from '@/components/timeline/TimelineBar.vue';
 import { useMapStore } from '@/stores/map';
+import { useAuthStore } from '@/stores/auth';
 
 const mapStore = useMapStore();
+const authStore = useAuthStore();
+
+// Only admins and analysts can draw on the map
+const canDraw = computed(() => authStore.isAdmin || authStore.isAnalyst);
 const showTimeline = ref(false);
 const timelineStartDate = ref(new Date('2022-02-24'));
 const timelineEndDate = ref(new Date());
@@ -36,7 +41,9 @@ onMounted(() => {
 
     <div class="flex-1 relative">
       <div class="absolute top-4 left-4 z-[1000] space-x-2">
+        <!-- Drawing button - only visible to admins and analysts -->
         <button
+          v-if="canDraw"
           @click="toggleDrawingMode"
           :class="{
             'bg-blue-600 text-white': mapStore.drawingMode,
