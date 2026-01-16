@@ -116,10 +116,11 @@ const handleLogin = async () => {
 
     // Redirect to intended destination or dashboard
     const redirect = route.query.redirect as string;
-    await router.replace(redirect || '/');
+    await router.replace(redirect || '/dashboard');
   } catch (err: any) {
     console.error('Login failed:', err);
     error.value = err?.message || 'Login failed. Please check your credentials.';
+  } finally {
     loading.value = false;
   }
 };

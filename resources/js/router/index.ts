@@ -4,6 +4,12 @@ import { useAuthStore } from '@/stores/auth';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    name: 'home',
+    component: () => import('@/views/Home.vue'),
+    meta: { requiresAuth: false, isPublic: true }
+  },
+  {
+    path: '/dashboard',
     name: 'dashboard',
     component: () => import('@/views/Dashboard.vue'),
     meta: { requiresAuth: true }
@@ -80,9 +86,29 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/admin/Conflicts.vue')
       },
       {
+        path: 'events',
+        name: 'admin-events',
+        component: () => import('@/views/admin/Events.vue')
+      },
+      {
+        path: 'equipment',
+        name: 'admin-equipment',
+        component: () => import('@/views/admin/Equipment.vue')
+      },
+      {
+        path: 'zones',
+        name: 'admin-zones',
+        component: () => import('@/views/admin/Zones.vue')
+      },
+      {
         path: 'audit-logs',
         name: 'admin-audit-logs',
         component: () => import('@/views/admin/AuditLogs.vue')
+      },
+      {
+        path: 'settings',
+        name: 'admin-settings',
+        component: () => import('@/views/admin/Settings.vue')
       }
     ]
   },
@@ -123,5 +149,7 @@ router.beforeEach(async (to, _from, next) => {
     next();
   }
 });
+
+export { routes };
 
 export default router;

@@ -41,9 +41,10 @@ const navigateTo = (routeName: string) => {
 };
 
 const navItems = [
-  { name: 'dashboard', label: 'Dashboard', path: '/' },
+  { name: 'dashboard', label: 'Dashboard', path: '/dashboard' },
   { name: 'map', label: 'Map', path: '/map' },
   { name: 'events', label: 'Events', path: '/events' },
+  { name: 'zones', label: 'Zones', path: '/zones' },
   { name: 'equipment', label: 'Equipment', path: '/equipment' },
   { name: 'analytics', label: 'Analytics', path: '/analytics' },
 ];

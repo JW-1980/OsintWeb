@@ -314,9 +314,11 @@ const managementLinks = ref([
   { label: 'Users', path: '/admin/users', icon: UsersIcon, badge: null },
   { label: 'Actors', path: '/admin/actors', icon: ShieldIcon, badge: null },
   { label: 'Conflicts', path: '/admin/conflicts', icon: GlobeIcon, badge: null },
-  { label: 'Equipment', path: '/equipment', icon: DatabaseIcon, badge: null },
-  { label: 'Audit Logs', path: '/admin/audit-logs', icon: DocumentIcon, badge: 'New' },
-  { label: 'Settings', path: '/settings', icon: CogIcon, badge: null },
+  { label: 'Events', path: '/admin/events', icon: EventIcon, badge: null },
+  { label: 'Equipment', path: '/admin/equipment', icon: DatabaseIcon, badge: null },
+  { label: 'Zones', path: '/admin/zones', icon: MapIcon, badge: null },
+  { label: 'Audit Logs', path: '/admin/audit-logs', icon: DocumentIcon, badge: null },
+  { label: 'Settings', path: '/admin/settings', icon: CogIcon, badge: null },
   { label: 'Analytics', path: '/analytics', icon: ChartIcon, badge: null },
 ]);
 
