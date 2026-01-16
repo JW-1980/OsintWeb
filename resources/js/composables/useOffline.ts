@@ -19,7 +19,6 @@ import {
   EntityType,
   SyncOperation,
   Priority,
-  ConflictData,
 } from '@/services/offlineManager';
 import { useApi } from '@/composables/useApi';
 
@@ -72,7 +71,6 @@ const storageUsed = ref(0);
 const isInitialized = ref(false);
 const isSyncing = ref(false);
 
-let statusUnsubscribe: (() => void) | null = null;
 let updateAvailableHandler: ((event: Event) => void) | null = null;
 
 /**
@@ -110,7 +108,7 @@ export function useOffline(): UseOfflineReturn {
       const manager = await initOffline();
 
       // Subscribe to status changes
-      statusUnsubscribe = manager.onStatusChange((status: OfflineStatus) => {
+      manager.onStatusChange((status: OfflineStatus) => {
         isOffline.value = !status.isOnline;
         pendingChanges.value = status.pendingCount;
         conflictCount.value = status.conflictCount;
@@ -341,7 +339,7 @@ export function useOffline(): UseOfflineReturn {
  * Helper to wrap API calls with offline support
  */
 export function useOfflineApi() {
-  const { isOffline, queueChange, getCachedEntity, getCachedEntities, cacheEntities } =
+  const { isOffline, queueChange, getCachedEntities, cacheEntities } =
     useOffline();
   const api = useApi();
 

@@ -110,7 +110,6 @@ class OfflineManager {
   private isOnline: boolean = navigator.onLine;
   private statusListeners: Set<(status: OfflineStatus) => void> = new Set();
   private syncInProgress: boolean = false;
-  private serviceWorkerReady: boolean = false;
 
   constructor() {
     this.setupNetworkListeners();
@@ -245,7 +244,6 @@ class OfflineManager {
         scope: '/',
       });
 
-      this.serviceWorkerReady = true;
       console.log('Service Worker registered:', registration.scope);
 
       // Handle updates
