@@ -99,7 +99,7 @@ export function useMap(container: Ref<HTMLElement | null>, options: MapOptions =
   function addControlZone(zone: ControlZone, onClick?: (zone: ControlZone) => void): L.Polygon | null {
     if (!map) return null;
 
-    const coordinates = zone.geometry.type === 'Polygon'
+    const coordinates = zone.geometry.type === 'Polygon' && zone.geometry.coordinates[0]
       ? zone.geometry.coordinates[0].map(coord => [coord[1], coord[0]] as [number, number])
       : [];
 
@@ -131,20 +131,20 @@ export function useMap(container: Ref<HTMLElement | null>, options: MapOptions =
 
     const drawControl = new L.Control.Draw({
       edit: {
-        featureGroup: drawnItems
+        featureGroup: drawnItems as L.FeatureGroup
       },
       draw: {
         polygon: {
           allowIntersection: false,
           showArea: true
         },
-        polyline: true,
-        rectangle: true,
+        polyline: {},
+        rectangle: {},
         circle: false,
-        marker: true,
+        marker: {},
         circlemarker: false
       }
-    });
+    } as L.Control.DrawConstructorOptions);
 
     map.addControl(drawControl);
 
@@ -169,7 +169,7 @@ export function useMap(container: Ref<HTMLElement | null>, options: MapOptions =
     map.fitBounds(bounds, { padding: [50, 50] });
   }
 
-  function getEventIcon(eventType: string): L.Icon {
+  function getEventIcon(eventType: string): L.DivIcon {
     const iconColors: Record<string, string> = {
       combat_engagement: '#F44336',
       airstrike: '#E91E63',

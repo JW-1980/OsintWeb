@@ -19,11 +19,11 @@ const initDrawingTools = () => {
   if (!props.map) return;
 
   drawnItems.value = new L.FeatureGroup();
-  props.map.addLayer(drawnItems.value);
+  props.map.addLayer(drawnItems.value as unknown as L.Layer);
 
   const drawControl = new L.Control.Draw({
     edit: {
-      featureGroup: drawnItems.value,
+      featureGroup: drawnItems.value as L.FeatureGroup,
       remove: true
     },
     draw: {
@@ -31,13 +31,13 @@ const initDrawingTools = () => {
         allowIntersection: false,
         showArea: true
       },
-      polyline: true,
-      rectangle: true,
+      polyline: {},
+      rectangle: {},
       circle: false,
-      marker: true,
+      marker: {},
       circlemarker: false
     }
-  });
+  } as L.Control.DrawConstructorOptions);
 
   props.map.addControl(drawControl);
 

@@ -3,19 +3,18 @@ import { ref, onMounted, watch } from 'vue';
 import { useMapStore } from '@/stores/map';
 import { useEventsStore } from '@/stores/events';
 import { useMap } from '@/composables/useMap';
-import { Event, ControlZone } from '@/types';
+import { Event } from '@/types';
 
 const mapContainer = ref<HTMLElement | null>(null);
 const mapStore = useMapStore();
 const eventsStore = useEventsStore();
 
-const { initMap, addEventMarker, addControlZone, setBasemap, flyTo } = useMap(mapContainer, {
+const { initMap, addEventMarker, setBasemap, flyTo } = useMap(mapContainer, {
   center: mapStore.center,
   zoom: mapStore.zoom
 });
 
 const eventMarkers = ref<L.Marker[]>([]);
-const zonePolygons = ref<L.Polygon[]>([]);
 
 onMounted(async () => {
   const map = initMap();
@@ -42,10 +41,6 @@ const renderEvents = () => {
 
 const handleEventClick = (event: Event) => {
   mapStore.selectEvent(event);
-};
-
-const handleZoneClick = (zone: ControlZone) => {
-  mapStore.selectZone(zone);
 };
 
 watch(() => mapStore.basemap, (newBasemap) => {
