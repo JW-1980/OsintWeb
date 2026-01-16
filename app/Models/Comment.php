@@ -13,6 +13,101 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+/**
+ * Comment Model
+ *
+ * Represents threaded comments on articles, events, equipment, and other entities.
+ * Supports moderation, spam detection, voting, and edit history tracking.
+ *
+ * Database Table: comments
+ *
+ * Database Schema:
+ * - id: bigint unsigned, auto-increment, primary key
+ * - uuid: char(36), unique
+ * - commentable_type: varchar(255), polymorphic type
+ * - commentable_id: bigint unsigned, polymorphic id
+ * - user_id: bigint unsigned, nullable, foreign key to users
+ * - guest_name: varchar(255), nullable (for guest comments)
+ * - guest_email: varchar(255), nullable (for guest comments)
+ * - parent_id: bigint unsigned, nullable, self-referencing foreign key
+ * - depth: smallint unsigned, default 0
+ * - path: varchar(500), nullable (materialized path for tree queries)
+ * - content: text
+ * - content_html: text, nullable (cached rendered HTML)
+ * - is_edited: boolean, default false
+ * - last_edited_at: timestamp, nullable
+ * - edit_count: smallint unsigned, default 0
+ * - status: enum('pending', 'approved', 'rejected', 'spam', 'hidden'), default 'approved'
+ * - moderated_by: bigint unsigned, nullable, foreign key to users
+ * - moderated_at: timestamp, nullable
+ * - moderation_reason: varchar(255), nullable
+ * - ip_address: varchar(45), nullable
+ * - user_agent: varchar(500), nullable
+ * - spam_score: decimal(5,2), default 0
+ * - spam_flags: json, nullable
+ * - upvotes: int, default 0
+ * - downvotes: int, default 0
+ * - reply_count: int unsigned, default 0
+ * - is_pinned: boolean, default false
+ * - is_author_reply: boolean, default false
+ * - is_highlighted: boolean, default false
+ * - deleted_at: timestamp, nullable
+ * - created_at: timestamp, nullable
+ * - updated_at: timestamp, nullable
+ *
+ * @property int $id
+ * @property string $uuid
+ * @property string $commentable_type
+ * @property int $commentable_id
+ * @property int|null $user_id
+ * @property string|null $guest_name
+ * @property string|null $guest_email
+ * @property int|null $parent_id
+ * @property int $depth
+ * @property string|null $path
+ * @property string $content
+ * @property string|null $content_html
+ * @property bool $is_edited
+ * @property \Carbon\Carbon|null $last_edited_at
+ * @property int $edit_count
+ * @property string $status
+ * @property int|null $moderated_by
+ * @property \Carbon\Carbon|null $moderated_at
+ * @property string|null $moderation_reason
+ * @property string|null $ip_address
+ * @property string|null $user_agent
+ * @property float $spam_score
+ * @property array|null $spam_flags
+ * @property int $upvotes
+ * @property int $downvotes
+ * @property int $reply_count
+ * @property bool $is_pinned
+ * @property bool $is_author_reply
+ * @property bool $is_highlighted
+ * @property \Carbon\Carbon|null $deleted_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ *
+ * @property-read string $author_name
+ * @property-read bool $can_edit
+ * @property-read bool $can_delete
+ * @property-read int $vote_score
+ *
+ * @property-read \Illuminate\Database\Eloquent\Model $commentable
+ * @property-read \App\Models\User|null $user
+ * @property-read \App\Models\Comment|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\Comment> $replies
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\Comment> $approvedReplies
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\CommentRevision> $revisions
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\CommentVote> $votes
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\CommentReport> $reports
+ * @property-read \App\Models\User|null $moderator
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder approved()
+ * @method static \Illuminate\Database\Eloquent\Builder pending()
+ * @method static \Illuminate\Database\Eloquent\Builder topLevel()
+ * @method static \Illuminate\Database\Eloquent\Builder threaded()
+ */
 class Comment extends Model
 {
     use HasFactory, SoftDeletes;

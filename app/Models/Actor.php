@@ -13,27 +13,89 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Actor Model
  *
- * Represents an individual person or entity involved in events.
+ * Represents a state or non-state actor (military forces, insurgent groups, militias, etc.)
+ * involved in conflict events. Supports autocomplete with priority scoring.
+ *
+ * Database Table: actors
+ *
+ * Database Schema:
+ * - id: bigint unsigned, auto-increment, primary key
+ * - uuid: char(36), unique
+ * - name: varchar(500), indexed
+ * - short_name: varchar(100), nullable, indexed
+ * - alias_names: json, nullable
+ * - actor_type: enum('STATE','SEPARATIST','INSURGENT','TERRORIST','MILITIA','PMC','CARTEL','REBEL','ETHNIC_MILITIA','GOVERNMENT_FORCES','COALITION','PROXY'), indexed
+ * - country_id: bigint unsigned, nullable, foreign key to countries
+ * - primary_region: varchar(100), nullable, indexed
+ * - operational_areas: json, nullable
+ * - is_state_actor: boolean, default false, indexed
+ * - is_designated_terrorist: boolean, default false, indexed
+ * - designations: json, nullable (us, eu, un designation flags)
+ * - is_active_in_conflict: boolean, default false, indexed
+ * - activity_level: enum('high','medium','low','inactive'), default 'inactive', indexed
+ * - last_activity_date: date, nullable, indexed
+ * - autocomplete_priority: int, default 0, indexed
+ * - priority_score: decimal(5,2), default 0.0, indexed
+ * - flag_emoji: varchar(10), nullable
+ * - logo_url: varchar(500), nullable
+ * - flag_url: varchar(500), nullable
+ * - color_hex: varchar(7), nullable
+ * - icon: varchar(100), nullable
+ * - description: text, nullable
+ * - founded_date: date, nullable
+ * - dissolved_date: date, nullable
+ * - successor_id: bigint unsigned, nullable
+ * - parent_organization_id: bigint unsigned, nullable
+ * - wikipedia_url: varchar(500), nullable
+ * - official_website: varchar(500), nullable
+ * - deleted_at: timestamp, nullable
+ * - created_at: timestamp, nullable
+ * - updated_at: timestamp, nullable
  *
  * @property int $id
  * @property string $uuid
  * @property string $name
- * @property string|null $full_name
- * @property string|null $role
- * @property string|null $rank
- * @property string|null $affiliation
- * @property string|null $nationality
- * @property string|null $photo_url
- * @property string|null $biography
- * @property \Carbon\Carbon|null $date_of_birth
- * @property \Carbon\Carbon|null $date_of_death
- * @property bool $is_active
- * @property bool $is_verified
- * @property array|null $aliases
- * @property array|null $metadata
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property string|null $short_name
+ * @property array|null $alias_names
+ * @property string $actor_type
+ * @property int|null $country_id
+ * @property string|null $primary_region
+ * @property array|null $operational_areas
+ * @property bool $is_state_actor
+ * @property bool $is_designated_terrorist
+ * @property array|null $designations
+ * @property bool $is_active_in_conflict
+ * @property string $activity_level
+ * @property \Carbon\Carbon|null $last_activity_date
+ * @property int $autocomplete_priority
+ * @property float $priority_score
+ * @property string|null $flag_emoji
+ * @property string|null $logo_url
+ * @property string|null $flag_url
+ * @property string|null $color_hex
+ * @property string|null $icon
+ * @property string|null $description
+ * @property \Carbon\Carbon|null $founded_date
+ * @property \Carbon\Carbon|null $dissolved_date
+ * @property int|null $successor_id
+ * @property int|null $parent_organization_id
+ * @property string|null $wikipedia_url
+ * @property string|null $official_website
  * @property \Carbon\Carbon|null $deleted_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ *
+ * @property-read array $all_names
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\Event> $events
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\ActorRelationship> $relationships
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\ActorRelationship> $inverseRelationships
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder active()
+ * @method static \Illuminate\Database\Eloquent\Builder verified()
+ * @method static \Illuminate\Database\Eloquent\Builder affiliation(string $affiliation)
+ * @method static \Illuminate\Database\Eloquent\Builder living()
+ * @method static \Illuminate\Database\Eloquent\Builder search(string $term)
  */
 class Actor extends Model
 {

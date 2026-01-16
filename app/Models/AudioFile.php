@@ -147,6 +147,24 @@ class AudioFile extends Model
     }
 
     /**
+     * Get forensic analyses for this audio.
+     */
+    public function analyses(): HasMany
+    {
+        return $this->hasMany(AudioAnalysis::class);
+    }
+
+    /**
+     * Get the latest completed analysis.
+     */
+    public function latestAnalysis(): HasOne
+    {
+        return $this->hasOne(AudioAnalysis::class)
+            ->where('analysis_status', 'completed')
+            ->latest();
+    }
+
+    /**
      * Get the file URL.
      */
     public function getFileUrl(): string

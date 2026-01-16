@@ -13,6 +13,89 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * Article Model
+ *
+ * Represents news articles, analysis pieces, reports, and premium content.
+ * Supports publishing workflow, SEO metadata, and comment management.
+ *
+ * Database Table: articles
+ *
+ * Database Schema:
+ * - id: bigint unsigned, auto-increment, primary key
+ * - uuid: char(36), unique
+ * - author_id: bigint unsigned, foreign key to users
+ * - category_id: bigint unsigned, nullable, foreign key to article_categories
+ * - title: varchar(255)
+ * - slug: varchar(255), unique
+ * - excerpt: text, nullable
+ * - content: longtext
+ * - featured_image: varchar(255), nullable
+ * - type: enum('news', 'article', 'analysis', 'report', 'tutorial'), default 'article'
+ * - is_premium: boolean, default false
+ * - is_featured: boolean, default false
+ * - is_pinned: boolean, default false
+ * - status: enum('draft', 'pending_review', 'published', 'archived'), default 'draft'
+ * - published_at: timestamp, nullable
+ * - scheduled_at: timestamp, nullable
+ * - meta_title: varchar(255), nullable
+ * - meta_description: text, nullable
+ * - meta_keywords: json, nullable
+ * - view_count: bigint unsigned, default 0
+ * - share_count: bigint unsigned, default 0
+ * - allow_comments: boolean, default true
+ * - comments_locked: boolean, default false
+ * - comments_locked_at: timestamp, nullable
+ * - comments_lock_reason: varchar(255), nullable
+ * - reading_time_minutes: smallint unsigned, default 1
+ * - deleted_at: timestamp, nullable
+ * - created_at: timestamp, nullable
+ * - updated_at: timestamp, nullable
+ *
+ * @property int $id
+ * @property string $uuid
+ * @property int $author_id
+ * @property int|null $category_id
+ * @property string $title
+ * @property string $slug
+ * @property string|null $excerpt
+ * @property string $content
+ * @property string|null $featured_image
+ * @property string $type
+ * @property bool $is_premium
+ * @property bool $is_featured
+ * @property bool $is_pinned
+ * @property string $status
+ * @property \Carbon\Carbon|null $published_at
+ * @property \Carbon\Carbon|null $scheduled_at
+ * @property string|null $meta_title
+ * @property string|null $meta_description
+ * @property array|null $meta_keywords
+ * @property int $view_count
+ * @property int $share_count
+ * @property bool $allow_comments
+ * @property bool $comments_locked
+ * @property \Carbon\Carbon|null $comments_locked_at
+ * @property string|null $comments_lock_reason
+ * @property int $reading_time_minutes
+ * @property \Carbon\Carbon|null $deleted_at
+ * @property \Carbon\Carbon|null $created_at
+ * @property \Carbon\Carbon|null $updated_at
+ *
+ * @property-read \App\Models\User $author
+ * @property-read \App\Models\ArticleCategory|null $category
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\ArticleTag> $tags
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\Comment> $comments
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\Comment> $approvedComments
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\ArticleRead> $reads
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\ArticleBookmark> $bookmarks
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder published()
+ * @method static \Illuminate\Database\Eloquent\Builder featured()
+ * @method static \Illuminate\Database\Eloquent\Builder premium()
+ * @method static \Illuminate\Database\Eloquent\Builder free()
+ * @method static \Illuminate\Database\Eloquent\Builder ofType(string $type)
+ */
 class Article extends Model
 {
     use HasFactory, SoftDeletes;
