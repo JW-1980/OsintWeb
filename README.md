@@ -143,8 +143,14 @@ OsintWeb provides powerful tools for:
 *   **Export Options**: Export high-quality maps as PNG, JPG, PDF, or SVG (up to 300 DPI).
 *   **Satellite Layers**: Toggle between OpenStreetMap, Satellite, and hybrid views.
 
+### 🌐 Public Intelligence Portal
+*   **No Login Required**: Browse the interactive map, events, equipment, and conflicts without authentication.
+*   **Public Explore Pages**: Dedicated pages for events, equipment, actors, and conflict zones.
+*   **Crowdsourced Tips**: Submit anonymous intelligence tips through a streamlined public form.
+*   **Contact & About**: Professional landing pages for community engagement.
+
 ### 🚜 Military Equipment Database
-*   **Comprehensive Catalog**: 140+ pre-loaded items including ships, tanks, aircraft, and drones.
+*   **Comprehensive Catalog**: 190+ pre-loaded items including ships, tanks, aircraft, helicopters, drones, and **50+ detailed missile systems**.
 *   **Detailed Specs**: Track dimensions, armament, range, and production numbers.
 *   **Inventory Tracking**: Monitor per-country inventory levels and loss statistics.
 *   **CRUD Operations**: Full management capabilities via API and admin panel.
@@ -166,8 +172,21 @@ OsintWeb provides powerful tools for:
 
 ### 🔒 Role-Based Access Control (RBAC)
 *   **Granular Permissions**: 50+ permission types for fine-grained access control.
+*   **Admin Management UI**: Full CRUD interface for Roles and Permissions management.
 *   **Hierarchical Roles**: Admin, Moderator, Analyst, and Viewer roles with inheritance.
 *   **Team Management**: Group-based permissions and time-limited access grants.
+
+### 🔔 Alert & Notification System
+*   **Custom Alerts**: Configure alerts for regions, keywords, event types, or specific actors.
+*   **Real-time Notifications**: Get instant updates when matching events are created.
+*   **Alert History**: Track triggered alerts with links to relevant events.
+*   **Email & Push**: Multi-channel notification delivery options.
+
+### 📊 Report Generation
+*   **SITREP Builder**: Generate situation reports with customizable templates.
+*   **Export Formats**: Download reports as PDF, DOCX, or HTML.
+*   **Scheduled Reports**: Automate daily, weekly, or monthly report generation.
+*   **Custom Branding**: Add organization logos and styling to reports.
 
 ### 📝 News & CMS
 *   **Publishing System**: Create analysis, reports, and tutorials with rich text editing.
@@ -181,8 +200,16 @@ OsintWeb provides powerful tools for:
 
 ### 🤖 AI & Automation
 *   **AI Agents**: Deploy agents for tasks like geolocation and image verification.
+*   **Agent Management**: Full admin UI to create, configure, and monitor AI agents.
 *   **Smart Skills**: Keyword-triggered capabilities that enhance investigation workflows.
+*   **Skills Administration**: Manage skills with triggers, configurations, and agent assignments.
 *   **Transcription**: AI-powered audio transcription with speaker identification (via OpenRouter).
+
+### 🏆 Achievement System
+*   **Achievement Management**: Full admin CRUD for creating and managing achievements.
+*   **Categories & Rarity**: Organize achievements by contribution, verification, engagement types.
+*   **Point System**: Configurable point values and rarity tiers (common to legendary).
+*   **User Rewards**: Track and display user achievements on profiles.
 
 ### 🛡️ Privacy & Security
 *   **GDPR Compliance**: Built-in tools for consent management, data export, and "right to be forgotten".

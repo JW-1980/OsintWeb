@@ -2,12 +2,81 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
 const routes: RouteRecordRaw[] = [
+  // ==========================================
+  // PUBLIC ROUTES (No login required)
+  // ==========================================
   {
     path: '/',
     name: 'home',
     component: () => import('@/views/Home.vue'),
     meta: { requiresAuth: false, isPublic: true }
   },
+  {
+    path: '/explore',
+    name: 'explore-map',
+    component: () => import('@/views/public/ExploreMap.vue'),
+    meta: { requiresAuth: false, isPublic: true }
+  },
+  {
+    path: '/explore/events',
+    name: 'explore-events',
+    component: () => import('@/views/public/ExploreEvents.vue'),
+    meta: { requiresAuth: false, isPublic: true }
+  },
+  {
+    path: '/explore/events/:id',
+    name: 'explore-event-detail',
+    component: () => import('@/views/public/ExploreEventDetail.vue'),
+    meta: { requiresAuth: false, isPublic: true },
+    props: true
+  },
+  {
+    path: '/explore/equipment',
+    name: 'explore-equipment',
+    component: () => import('@/views/public/ExploreEquipment.vue'),
+    meta: { requiresAuth: false, isPublic: true }
+  },
+  {
+    path: '/explore/equipment/:id',
+    name: 'explore-equipment-detail',
+    component: () => import('@/views/public/ExploreEquipmentDetail.vue'),
+    meta: { requiresAuth: false, isPublic: true },
+    props: true
+  },
+  {
+    path: '/explore/actors',
+    name: 'explore-actors',
+    component: () => import('@/views/public/ExploreActors.vue'),
+    meta: { requiresAuth: false, isPublic: true }
+  },
+  {
+    path: '/explore/conflicts',
+    name: 'explore-conflicts',
+    component: () => import('@/views/public/ExploreConflicts.vue'),
+    meta: { requiresAuth: false, isPublic: true }
+  },
+  {
+    path: '/submit-tip',
+    name: 'submit-tip',
+    component: () => import('@/views/public/SubmitTip.vue'),
+    meta: { requiresAuth: false, isPublic: true }
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: () => import('@/views/public/About.vue'),
+    meta: { requiresAuth: false, isPublic: true }
+  },
+  {
+    path: '/contact',
+    name: 'contact',
+    component: () => import('@/views/public/Contact.vue'),
+    meta: { requiresAuth: false, isPublic: true }
+  },
+
+  // ==========================================
+  // AUTHENTICATED USER ROUTES
+  // ==========================================
   {
     path: '/dashboard',
     name: 'dashboard',
@@ -24,6 +93,12 @@ const routes: RouteRecordRaw[] = [
     path: '/events',
     name: 'events',
     component: () => import('@/views/EventList.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/events/create',
+    name: 'event-create',
+    component: () => import('@/views/EventCreate.vue'),
     meta: { requiresAuth: true }
   },
   {
@@ -59,11 +134,39 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/reports',
+    name: 'reports',
+    component: () => import('@/views/Reports.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/timeline',
+    name: 'timeline',
+    component: () => import('@/views/Timeline.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/alerts',
+    name: 'alerts',
+    component: () => import('@/views/Alerts.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/settings',
     name: 'settings',
     component: () => import('@/views/Settings.vue'),
     meta: { requiresAuth: true }
   },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: () => import('@/views/Profile.vue'),
+    meta: { requiresAuth: true }
+  },
+
+  // ==========================================
+  // ADMIN ROUTES
+  // ==========================================
   {
     path: '/admin',
     name: 'admin',
@@ -74,6 +177,16 @@ const routes: RouteRecordRaw[] = [
         path: 'users',
         name: 'admin-users',
         component: () => import('@/views/admin/Users.vue')
+      },
+      {
+        path: 'roles',
+        name: 'admin-roles',
+        component: () => import('@/views/admin/Roles.vue')
+      },
+      {
+        path: 'permissions',
+        name: 'admin-permissions',
+        component: () => import('@/views/admin/Permissions.vue')
       },
       {
         path: 'actors',
@@ -101,6 +214,31 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/admin/Zones.vue')
       },
       {
+        path: 'achievements',
+        name: 'admin-achievements',
+        component: () => import('@/views/admin/Achievements.vue')
+      },
+      {
+        path: 'agents',
+        name: 'admin-agents',
+        component: () => import('@/views/admin/Agents.vue')
+      },
+      {
+        path: 'skills',
+        name: 'admin-skills',
+        component: () => import('@/views/admin/Skills.vue')
+      },
+      {
+        path: 'tips',
+        name: 'admin-tips',
+        component: () => import('@/views/admin/Tips.vue')
+      },
+      {
+        path: 'reports',
+        name: 'admin-reports',
+        component: () => import('@/views/admin/Reports.vue')
+      },
+      {
         path: 'audit-logs',
         name: 'admin-audit-logs',
         component: () => import('@/views/admin/AuditLogs.vue')
@@ -112,6 +250,10 @@ const routes: RouteRecordRaw[] = [
       }
     ]
   },
+
+  // ==========================================
+  // AUTH ROUTES
+  // ==========================================
   {
     path: '/login',
     name: 'login',
@@ -124,6 +266,23 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/auth/Register.vue'),
     meta: { requiresGuest: true }
   },
+  {
+    path: '/forgot-password',
+    name: 'forgot-password',
+    component: () => import('@/views/auth/ForgotPassword.vue'),
+    meta: { requiresGuest: true }
+  },
+  {
+    path: '/reset-password/:token',
+    name: 'reset-password',
+    component: () => import('@/views/auth/ResetPassword.vue'),
+    meta: { requiresGuest: true },
+    props: true
+  },
+
+  // ==========================================
+  // ERROR ROUTES
+  // ==========================================
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
