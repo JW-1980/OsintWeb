@@ -50,8 +50,8 @@
             Track, analyze, and visualize global events with real-time mapping, comprehensive data management, and powerful analytics tools.
           </p>
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <router-link to="/register" class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all">
-              Start Free Trial
+            <router-link to="/explore" class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all">
+              Explore Now
             </router-link>
             <a href="#features" class="w-full sm:w-auto px-8 py-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-lg shadow-lg hover:shadow-xl border border-gray-200 dark:border-gray-700 transition-all">
               Learn More
@@ -218,19 +218,19 @@
               <div class="space-y-4">
                 <div class="flex items-center space-x-3">
                   <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-semibold text-sm">1</div>
-                  <span class="text-gray-600 dark:text-gray-400">Create your free account</span>
+                  <span class="text-gray-600 dark:text-gray-400">Browse verified events on the map</span>
                 </div>
                 <div class="flex items-center space-x-3">
                   <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-semibold text-sm">2</div>
-                  <span class="text-gray-600 dark:text-gray-400">Set up your workspace</span>
+                  <span class="text-gray-600 dark:text-gray-400">Explore equipment and actors</span>
                 </div>
                 <div class="flex items-center space-x-3">
                   <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-semibold text-sm">3</div>
-                  <span class="text-gray-600 dark:text-gray-400">Start tracking events</span>
+                  <span class="text-gray-600 dark:text-gray-400">Register for advanced features</span>
                 </div>
               </div>
-              <router-link to="/register" class="mt-6 block w-full text-center px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all">
-                Get Started Free
+              <router-link to="/explore" class="mt-6 block w-full text-center px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all">
+                Start Exploring
               </router-link>
             </div>
           </div>
@@ -285,12 +285,12 @@
             <p class="text-gray-400">Open Source Intelligence Platform for tracking and analyzing global events.</p>
           </div>
           <div>
-            <h3 class="font-semibold mb-4">Product</h3>
+            <h3 class="font-semibold mb-4">Explore</h3>
             <ul class="space-y-2 text-gray-400">
-              <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Pricing</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Documentation</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">API</a></li>
+              <li><router-link to="/explore" class="hover:text-white transition-colors">Map</router-link></li>
+              <li><router-link to="/explore/events" class="hover:text-white transition-colors">Events</router-link></li>
+              <li><router-link to="/explore/equipment" class="hover:text-white transition-colors">Equipment</router-link></li>
+              <li><router-link to="/explore/conflicts" class="hover:text-white transition-colors">Conflicts</router-link></li>
             </ul>
           </div>
           <div>
