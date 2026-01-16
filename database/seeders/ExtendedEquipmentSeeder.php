@@ -1174,27 +1174,272 @@ class ExtendedEquipmentSeeder extends Seeder
     private function updateExistingDescriptions(): void
     {
         $updates = [
+            // ========================================
+            // TANKS
+            // ========================================
             'T-90M Proryv' => 'Russia\'s most advanced operational main battle tank developed by Uralvagonzavod. Features Relikt explosive reactive armor, improved Sosna-U sighting system with thermal imaging, and soft-kill Shtora-1 countermeasures. Recognizable by welded turret with distinctive ERA configuration. Combat proven in Ukraine conflict. Crew protected in armored capsule. 125mm smoothbore gun with autoloader fires Refleks ATGMs.',
 
             'T-72B3' => 'Modernized Soviet-era tank by Uralvagonzavod representing bulk of Russian armored forces. Identifiable by Kontakt-5 ERA blocks on turret and hull. Upgraded fire control with Sosna-U sight. Workhorse of Russian operations in Ukraine with significant losses documented. Cost-effective upgrade of massive T-72 stockpiles. 125mm gun with autoloader.',
+
+            'T-80BVM' => 'Russian gas turbine-powered main battle tank modernized from Cold War T-80B. Built by Omsktransmash. Distinctive by GTD-1250 gas turbine engine giving high power-to-weight ratio and distinctive whine. Features Relikt ERA providing protection against tandem warheads. Primarily deployed in northern regions due to cold-start capability. V-92S2F turbine allows operation in extreme cold without warm-up.',
+
+            'T-14 Armata' => 'Russia\'s next-generation main battle tank by Uralvagonzavod featuring revolutionary unmanned turret design. Crew sits in armored capsule at hull front, separated from ammunition. Afghanit active protection system with radar to intercept incoming projectiles. 125mm 2A82-1M gun can also fire ATGMs. Limited production due to cost; not fielded in Ukraine despite claims.',
 
             'Leopard 2A7' => 'Germany\'s premier main battle tank by Krauss-Maffei Wegmann (KMW). Latest variant features enhanced mine protection, urban warfare kit, and programmable HE rounds. Identifiable by wedge-shaped turret addon armor. Rheinmetall 120mm L55A1 gun is most powerful Western tank gun. Exported to 18 nations. Considered among finest MBTs globally.',
 
             'M1A2 Abrams SEP v3' => 'America\'s primary main battle tank by General Dynamics Land Systems. SEP v3 (System Enhancement Package) adds improved thermal sights, datalinks, and auxiliary power unit. Distinctive turbine engine whine and flat turret profile. Chobham composite armor with depleted uranium mesh. 120mm M256 smoothbore gun. Battle-tested in Gulf War, Iraq, and with allies.',
 
+            'Challenger 2' => 'British main battle tank by Vickers Defence Systems (now BAE). Only Western tank with rifled 120mm gun (L30A1) for accuracy. Dorchester composite armor among best protected. Distinctive flat turret profile with commander\'s thermal sight. 4-person crew. Single combat loss recorded. Being upgraded to Challenger 3 with Rheinmetall smoothbore gun.',
+
+            'Leclerc' => 'French main battle tank by GIAT Industries (now Nexter). First Western MBT with autoloader reducing crew to 3. FINDERS battle management system for network-centric warfare. Modular armor allows theater-specific protection packages. CN120-26 120mm gun. Distinctive compact turret and angular profile. Exported to UAE with tropicalized modifications.',
+
+            'Merkava Mk.4' => 'Israeli main battle tank by Israel Military Industries. Unique front-mounted engine provides crew protection and allows rear compartment for infantry or wounded. Trophy active protection system intercepts incoming ATGMs and RPGs with radar-guided countermeasures. 120mm MG253 gun. Optimized for urban warfare with overhead protection against ATGMs.',
+
+            'Type 99A' => 'China\'s most advanced main battle tank by Norinco. Features 125mm ZPT-98 gun with autoloader, laser dazzler for disrupting targeting systems. Composite armor with ERA. Integrated battle management system. Recognizable by angular turret and ERA blocks. Estimated 600+ in service. Represents significant advancement over older Chinese designs.',
+
+            'K2 Black Panther' => 'South Korean main battle tank by Hyundai Rotem. Features hydropneumatic suspension allowing hull positioning, automatic target tracking, and active protection system. 120mm L55 Rheinmetall gun with autoloader. One of world\'s most expensive MBTs but highly capable. Being exported to Poland in large numbers to replace Soviet-era tanks.',
+
+            'Type 10' => 'Japanese main battle tank by Mitsubishi Heavy Industries. Designed for Japan\'s mountainous terrain with modular armor and reduced weight (48 tonnes). Features C4I system for networked warfare, hydropneumatic suspension. 120mm smoothbore gun with autoloader. Only 117 built due to cost. Highly maneuverable on narrow Japanese roads.',
+
+            'Arjun Mk.2' => 'Indian main battle tank developed by DRDO\'s Combat Vehicles R&D Establishment. Features Kanchan composite armor, 120mm rifled gun with indigenous ammunition. Long development history since 1970s. Mk.2 adds improved fire control, laser warning system, and mine protection. Heavier than most MBTs at 68 tonnes. Limited production alongside Russian T-90S.',
+
+            'Altay' => 'Turkish main battle tank by BMC based on South Korean K2 design. Features indigenous ASELSAN fire control and sensor systems. 120mm L55 Rheinmetall gun. MTU powerpack initially, later domestic engine planned. First Turkish indigenous MBT. Production began 2023 after extensive delays. Intended to replace aging M60 and Leopard 2A4 fleets.',
+
+            'Stridsvagn 122' => 'Swedish variant of Leopard 2A5 by Krauss-Maffei Wegmann with enhanced protection. Features additional roof armor, improved mine protection, and French thermal sights. Barracuda camouflage reduces thermal and radar signature. 120mm L44 gun. 120 in Swedish service with 10 donated to Ukraine. Identifiable by angular turret addon armor.',
+
+            'T-84 Oplot' => 'Ukrainian main battle tank developed by Kharkiv Morozov. Evolution of T-80UD with welded turret, Duplet ERA, and Varta APS. 125mm KBA-3 gun with autoloader. 1200hp diesel engine. Limited production due to complexity and cost. Mainly exported to Thailand. Used in limited numbers during Russian invasion.',
+
+            // ========================================
+            // INFANTRY FIGHTING VEHICLES
+            // ========================================
+            'BMP-3' => 'Russian infantry fighting vehicle by Kurganmashzavod. Unique armament of 100mm gun (fires ATGMs), 30mm autocannon, and 3 PKT machine guns. Amphibious with waterjets. Carries 7 infantry in cramped conditions. Distinctive low profile. Export success to UAE, South Korea, and others. Criticized for thin aluminum armor vulnerable to modern ATGMs.',
+
+            'M2A3 Bradley' => 'American infantry fighting vehicle by BAE Systems. Carries 6 infantry with 25mm M242 Bushmaster autocannon and twin TOW missile launchers. Bradley Urban Survival Kit adds appliqué armor. Recognizable by boxy profile and turret. Combat proven in Gulf War, Iraq. M2A4 upgrade adds improved protection and electronics.',
+
+            'Marder 1A5' => 'German infantry fighting vehicle by Rheinmetall. 20mm Rh202 autocannon in one-man turret. Carries 6 infantry. Mine protection package in A5 variant. Being replaced by Puma IFV. Donated to Ukraine. Recognizable by distinctive angled hull and turret design. Proven reliability over 50+ years of service.',
+
+            'CV90' => 'Swedish infantry fighting vehicle family by BAE Systems Hägglunds. Modular design with multiple variants: IFV, anti-air, command, mortar carrier. 40mm Bofors autocannon in most variants. Exported to 7 nations. Mk IV variant has active protection and improved sensors. Recognizable by long hull with 7 road wheels.',
+
+            'BTR-82A' => 'Russian 8x8 wheeled armored personnel carrier modernized from BTR-80. 30mm 2A72 autocannon replacing older 14.5mm KPVT. Carries 7 infantry. V-shape hull for mine protection. Amphibious without preparation. Extensively used in Syria and Ukraine. Vulnerable to modern ATGMs despite upgrades.',
+
+            'BTR-4 Bucephalus' => 'Ukrainian 8x8 wheeled APC by Kharkiv Morozov. Modular design with multiple turret options including 30mm, ATGMs, or 120mm mortar. Carries 7 infantry. Combat proven defending Ukraine. Features modern fire control and battlefield management systems. Export success to Iraq, Indonesia, Nigeria.',
+
+            'Namer' => 'Israeli heavy APC based on Merkava tank chassis by Israel Military Industries. Among most protected APCs globally with Trophy APS option. Front engine provides additional crew protection. Carries 9 infantry plus 3 crew. No armament in base version - relies on infantry dismounts. Used extensively in Gaza operations.',
+
+            'M1126 Stryker' => 'American 8x8 wheeled armored vehicle by General Dynamics. Part of Stryker Brigade Combat Teams for rapid deployment. Multiple variants including Infantry Carrier (ICV), Mobile Gun System, and Reconnaissance. Air transportable by C-130. Add-on slat armor protects against RPGs. 105mm gun variant for fire support.',
+
+            'M1296 Dragoon' => 'Stryker variant with 30mm XM813 autocannon by General Dynamics. First Stryker IFV with medium-caliber weapon. Unmanned turret reduces crew exposure. Airburst ammunition for defeating defilade targets. Deployed to Europe for enhanced firepower against Russian threats. Maintains Stryker mobility advantages.',
+
+            'AMX-10 RC' => 'French 6x6 wheeled reconnaissance vehicle by GIAT Industries. 105mm gun on wheeled chassis provides tank-like firepower with high mobility. 300km range on roads. Amphibious capability. Used extensively in African interventions. Donated to Ukraine. Being replaced by EBRC Jaguar. Recognizable by large turret on compact hull.',
+
+            // ========================================
+            // SELF-PROPELLED ARTILLERY
+            // ========================================
+            '2S19 Msta-S' => 'Russian 152mm self-propelled howitzer on T-80 chassis by Uraltransmash. Autoloader enables 7-8 rounds/minute. 29km range with conventional rounds, 40km with RAP. Carries 50 rounds. Widely exported. Forms backbone of Russian artillery. Recognizable by large boxy turret on tank chassis.',
+
+            'PzH 2000' => 'German 155mm self-propelled howitzer by Krauss-Maffei Wegmann. NATO\'s most capable tube artillery with 56km range using Vulcano guided rounds. Automated loading achieves burst rate of 10 rounds/minute. Navigation and fire control computers. Exported to 6 nations including Ukraine. Barrel life tracking system.',
+
+            'AS-90' => 'British 155mm self-propelled howitzer by Vickers Shipbuilding (now BAE). L31 gun provides 24.7km range. Autonomous navigation and fire control. Burst rate of 3 rounds in 10 seconds. 179 in British service. Donated to Ukraine. Being replaced by Boxer RCH 155. Distinctive boxy turret on tracked chassis.',
+
+            'CAESAR' => 'French 155mm truck-mounted howitzer by Nexter. 6x6 or 8x8 wheeled chassis provides shoot-and-scoot capability. 42km range. Crew of 5 can fire and displace in under 2 minutes. Combat proven in Afghanistan, Mali, Ukraine. Popular export with 8+ customers. Recognizable by gun mounted on truck bed.',
+
+            'K9 Thunder' => 'South Korean 155mm self-propelled howitzer by Hanwha Defense. 40km range with base-bleed rounds. Automated fire control and loading. Burst rate of 6 rounds/minute. Export success to Turkey, Poland, Norway, Egypt, Australia. Licensed production in multiple countries. Proven reliability in Korean climate extremes.',
+
+            'Archer' => 'Swedish fully automated 155mm howitzer by BAE Systems Hägglunds on Volvo truck chassis. Revolutionary automation allows 3-person crew with 21-round magazine. 50km range. Shoot-and-scoot in 30 seconds. Multiple rounds simultaneous impact capability. Being acquired by UK and Sweden. Unique enclosed armored cabin.',
+
+            '2S35 Koalitsiya-SV' => 'Russian next-generation 152mm self-propelled howitzer with unmanned turret by Uraltransmash. Claimed 70km range and 16 rounds/minute rate of fire. Crew isolated in armored hull capsule. Limited production. Not confirmed in Ukraine combat. Represents significant advancement over 2S19 Msta-S.',
+
+            'M270 MLRS' => 'American tracked multiple launch rocket system by Lockheed Martin. Carries 12 GMLRS rockets or 2 ATACMS missiles. 70km range with GMLRS, 300km with ATACMS. Armored cab protects crew. Operated by 13 nations. Combat proven since 1991 Gulf War. Complemented by wheeled HIMARS.',
+
+            'BM-21 Grad' => 'Soviet/Russian 122mm multiple rocket launcher on Ural-375D truck by Splav. 40 tubes fire in 20 seconds covering 4 hectares. 20km range. Simple, reliable, cheap. Produced in massive numbers (9000+). Used globally in every conflict since 1960s. Recognizable by distinctive 40-tube launcher.',
+
+            'BM-27 Uragan' => 'Soviet/Russian 220mm heavy multiple rocket launcher by Splav. 16 tubes with 35km range. Larger warheads than BM-21 for harder targets. Cluster munitions, thermobaric, and mine-laying rounds available. Used extensively in Ukraine by both sides. Recognizable by large rectangular launcher.',
+
+            'BM-30 Smerch' => 'Soviet/Russian 300mm heavy multiple rocket launcher by Splav. 12 tubes with 90km range. Most powerful tube-launched rocket in Russian inventory. Sensor-fuzed munitions for armor targets. Forms basis of HIMARS competition. GPS-guided Tornado-S variant extends range to 120km.',
+
+            'TOS-1A Solntsepyok' => 'Russian thermobaric multiple rocket launcher on T-72 tank chassis by Omsk Transmash. 24 220mm rockets with devastating fuel-air explosive warheads. 6km range limits use to breakthrough operations. Creates massive overpressure killing through concussion. Controversial weapon documented in Ukraine.',
+
+            // ========================================
+            // AIR DEFENSE SYSTEMS
+            // ========================================
+            'S-400 Triumf' => 'Russia\'s advanced long-range SAM system by Almaz-Antey. Multiple missile types engage targets from 2-400km range, 10-30km altitude. Distinctive quad-canister launchers on 5P85 TEL. 91N6E "Big Bird" acquisition radar and 92N6E "Grave Stone" engagement radar. Controversial exports to Turkey, India, China. Claimed effective against stealth aircraft.',
+
+            'Buk-M3' => 'Russian medium-range SAM system by Almaz-Antey. 9M317M missiles in container-launchers with 70km range, 35km altitude. AESA radar for improved multi-target engagement. Each TELAR carries 6 missiles. Notorious for MH17 shootdown (Buk-M1). Widely exported. Primary Russian medium-range air defense.',
+
+            '9K33 Osa' => 'Soviet/Russian short-range mobile SAM system. 6 missiles on amphibious TELAR with integrated radar. 15km range, 12km altitude. Simple and reliable system exported globally. Being replaced by Tor-M2. Still effective against helicopters and slow aircraft. Recognizable by box launcher and rotating radar.',
+
+            'MIM-104 Patriot' => 'American long-range SAM system by Raytheon. PAC-3 variant uses hit-to-kill interceptors against ballistic missiles. 160km range against aircraft. Phased array radar tracks 100+ targets. Proven effective in Ukraine against Russian missiles. Operates with 18 nations. Each battery has 16 interceptors.',
+
+            'IRIS-T SLM' => 'German medium-range SAM system by Diehl Defence. Uses IRIS-T air-to-air missiles adapted for ground launch. 40km range, 20km altitude. Highly maneuverable interceptor with imaging infrared seeker. 360° coverage. Delivered to Ukraine with high success rate against cruise missiles and drones.',
+
+            'Iron Dome' => 'Israeli short-range air defense system by Rafael and Israel Aerospace Industries. Intercepts rockets, artillery, mortars using Tamir interceptors. Revolutionary cost-effective approach engaging only threatening projectiles. 90%+ intercept rate claimed. Battle-proven against thousands of Hamas rockets. Each battery has 3-4 launchers with 20 missiles each.',
+
+            'David\'s Sling' => 'Israeli medium-range air defense system by Rafael and Raytheon. Stunner two-stage interceptor for cruise missiles, ballistic missiles, aircraft. Fills gap between Iron Dome and Arrow systems. Hit-to-kill technology. Fire control by Israeli Elta. Operational since 2017. Combat debut against Syrian missiles.',
+
+            'Pantsir-S1' => 'Russian combined gun-missile short-range air defense by KBP. 12 57E6 missiles (20km range) and twin 2A38M 30mm guns (4km range). Designed to protect S-300/S-400 batteries from cruise missiles and PGMs. Documented failures in Syria and Ukraine. Wheeled or tracked variants. Export success despite limitations.',
+
+            // ========================================
+            // FIGHTER AIRCRAFT
+            // ========================================
             'F-35A Lightning II' => 'Fifth-generation multirole stealth fighter by Lockheed Martin. Single-seat, single-engine with internal weapons bays. AN/APG-81 AESA radar, distributed aperture system provides 360° situational awareness. Recognizable by faceted fuselage and EOTS chin turret. Largest defense program in history with 15+ operator nations. CTOL variant for conventional runways.',
 
             'Su-35S' => 'Russian twin-engine super-maneuverable 4++ generation fighter by Sukhoi. Features thrust-vectoring AL-41F1S engines, Irbis-E passive electronically scanned array radar. Identifiable by canards (removed in production) and distinctive intake design. Heavy weapon load of 8000kg on 12 hardpoints. Air superiority role with multirole capability.',
 
-            'M142 HIMARS' => 'High Mobility Artillery Rocket System by Lockheed Martin on 5-ton truck chassis. Carries 6 GMLRS rockets (70km range) or 1 ATACMS missile (300km range). Game-changing weapon in Ukraine conflict for precision deep strikes. C-130 transportable for rapid deployment. Automated fire control with GPS-guided munitions.',
+            'Su-57' => 'Russian fifth-generation stealth multirole fighter by Sukhoi. Twin-engine with internal weapons bays and 3D thrust vectoring. Al-41F1 engines, N036 AESA radar. Only ~22 built due to costs. Limited combat use in Ukraine for standoff strikes. Recognizable by angular stealth shaping with distinctive LERX.',
 
-            'S-400 Triumf' => 'Russia\'s advanced long-range SAM system by Almaz-Antey. Multiple missile types engage targets from 2-400km range, 10-30km altitude. Distinctive quad-canister launchers on 5P85 TEL. 91N6E "Big Bird" acquisition radar and 92N6E "Grave Stone" engagement radar. Controversial exports to Turkey, India, China. Claimed effective against stealth aircraft.',
+            'F-22 Raptor' => 'American fifth-generation air superiority fighter by Lockheed Martin. First operational stealth fighter with supercruise capability. Twin F119 thrust-vectoring engines. AN/APG-77 AESA radar. 195 built before production ended. Export banned. Recognizable by distinctive trapezoidal wing planform and twin canted tails.',
 
-            'Iron Dome' => 'Israeli short-range air defense system by Rafael and Israel Aerospace Industries. Intercepts rockets, artillery, mortars using Tamir interceptors. Revolutionary cost-effective approach engaging only threatening projectiles. 90%+ intercept rate claimed. Battle-proven against thousands of Hamas rockets. Each battery has 3-4 launchers with 20 missiles each.',
+            'F-16C/D Fighting Falcon' => 'American multirole fighter by General Dynamics/Lockheed Martin. Most numerous Western fighter with 4600+ built. Single F110/F100 engine, bubble canopy, blended wing-body. Combat proven in every major conflict since 1980s. Block 70/72 Viper variant remains competitive. Being transferred to Ukraine.',
 
+            'Rafale' => 'French twin-engine multirole fighter by Dassault. Omnirole capability for air-to-air, strike, nuclear deterrence, and reconnaissance. SPECTRA electronic warfare suite, RBE2 AESA radar. Carrier-capable M variant. Export success to India, Qatar, Egypt, UAE, Greece, Indonesia. Recognizable by delta wing with canards.',
+
+            'Eurofighter Typhoon' => 'European twin-engine multirole fighter by consortium of UK, Germany, Italy, Spain. Delta wing with canards, supercruise capable. Captor-E AESA radar in latest tranches. 680+ built for 9 nations. Strong export performer. Recognizable by distinctive delta-canard configuration with twin vertical tails.',
+
+            'JAS 39 Gripen E' => 'Swedish single-engine multirole fighter by Saab. Designed for dispersed operations from roads. Latest E variant has new engine (F414), AESA radar, increased range. Cost-effective with low operating costs. Exported to 6 nations. Recognizable by delta-canard layout smaller than competitors.',
+
+            'F-35I Adir' => 'Israeli variant of F-35A by Lockheed Martin with indigenous modifications. Israeli electronic warfare suite and command/control systems. Internal fuel tanks. First foreign F-35 operator. Combat proven against Iranian targets in Syria. "Adir" means "Mighty" in Hebrew. 50 in service with more ordered.',
+
+            'J-20' => 'Chinese fifth-generation stealth fighter by Chengdu. Large twin-engine aircraft with canard-delta configuration. WS-10C engines being replaced by WS-15. Longest stealth fighter for fuel capacity. Side weapon bays for short-range missiles. Operational with ~200 in service. Intended to counter F-22/F-35.',
+
+            'MiG-31BM' => 'Russian supersonic interceptor by Mikoyan. Modernized MiG-31 with Zaslon-M phased array radar (400km range). Fastest operational fighter at Mach 2.83. Primary platform for Kinzhal hypersonic missile. Four-aircraft formation can cover 800km front. Identifiable by large size and side-by-side crew configuration.',
+
+            'FA-50' => 'South Korean light combat aircraft by Korea Aerospace Industries. Developed from T-50 Golden Eagle supersonic trainer. EL/M-2032 radar, AIM-9 Sidewinder capability. Cost-effective alternative for nations not requiring full fighters. Exported to Philippines, Iraq, Poland, Malaysia. Combat debut in Philippines against insurgents.',
+
+            'F-2' => 'Japanese multirole fighter by Mitsubishi based on F-16. Enlarged wing, composite materials, J/APG-1 AESA radar (first operational fighter AESA). Primarily anti-ship role with 4 ASM-2 missiles. 94 built at high cost. Recognizable by larger wing and intake compared to F-16.',
+
+            'HAL Tejas Mk.1' => 'Indian light combat aircraft by Hindustan Aeronautics. Indigenous delta-wing design with fly-by-wire. GE F404 engine, Israeli EL/M-2032 radar. Extended development since 1983. Mk.1A adds AESA radar and improved EW. Intended to replace aging MiG-21 fleet.',
+
+            'TF Kaan' => 'Turkish fifth-generation stealth fighter under development by Turkish Aerospace Industries. Twin-engine with internal weapons bays. First flight December 2023. Intended to replace F-16 fleet. Development accelerated after F-35 program exclusion. Full operational capability expected late 2020s.',
+
+            // ========================================
+            // BOMBERS
+            // ========================================
+            'Tu-22M3' => 'Russian long-range supersonic bomber by Tupolev. Variable-geometry wings for supersonic dash. Kh-22/Kh-32 cruise missiles for maritime strike. Extensively used in Ukraine with Kh-22 missiles. 268 built during Soviet era, ~60 operational. Identifiable by swing-wing configuration and nose-mounted radar.',
+
+            'B-2 Spirit' => 'American stealth strategic bomber by Northrop Grumman. Flying wing design virtually invisible to radar. Two internal weapon bays for 23,000kg payload including nuclear weapons. 21 built at $2 billion each. Can strike any target globally from CONUS. Identifiable by distinctive bat-wing shape.',
+
+            'B-21 Raider' => 'American next-generation stealth bomber under development by Northrop Grumman. Flying wing continuing B-2 lineage with improved stealth and electronics. Nuclear and conventional capability. 100+ planned to replace B-1B and B-2. First flight 2023. Lower cost through open systems architecture.',
+
+            // ========================================
+            // HELICOPTERS
+            // ========================================
             'Ka-52' => 'Russian tandem-seat attack helicopter by Kamov with signature coaxial contra-rotating rotors eliminating tail rotor. Crew seated side-by-side unlike conventional tandem. Vikhr ATGMs, rockets, 30mm cannon. Advanced radar in nose cone. Ejection seats rare for helicopters. Extensively used in Ukraine with documented losses to MANPADs.',
 
             'AH-64E Apache Guardian' => 'Premier American attack helicopter by Boeing. Tandem crew with pilot rear, copilot/gunner front. Distinctive Longbow millimeter-wave radar dome above rotor. 30mm M230 chain gun, Hellfire missiles, Hydra rockets. Integrated with UAS for unmanned teaming. Night vision and thermal imaging for all-weather operations. Combat proven globally.',
+
+            'Mi-28N' => 'Russian tandem-seat attack helicopter by Mil Moscow Helicopter Plant. "Night Hunter" variant with night/all-weather capability. Ataka ATGMs, rockets, 30mm 2A42 cannon. Heavily armored cockpit. No ejection seats unlike Ka-52. Extensively used in Syria and Ukraine. Identifiable by distinctive rounded nose sensor turret.',
+
+            'Mi-24P' => 'Russian heavy attack helicopter by Mil that uniquely can transport 8 troops. GSh-30K 30mm cannon on fixed mount (P variant). Ataka ATGMs, rockets. Nicknamed "Flying Tank" for armor protection. Most-produced attack helicopter globally. Combat veteran of Soviet-Afghan War, Chechnya, Syria, Ukraine.',
+
+            'Mi-8/17' => 'Russian medium transport helicopter by Mil, most-produced helicopter in history (17,000+). Hip variants serve utility, assault, medevac, and gunship roles. Carries 24 troops or 4000kg cargo. Twin turboshafts provide redundancy. Used by 80+ countries. Recognizable by distinctive round nose and tail configuration.',
+
+            'UH-60M Black Hawk' => 'American medium utility helicopter by Sikorsky. Workhorse of US military transporting 14 troops or external cargo. Twin T700 turboshafts. Multiple variants: medevac, special ops, naval. 4000+ built for 30+ countries. Combat proven in every US operation since 1979. Distinctive low-mounted horizontal tail.',
+
+            'CH-47F Chinook' => 'American heavy-lift helicopter by Boeing with distinctive tandem rotor configuration. Carries 55 troops or 12,700kg cargo including vehicles. Rear loading ramp. Fastest conventional helicopter at 315km/h. 1200+ built serving 20+ countries. Essential for vertical envelopment and logistics. In production since 1962.',
+
+            'T129 ATAK' => 'Turkish attack helicopter by Turkish Aerospace Industries based on AgustaWestland A129 Mangusta. 20mm cannon, ATGMs, rockets. Turkish avionics and weapons integration. Combat proven against PKK. Export success despite engine supply issues (US-made LHTEC CTS800). Recognizable by slim fuselage and stepped tandem cockpit.',
+
+            'NH90' => 'European medium helicopter by NHIndustries (Airbus, Leonardo, Fokker). Tactical (TTH) and naval (NFH) variants. All-composite airframe, fly-by-wire. Carries 20 troops. Produced for 14 nations. Troubled development history. NFH variant carries torpedoes for ASW. Distinctive angular fuselage design.',
+
+            'Tigre' => 'Franco-German attack helicopter by Eurocopter (now Airbus Helicopters). Tandem crew, stepped cockpit. 30mm cannon, ATGMs, rockets. All-weather capable with TADS/PNVS equivalent. Combat proven in Afghanistan, Libya, Mali. Three variants: anti-tank, escort, reconnaissance. 180+ built for France, Germany, Spain, Australia.',
+
+            // ========================================
+            // UAVs
+            // ========================================
+            'Bayraktar TB2' => 'Turkish medium-altitude long-endurance UAV by Baykar. Game-changing weapon in Nagorno-Karabakh, Libya, and Ukraine. 27-hour endurance, 8200m ceiling. Carries 4 MAM-L/MAM-C precision munitions. Satellite link for beyond-line-of-sight. Low cost compared to Western equivalents. 500+ produced for 25+ countries.',
+
+            'Akinci' => 'Turkish high-altitude long-endurance UCAV by Baykar. Twin-engine with 24-hour endurance, 12,200m ceiling. Carries 1350kg of weapons including cruise missiles and SOM-J. AESA radar option for air-to-air capability. Represents significant capability jump from TB2. AI-assisted autonomous functions.',
+
+            'MQ-9 Reaper' => 'American MALE UCAV by General Atomics. Primary US strike drone with 27-hour endurance. Carries 1700kg on 7 hardpoints including Hellfire, Paveway, JDAM. Turboprop for 400km/h speed. Extensive combat record in Middle East and Africa. Being replaced by MQ-9B SkyGuardian with improved sensors.',
+
+            'Orlan-10' => 'Russian reconnaissance UAV by Special Technology Center. Catapult-launched with 16-hour endurance. Primary Russian artillery spotting platform with huge losses in Ukraine (1000+). Remarkably uses commercial components including Canon camera. Simple design enables mass production. 3000+ built.',
+
+            'Lancet' => 'Russian loitering munition by ZALA Aero (Kalashnikov). Kamikaze drone with 40-minute endurance, 70km range. Targets identified by separate Orlan-10 scouts. 3kg or 5kg warhead variants. Extensively used against Ukrainian artillery and vehicles. TV or thermal seeker. Cheap and effective despite simple design.',
+
+            // ========================================
+            // NAVAL VESSELS
+            // ========================================
+            'Gerald R. Ford-class' => 'American supercarrier by Huntington Ingalls Industries. Newest and largest US carrier class at 100,000 tonnes. EMALS electromagnetic catapults replace steam. Advanced arresting gear, improved reactor design. 75+ aircraft capacity. $13 billion cost per hull. CVN-78 commissioned 2017, CVN-79 Kennedy building.',
+
+            'Nimitz-class' => 'American nuclear supercarrier by Newport News Shipbuilding. Ten ships forming backbone of US carrier force. 100,000 tonnes carrying 85+ aircraft. Steam catapults, four elevators. Two A4W reactors provide unlimited range. Combat proven since 1970s. Being replaced by Ford-class at one ship per decade.',
+
+            'Arleigh Burke-class' => 'American guided-missile destroyer by Bath Iron Works and Huntington Ingalls. Primary US surface combatant with 73+ built in three flights. Aegis combat system with SPY-1D radar. 96 VLS cells for SM-2/SM-6, Tomahawk, ESSM. Flight III adds SPY-6 radar. Most numerous Western surface combatant class.',
+
+            'Zumwalt-class' => 'American stealth guided-missile destroyer by Bath Iron Works. Tumblehome hull design for reduced radar signature. Originally 32 planned, cut to 3 due to costs. 80 VLS cells. 155mm Advanced Gun System ammunition too expensive. Now being converted for hypersonic weapons. Distinctive angular profile.',
+
+            'Constellation-class' => 'American guided-missile frigate under construction by Fincantieri. Based on FREMM design for multi-mission warfare. 32 VLS cells, Enterprise Air Surveillance Radar. 20 planned to replace LCS and expand fleet. First hull expected 2029 after delays. Cost-effective alternative to destroyers.',
+
+            'Virginia-class' => 'American nuclear attack submarine by General Dynamics and Huntington Ingalls. 23 boats commissioned with 66 planned. Modular design with Virginia Payload Module adding 28 Tomahawk tubes. Advanced sonar and combat systems. Replaces Los Angeles-class. Block V variant significantly larger.',
+
+            'Type 055' => 'Chinese guided-missile destroyer by Jiangnan and Dalian shipyards. Among largest and most powerful surface combatants globally. 112 VLS cells for HHQ-9, YJ-18, land-attack missiles. 13,000 tonnes with integrated electric propulsion. Dual-band radar. 8 commissioned with more building. Rivals Arleigh Burke Flight III.',
+
+            'Liaoning' => 'Chinese aircraft carrier, former Soviet Varyag completed by China. STOBAR configuration with ski-jump. Carries J-15 Flying Shark fighters. 60,000 tonnes. Primarily training vessel for growing Chinese carrier force. Commissioned 2012. Being supplemented by larger domestically-built Shandong and Fujian.',
+
+            'Admiral Kuznetsov' => 'Russian aircraft carrier, only Russian carrier in service. STOBAR with ski-jump. Carries Su-33 and MiG-29K fighters. 55,000 tonnes. Troubled service history with frequent breakdowns. Damaged by fire during 2018 refit. Smoke-belching propulsion system distinctive. Unlikely to return to full service.',
+
+            'Admiral Gorshkov-class' => 'Russian guided-missile frigate by Severnaya Verf shipyard. Modern design with stealth features. 32 VLS cells for Kalibr, Oniks, and Zircon hypersonic missiles. Poliment-Redut SAM system. 4 in service with more building. Represents significant Russian naval capability.',
+
+            'Borei-class' => 'Russian nuclear ballistic missile submarine by Sevmash. New-generation SSBN carrying 16 Bulava SLBMs. 24,000 tonnes submerged. Pump-jet propulsion for reduced noise. 5 in service with 5 more building. Forms backbone of Russian naval nuclear deterrent. Replaces aging Typhoon and Delta classes.',
+
+            'Yasen-class' => 'Russian nuclear cruise missile submarine by Sevmash. 13,800 tonnes with 32 cruise missiles (Kalibr, Oniks, Zircon). Advanced sonar and quieting. Most capable Russian attack submarine. Only 3 in service due to cost and complexity. Improved Yasen-M variant addresses early issues.',
+
+            'Queen Elizabeth-class' => 'British aircraft carrier by Aircraft Carrier Alliance. Largest Royal Navy warships at 65,000 tonnes. STOVL configuration for F-35B. Unique twin island design. No catapults limits aircraft options. Two ships: HMS Queen Elizabeth (2017) and HMS Prince of Wales (2019). Ski-jump distinguishes from US carriers.',
+
+            'Type 45' => 'British air defense destroyer by BAE Systems. PAAMS missile system with Aster 15/30. SAMPSON multifunction radar. 6 ships in service. Propulsion problems led to fleet-wide modifications. Distinctive angular pyramid mast. Among most capable air defense destroyers. To receive hypersonic missiles.',
+
+            'Type 26' => 'British anti-submarine frigate under construction by BAE Systems. Global Combat Ship design also ordered by Australia and Canada. 24 VLS cells, Mk41 launcher. Advanced sonar suite for ASW. 8 planned for Royal Navy with first commissioning delayed to 2027. Replaces Type 23.',
+
+            'Astute-class' => 'British nuclear attack submarine by BAE Systems. 7,400 tonnes with Tomahawk and Spearfish torpedoes. Sonar 2076 suite among world\'s best. PWR2 reactor provides 25-year core life. 5 commissioned with 7 planned. Troubled early construction led to cost overruns. Most capable Royal Navy submarines.',
+
+            'Charles de Gaulle' => 'French nuclear aircraft carrier, only non-US nuclear carrier. CATOBAR with steam catapults for Rafale M fighters. 42,500 tonnes. Unique French nuclear propulsion. Single ship limits availability. Combat proven in Afghanistan, Libya, Syria, ISIS. Second carrier (PANG) planned for 2038.',
+
+            'FREMM' => 'French/Italian multi-mission frigate by Naval Group and Fincantieri. 32 VLS cells, Aster missiles, SCALP Naval. 6,000 tonnes with diesel-electric and gas turbine propulsion. 8 French, 10 Italian variants. Basis for US Constellation-class. Combat proven with French Navy.',
+
+            'Barracuda-class' => 'French nuclear attack submarine by Naval Group. Replacing Rubis-class with 5,300-tonne design. Carries SCALP Naval cruise missiles and F21 torpedoes. Pump-jet propulsion. 2 commissioned with 6 planned. More capable than predecessor with land-attack capability.',
+
+            'Izumo-class' => 'Japanese helicopter destroyer by Japan Marine United. Being converted to light carrier for F-35B. 27,000 tonnes, largest Japanese warship since WWII. Originally for ASW helicopters. Conversion requires heat-resistant deck coating and aircraft handling modifications.',
+
+            'INS Vikrant' => 'Indian aircraft carrier by Cochin Shipyard. First indigenous Indian carrier at 45,000 tonnes. STOBAR with ski-jump for MiG-29K fighters. Commissioned 2022 after extended construction. Complements Russian-built Vikramaditya. Establishes Indian carrier construction capability.',
+
+            // ========================================
+            // MISSILES
+            // ========================================
+            '3M22 Zircon' => 'Russian hypersonic anti-ship cruise missile by NPO Mashinostroyeniya. Mach 8-9 speed with 500-1000km range makes interception extremely difficult. Launched from ships (Admiral Gorshkov) and submarines (Yasen). Operational since 2023. First use in Ukraine January 2023. May carry nuclear warhead.',
+
+            '9M133 Kornet' => 'Russian anti-tank guided missile by KBP. Laser beam-riding with tandem HEAT warhead penetrating 1200mm RHA behind ERA. 5.5km range. Man-portable or vehicle mounted. Widely exported and extensively used by various factions. Thermobaric variant for bunkers. Effective against modern tanks.',
+
+            'FGM-148 Javelin' => 'American fire-and-forget ATGM by Raytheon and Lockheed Martin. Infrared imaging seeker with soft-launch and top-attack mode. Penetrates 800mm RHA. Revolutionary weapon against Russian armor in Ukraine. 4.75km range. Man-portable at 22.3kg. 50,000+ produced. $240,000 per missile.',
+
+            'FIM-92 Stinger' => 'American shoulder-launched SAM by General Dynamics/Raytheon. Infrared homing with IFF capability. Lethal against helicopters and low-flying aircraft to 3.8km range. Changed Afghan war against Soviet helicopters. Supplied in thousands to Ukraine. Still effective 40+ years after introduction.',
+
+            'Storm Shadow' => 'British/French air-launched cruise missile by MBDA. 560km range with stealth profile and terrain-following. GPS/INS/terrain reference navigation. BROACH tandem warhead for hardened targets. Combat proven in Iraq, Libya, Syria. Supplied to Ukraine for strikes on Russian targets. Known as SCALP-EG in French service.',
+
+            'SCALP-EG' => 'French designation of Storm Shadow cruise missile by MBDA. Air-launched from Rafale, Mirage 2000, Tornado. 560km range optimized for deep strike. BROACH warhead penetrates hardened shelters. Combat proven in multiple French operations. Integration with additional platforms ongoing.',
+
+            'Spike ATGM' => 'Israeli anti-tank missile family by Rafael. Multiple variants: SR (short-range), MR (medium 2.5km), LR (4km), ER (8km), NLOS (25km). Fire-and-forget with electro-optical seeker. Fiber-optic data link on longer-range variants. 33,000+ produced for 35+ nations. Man-portable to vehicle/helicopter mounted.',
+
+            'DF-21D' => 'Chinese anti-ship ballistic missile by CASIC. First ASBM designed to target carriers at 1500km range. Terminal maneuvering to evade defenses. Over-the-horizon radar targeting with satellite support. "Carrier killer" designation. Deployed since 2010. Accuracy unverified in combat.',
+
+            'BrahMos' => 'Indian/Russian supersonic cruise missile by BrahMos Aerospace joint venture. Mach 3 speed making it fastest cruise missile in service. 450km range (extended versions longer). Launched from ships, submarines, aircraft, land. 500+ produced. NG hypersonic version under development.',
+
+            'MGM-140 ATACMS' => 'American tactical ballistic missile by Lockheed Martin for MLRS/HIMARS. 300km range with GPS/INS guidance. Block IA has 950 M74 bomblets, later versions use unitary warhead. 3700+ produced. Game-changer when supplied to Ukraine for deep strikes. Being replaced by PrSM.',
+
+            'PrSM' => 'Precision Strike Missile by Lockheed Martin replacing ATACMS. 500km+ range in compact form fitting 2 per HIMARS pod. GPS guidance with advanced seeker options. Designed to defeat modern air defenses. Initial operational capability 2024. Represents significant US long-range strike improvement.',
+
+            'Iskander-M' => 'Russian short-range ballistic missile system by KBP. 9M723 quasi-ballistic missile with 500km range, 5m CEP. Maneuvering trajectory defeats missile defenses. Nuclear or conventional warheads. Extensively used against Ukraine with mixed accuracy. Brigade-level weapon replacing Tochka-U.',
+
+            'Kh-101' => 'Russian air-launched cruise missile by Raduga. 4500km range making it longest-range Russian cruise missile. Low-observable design reduces radar signature. Conventional 400kg warhead or Kh-102 nuclear variant. Launched from Tu-160, Tu-95MS bombers. Extensively used against Ukraine with terrain-following flight.',
+
+            'Kh-47M2 Kinzhal' => 'Russian air-launched hypersonic missile, essentially air-launched Iskander. Mach 10+ speed with 2000km range from MiG-31K or Tu-22M3. Maneuvering makes interception difficult. Claims of Patriot intercept disputed. Nuclear capable. First use in Ukraine March 2022 though effectiveness debated.',
+
+            'Starstreak' => 'British high-velocity SAM by Thales. Unique design with 3 dart sub-munitions traveling at Mach 4. Laser beam-riding guidance immune to countermeasures. 7km range. Man-portable, vehicle-mounted, or helicopter-launched. Supplied to Ukraine with successful helicopter kills. Fastest short-range SAM.',
+
+            'M142 HIMARS' => 'High Mobility Artillery Rocket System by Lockheed Martin on 5-ton truck chassis. Carries 6 GMLRS rockets (70km range) or 1 ATACMS missile (300km range). Game-changing weapon in Ukraine conflict for precision deep strikes. C-130 transportable for rapid deployment. Automated fire control with GPS-guided munitions.',
+
+            // ========================================
+            // TRANSPORT AIRCRAFT
+            // ========================================
+            'A400M Atlas' => 'European four-engine turboprop military transport by Airbus Defence. 37,000kg payload, 8700km range. Bridges gap between C-130 and C-17. TP400 engines are most powerful turboprops ever. Can operate from short unpaved runways. 110+ delivered to 8 nations. Troubled development history with delays and cost overruns.',
         ];
 
         foreach ($updates as $designation => $description) {
