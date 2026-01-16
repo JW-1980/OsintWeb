@@ -48,11 +48,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { reactive, ref, nextTick } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
+const route = useRoute();
 const authStore = useAuthStore();
 
 const form = reactive({
@@ -69,11 +70,16 @@ const handleLogin = async () => {
 
   try {
     await authStore.login(form.email, form.password);
-    router.push('/');
+
+    // Wait for state to update
+    await nextTick();
+
+    // Redirect to intended destination or dashboard
+    const redirect = route.query.redirect as string;
+    await router.replace(redirect || '/');
   } catch (err: any) {
     console.error('Login failed:', err);
     error.value = err?.message || 'Login failed. Please check your credentials.';
-  } finally {
     loading.value = false;
   }
 };
