@@ -168,6 +168,12 @@ const routes: RouteRecordRaw[] = [
   // ADMIN ROUTES
   // ==========================================
   {
+    path: '/admin/login',
+    name: 'admin-login',
+    component: () => import('@/views/admin/AdminLogin.vue'),
+    meta: { requiresGuest: true, isAdminLogin: true }
+  },
+  {
     path: '/admin',
     name: 'admin',
     component: () => import('@/views/admin/AdminDashboard.vue'),
@@ -298,13 +304,29 @@ const router = createRouter({
 router.beforeEach(async (to, _from, next) => {
   const authStore = useAuthStore();
 
+  // Require authentication for protected routes
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'login', query: { redirect: to.fullPath } });
-  } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
-    next({ name: 'dashboard' });
-  } else if (to.meta.requiresAdmin && !authStore.isAdmin) {
-    next({ name: 'dashboard' });
-  } else {
+    // Redirect admin routes to admin login, others to regular login
+    if (to.meta.requiresAdmin) {
+      next({ name: 'admin-login' });
+    } else {
+      next({ name: 'login', query: { redirect: to.fullPath } });
+    }
+  }
+  // Redirect guests from guest-only pages
+  else if (to.meta.requiresGuest && authStore.isAuthenticated) {
+    // Admin login page redirects to admin panel, regular login to dashboard
+    if (to.meta.isAdminLogin && authStore.isAdmin) {
+      next({ name: 'admin' });
+    } else {
+      next({ name: 'dashboard' });
+    }
+  }
+  // Check admin privileges for admin routes
+  else if (to.meta.requiresAdmin && !authStore.isAdmin) {
+    next({ name: 'admin-login' });
+  }
+  else {
     next();
   }
 });
