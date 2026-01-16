@@ -3,8 +3,8 @@
     "file": "assets/chart-vendor-l0sNRNKZ.js",
     "name": "chart-vendor"
   },
-  "_events-Dqlv7KaZ.js": {
-    "file": "assets/events-Dqlv7KaZ.js",
+  "_events-CSqJwcgI.js": {
+    "file": "assets/events-CSqJwcgI.js",
     "name": "events",
     "imports": [
       "_vue-vendor-D9YORt-q.js",
@@ -55,12 +55,12 @@
     "src": "node_modules/leaflet/dist/images/marker-shadow.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-yGB3nR8l.css",
+    "file": "assets/app-B-6YN436.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/js/app.ts": {
-    "file": "assets/app-C3PY9Ly-.js",
+    "file": "assets/app-HEhuvRSe.js",
     "name": "app",
     "src": "resources/js/app.ts",
     "isEntry": true,
@@ -109,13 +109,13 @@
     ]
   },
   "resources/js/views/Dashboard.vue": {
-    "file": "assets/Dashboard-sLM0jyeO.js",
+    "file": "assets/Dashboard-0EL7KRpV.js",
     "name": "Dashboard",
     "src": "resources/js/views/Dashboard.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vue-vendor-D9YORt-q.js",
-      "_events-Dqlv7KaZ.js",
+      "_events-CSqJwcgI.js",
       "resources/js/app.ts",
       "_map-vendor-ansGHOnC.js"
     ],
@@ -142,13 +142,13 @@
     ]
   },
   "resources/js/views/EventDetail.vue": {
-    "file": "assets/EventDetail-SlrNE_Ml.js",
+    "file": "assets/EventDetail-BVO6vHv2.js",
     "name": "EventDetail",
     "src": "resources/js/views/EventDetail.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vue-vendor-D9YORt-q.js",
-      "_events-Dqlv7KaZ.js",
+      "_events-CSqJwcgI.js",
       "resources/js/app.ts",
       "_map-vendor-ansGHOnC.js"
     ],
@@ -166,14 +166,14 @@
     ]
   },
   "resources/js/views/MapPage.vue": {
-    "file": "assets/MapPage-DWhTWMSy.js",
+    "file": "assets/MapPage-CgXTOqMm.js",
     "name": "MapPage",
     "src": "resources/js/views/MapPage.vue",
     "isDynamicEntry": true,
     "imports": [
       "_vue-vendor-D9YORt-q.js",
       "resources/js/app.ts",
-      "_events-Dqlv7KaZ.js",
+      "_events-CSqJwcgI.js",
       "_map-vendor-ansGHOnC.js"
     ],
     "css": [
@@ -253,7 +253,7 @@
     ]
   },
   "resources/js/views/auth/Login.vue": {
-    "file": "assets/Login-CjTHnVQT.js",
+    "file": "assets/Login-CNQ5fL90.js",
     "name": "Login",
     "src": "resources/js/views/auth/Login.vue",
     "isDynamicEntry": true,
@@ -264,7 +264,7 @@
     ]
   },
   "resources/js/views/auth/Register.vue": {
-    "file": "assets/Register-CL0_vEOL.js",
+    "file": "assets/Register-BXgU-3t8.js",
     "name": "Register",
     "src": "resources/js/views/auth/Register.vue",
     "isDynamicEntry": true,
