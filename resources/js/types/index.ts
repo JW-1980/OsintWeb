@@ -1,4 +1,4 @@
-import { GeoJSON } from 'geojson';
+import type { Polygon, MultiPolygon } from 'geojson';
 
 export interface User {
   id: number;
@@ -8,6 +8,11 @@ export interface User {
   role: 'admin' | 'analyst' | 'contributor' | 'viewer';
   organization?: string;
   avatar_url?: string;
+  status?: 'active' | 'banned' | 'pending';
+  last_active_at?: string;
+  events_count?: number;
+  contributions?: number;
+  logins_count?: number;
   created_at: string;
   updated_at: string;
 }
@@ -199,7 +204,7 @@ export interface ControlZone {
   id: number;
   uuid: string;
   name: string;
-  geometry: GeoJSON.Polygon | GeoJSON.MultiPolygon;
+  geometry: Polygon | MultiPolygon;
   controller_id: number;
   controller?: Actor;
   control_type: ControlType;

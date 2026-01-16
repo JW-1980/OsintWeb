@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { Event, EventFilters, PaginatedResponse, EventType } from '@/types';
+import { Event, EventFilters, PaginatedResponse } from '@/types';
 import { useApi } from '@/composables/useApi';
 
 export const useEventsStore = defineStore('events', () => {
