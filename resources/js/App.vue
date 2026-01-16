@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useThemeStore } from '@/stores/theme';
 import AppHeader from '@/components/layout/AppHeader.vue';
 
+const route = useRoute();
 const authStore = useAuthStore();
 const themeStore = useThemeStore();
+
+const isPublicPage = computed(() => {
+  return route.meta?.isPublic === true || route.meta?.requiresGuest === true;
+});
+
+const showHeader = computed(() => {
+  return authStore.isAuthenticated && !isPublicPage.value;
+});
 
 onMounted(async () => {
   // Initialize theme
@@ -24,12 +34,13 @@ onMounted(async () => {
 
 <template>
   <div id="app" class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-    <AppHeader v-if="authStore.isAuthenticated" />
+    <AppHeader v-if="showHeader" />
 
-    <main :class="{ 'pt-16': authStore.isAuthenticated }">
-      <div :class="{ 'container mx-auto px-4 py-6': $route.meta.containerized !== false }">
+    <main :class="{ 'pt-16': showHeader }">
+      <div v-if="!isPublicPage" :class="{ 'container mx-auto px-4 py-6': $route.meta.containerized !== false }">
         <router-view />
       </div>
+      <router-view v-else />
     </main>
   </div>
 </template>
