@@ -6,8 +6,13 @@
       </h3>
     </div>
 
+    <!-- Error message -->
+    <div v-if="error" class="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+      <p class="text-sm text-yellow-700 dark:text-yellow-300">{{ error }}</p>
+    </div>
+
     <!-- Comment Form (only for authenticated users) -->
-    <div v-if="isAuthenticated" class="mb-6">
+    <div v-if="isAuthenticated && canComment" class="mb-6">
       <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4">
         <textarea
           v-model="newComment"
@@ -21,7 +26,7 @@
             Supports basic formatting: **bold**, *italic*, `code`
           </p>
           <button
-            @click="submitComment"
+            @click="submitComment()"
             :disabled="!newComment.trim() || submitting"
             class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
@@ -32,7 +37,7 @@
     </div>
 
     <!-- Login prompt for guests -->
-    <div v-else class="mb-6 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-center">
+    <div v-else-if="canComment" class="mb-6 bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-center">
       <p class="text-gray-600 dark:text-gray-400 mb-2">You must be logged in to comment.</p>
       <router-link
         to="/login"
@@ -40,6 +45,11 @@
       >
         Login to Comment
       </router-link>
+    </div>
+
+    <!-- Comments disabled message -->
+    <div v-else-if="!canComment" class="mb-6 bg-gray-100 dark:bg-gray-700/50 rounded-lg p-4 text-center">
+      <p class="text-gray-500 dark:text-gray-400">Comments are disabled for this content.</p>
     </div>
 
     <!-- Empty state -->
@@ -76,20 +86,39 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { useApi } from '@/composables/useApi';
 
 // Async component for recursive rendering
 const CommentItem = defineAsyncComponent(() => import('./CommentItem.vue'));
+
+interface CommentAuthor {
+  id: number;
+  name: string;
+  avatar_url: string | null;
+}
+
+interface ApiComment {
+  id: number;
+  uuid: string;
+  content: string;
+  content_html?: string;
+  user?: CommentAuthor | null;
+  guest_name: string | null;
+  parent_id: number | null;
+  upvotes: number;
+  downvotes: number;
+  edit_count?: number;
+  created_at: string;
+  updated_at: string;
+  approved_replies?: ApiComment[];
+}
 
 interface Comment {
   id: number;
   uuid: string;
   content: string;
   content_html: string;
-  author: {
-    id: number;
-    name: string;
-    avatar_url: string | null;
-  } | null;
+  author: CommentAuthor | null;
   guest_name: string | null;
   parent_id: number | null;
   depth: number;
@@ -101,14 +130,33 @@ interface Comment {
   updated_at: string;
 }
 
+interface CommentsResponse {
+  data: ApiComment[];
+  meta: {
+    current_page: number;
+    last_page: number;
+    total: number;
+    user_votes: Record<number, number>;
+    can_comment: boolean;
+    form_token?: string;
+  };
+}
+
+interface CommentResponse {
+  message: string;
+  data: ApiComment;
+  meta?: {
+    status?: string;
+    edit_time_remaining?: number;
+  };
+}
+
 const props = defineProps<{
   commentableType: string;
   commentableId: number | string;
 }>();
 
-// Props will be used when API integration is complete
-void props; // Prevent unused variable warning
-
+const api = useApi();
 const authStore = useAuthStore();
 
 const comments = ref<Comment[]>([]);
@@ -116,6 +164,10 @@ const newComment = ref('');
 const loading = ref(false);
 const submitting = ref(false);
 const replyingTo = ref<number | null>(null);
+const canComment = ref(true);
+const formToken = ref<string | null>(null);
+const userVotes = ref<Record<number, number>>({});
+const error = ref('');
 
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const currentUserId = computed(() => authStore.user?.id || null);
@@ -124,125 +176,203 @@ const topLevelComments = computed(() => {
   return comments.value.filter(c => c.parent_id === null);
 });
 
+// Convert API vote (-1, 0, 1) to component vote format ('up', 'down', null)
+const apiVoteToComponentVote = (vote: number): 'up' | 'down' | null => {
+  if (vote === 1) return 'up';
+  if (vote === -1) return 'down';
+  return null;
+};
+
+// Convert component vote format to API vote (-1, 0, 1)
+const componentVoteToApiVote = (voteType: 'up' | 'down', currentVote: 'up' | 'down' | null): number => {
+  // If clicking same vote, remove it
+  if (currentVote === voteType) return 0;
+  // Otherwise set the vote
+  return voteType === 'up' ? 1 : -1;
+};
+
+// Transform API comment to display comment
+const transformComment = (apiComment: ApiComment, depth: number): Comment => ({
+  id: apiComment.id,
+  uuid: apiComment.uuid,
+  content: apiComment.content,
+  content_html: apiComment.content_html || apiComment.content,
+  author: apiComment.user ? {
+    id: apiComment.user.id,
+    name: apiComment.user.name,
+    avatar_url: apiComment.user.avatar_url || null
+  } : null,
+  guest_name: apiComment.guest_name,
+  parent_id: apiComment.parent_id,
+  depth,
+  upvotes: apiComment.upvotes,
+  downvotes: apiComment.downvotes,
+  user_vote: apiVoteToComponentVote(userVotes.value[apiComment.id] || 0),
+  is_edited: (apiComment.edit_count || 0) > 0,
+  created_at: apiComment.created_at,
+  updated_at: apiComment.updated_at,
+});
+
+// Flatten nested comments for easier handling
+const flattenComments = (commentList: ApiComment[], depth = 0): Comment[] => {
+  const result: Comment[] = [];
+  for (const comment of commentList) {
+    result.push(transformComment(comment, depth));
+    if (comment.approved_replies && comment.approved_replies.length > 0) {
+      result.push(...flattenComments(comment.approved_replies, depth + 1));
+    }
+  }
+  return result;
+};
+
 const loadComments = async () => {
   loading.value = true;
+  error.value = '';
   try {
-    // TODO: Replace with actual API call
-    // const response = await api.get(`/${props.commentableType}/${props.commentableId}/comments`);
-    // comments.value = response.data.data;
+    const response = await api.get<CommentsResponse>(
+      `/${props.commentableType}/${props.commentableId}/comments`
+    );
 
-    // Mock data for demonstration
+    // Store user votes mapping
+    userVotes.value = response.meta.user_votes || {};
+    canComment.value = response.meta.can_comment;
+    formToken.value = response.meta.form_token || null;
+
+    // Flatten nested comments for display
+    comments.value = flattenComments(response.data);
+  } catch (err) {
+    console.error('Failed to load comments:', err);
     comments.value = [];
-  } catch (error) {
-    console.error('Failed to load comments:', error);
   } finally {
     loading.value = false;
   }
 };
 
-const submitComment = async () => {
-  if (!newComment.value.trim() || submitting.value) return;
+const submitComment = async (parentId: number | null = null) => {
+  const content = newComment.value.trim();
+  if (!content || submitting.value) return;
 
   submitting.value = true;
-  try {
-    // TODO: Replace with actual API call
-    // const response = await api.post(`/${props.commentableType}/${props.commentableId}/comments`, {
-    //   content: newComment.value,
-    //   parent_id: replyingTo.value
-    // });
+  error.value = '';
 
-    // Mock: Add comment to list
-    const mockComment: Comment = {
-      id: Date.now(),
-      uuid: `comment-${Date.now()}`,
-      content: newComment.value,
-      content_html: newComment.value,
-      author: authStore.user ? {
-        id: authStore.user.id,
-        name: authStore.user.name,
-        avatar_url: authStore.user.avatar_url || null
-      } : null,
-      guest_name: null,
-      parent_id: replyingTo.value,
-      depth: replyingTo.value ? 1 : 0,
-      upvotes: 0,
-      downvotes: 0,
-      user_vote: null,
-      is_edited: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+  try {
+    const payload: Record<string, unknown> = {
+      content,
+      parent_id: parentId || replyingTo.value,
     };
 
-    comments.value.push(mockComment);
+    if (formToken.value) {
+      payload._form_token = formToken.value;
+    }
+
+    const response = await api.post<CommentResponse>(
+      `/${props.commentableType}/${props.commentableId}/comments`,
+      payload
+    );
+
+    // Transform and add the new comment to the list
+    const depth = (parentId || replyingTo.value) ? 1 : 0;
+    const newCommentData = transformComment(response.data, depth);
+    newCommentData.user_vote = null;
+    newCommentData.is_edited = false;
+
+    comments.value.push(newCommentData);
     newComment.value = '';
     replyingTo.value = null;
-  } catch (error) {
-    console.error('Failed to submit comment:', error);
+
+    // Update form token if provided
+    if (response.meta?.status === 'pending') {
+      error.value = 'Your comment is pending approval.';
+    }
+  } catch (err: unknown) {
+    console.error('Failed to submit comment:', err);
+    const apiError = err as { message?: string };
+    error.value = apiError?.message || 'Failed to post comment. Please try again.';
   } finally {
     submitting.value = false;
   }
 };
 
-const handleReply = (commentId: number, replyContent: string) => {
-  // Handle reply submission
+const handleReply = async (commentId: number, replyContent: string) => {
+  // Set reply context and submit
   replyingTo.value = commentId;
   newComment.value = replyContent;
-  submitComment();
+  await submitComment(commentId);
 };
 
 const handleVote = async (commentId: number, voteType: 'up' | 'down') => {
-  try {
-    // TODO: Replace with actual API call
-    // await api.post(`/comments/${commentId}/vote`, { type: voteType });
+  if (!isAuthenticated.value) return;
 
-    const comment = comments.value.find(c => c.id === commentId);
-    if (comment) {
-      if (comment.user_vote === voteType) {
-        // Remove vote
-        if (voteType === 'up') comment.upvotes--;
-        else comment.downvotes--;
-        comment.user_vote = null;
-      } else {
-        // Change or add vote
-        if (comment.user_vote === 'up') comment.upvotes--;
-        if (comment.user_vote === 'down') comment.downvotes--;
-        if (voteType === 'up') comment.upvotes++;
-        else comment.downvotes++;
-        comment.user_vote = voteType;
-      }
-    }
-  } catch (error) {
-    console.error('Failed to vote:', error);
+  const comment = comments.value.find(c => c.id === commentId);
+  if (!comment) return;
+
+  const apiVote = componentVoteToApiVote(voteType, comment.user_vote);
+
+  // Optimistic update
+  const previousVote = comment.user_vote;
+  const previousUpvotes = comment.upvotes;
+  const previousDownvotes = comment.downvotes;
+
+  // Update locally first
+  if (previousVote === 'up') comment.upvotes--;
+  if (previousVote === 'down') comment.downvotes--;
+
+  if (apiVote === 1) {
+    comment.upvotes++;
+    comment.user_vote = 'up';
+  } else if (apiVote === -1) {
+    comment.downvotes++;
+    comment.user_vote = 'down';
+  } else {
+    comment.user_vote = null;
+  }
+
+  try {
+    await api.post(`/comments/${comment.uuid}/vote`, { vote: apiVote });
+    userVotes.value[comment.id] = apiVote;
+  } catch (err) {
+    console.error('Failed to vote:', err);
+    // Revert on error
+    comment.user_vote = previousVote;
+    comment.upvotes = previousUpvotes;
+    comment.downvotes = previousDownvotes;
   }
 };
 
 const handleEdit = async (commentId: number, newContent: string) => {
-  try {
-    // TODO: Replace with actual API call
-    // await api.patch(`/comments/${commentId}`, { content: newContent });
+  const comment = comments.value.find(c => c.id === commentId);
+  if (!comment) return;
 
-    const comment = comments.value.find(c => c.id === commentId);
-    if (comment) {
-      comment.content = newContent;
-      comment.content_html = newContent;
-      comment.is_edited = true;
-      comment.updated_at = new Date().toISOString();
-    }
-  } catch (error) {
-    console.error('Failed to edit comment:', error);
+  const previousContent = comment.content;
+
+  // Optimistic update
+  comment.content = newContent;
+  comment.content_html = newContent;
+  comment.is_edited = true;
+
+  try {
+    await api.put(`/comments/${comment.uuid}`, { content: newContent });
+    comment.updated_at = new Date().toISOString();
+  } catch (err) {
+    console.error('Failed to edit comment:', err);
+    // Revert on error
+    comment.content = previousContent;
+    comment.content_html = previousContent;
   }
 };
 
 const handleDelete = async (commentId: number) => {
   if (!confirm('Are you sure you want to delete this comment?')) return;
 
-  try {
-    // TODO: Replace with actual API call
-    // await api.delete(`/comments/${commentId}`);
+  const comment = comments.value.find(c => c.id === commentId);
+  if (!comment) return;
 
+  try {
+    await api.delete(`/comments/${comment.uuid}`);
     comments.value = comments.value.filter(c => c.id !== commentId);
-  } catch (error) {
-    console.error('Failed to delete comment:', error);
+  } catch (err) {
+    console.error('Failed to delete comment:', err);
+    error.value = 'Failed to delete comment. Please try again.';
   }
 };
 

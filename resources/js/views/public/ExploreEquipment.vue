@@ -117,8 +117,36 @@
           </div>
         </div>
 
+        <!-- Loading State -->
+        <div v-if="loading" class="flex items-center justify-center py-16">
+          <div class="flex flex-col items-center space-y-4">
+            <svg class="animate-spin h-10 w-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-600 dark:text-gray-400">Loading equipment...</p>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="text-center py-16">
+          <svg class="w-24 h-24 mx-auto text-red-400 dark:text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Unable to Load Equipment</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">{{ error }}</p>
+          <div class="flex items-center justify-center space-x-4">
+            <button @click="fetchEquipment" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Try Again
+            </button>
+            <router-link to="/register" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-colors">
+              Sign Up for Access
+            </router-link>
+          </div>
+        </div>
+
         <!-- Equipment Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <router-link
             v-for="item in filteredEquipment"
             :key="item.id"
@@ -177,7 +205,7 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="filteredEquipment.length === 0" class="text-center py-16">
+        <div v-if="!loading && !error && filteredEquipment.length === 0" class="text-center py-16">
           <svg class="w-24 h-24 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -186,19 +214,22 @@
         </div>
 
         <!-- Pagination -->
-        <div v-if="filteredEquipment.length > 0" class="mt-8 flex flex-col md:flex-row items-center justify-between">
+        <div v-if="!loading && !error && filteredEquipment.length > 0" class="mt-8 flex flex-col md:flex-row items-center justify-between">
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 md:mb-0">
-            Showing {{ filteredEquipment.length }} of {{ equipment.length }} equipment types
+            Showing {{ (currentPage - 1) * perPage + 1 }} to {{ Math.min(currentPage * perPage, totalItems || filteredEquipment.length) }} of {{ totalItems || filteredEquipment.length }} equipment types
           </p>
           <div class="flex items-center space-x-2">
             <button
+              @click="currentPage--"
               :disabled="currentPage === 1"
               class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Previous
             </button>
-            <span class="px-4 py-2 text-gray-700 dark:text-gray-300">Page {{ currentPage }}</span>
+            <span class="px-4 py-2 text-gray-700 dark:text-gray-300">Page {{ currentPage }} of {{ totalPages }}</span>
             <button
+              @click="currentPage++"
+              :disabled="currentPage >= totalPages"
               class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Next
@@ -218,9 +249,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useThemeStore } from '@/stores/theme';
+import { useApi } from '@/composables/useApi';
 
+const api = useApi();
 const themeStore = useThemeStore();
 const isDark = computed(() => themeStore.isDark);
 
@@ -229,12 +262,16 @@ const toggleTheme = () => {
 };
 
 const currentPage = ref(1);
+const perPage = ref(16);
+const loading = ref(false);
+const error = ref<string | null>(null);
+const totalItems = ref(0);
 
 const stats = ref({
-  types: 387,
-  losses: 12543,
-  countries: 18,
-  categories: 12
+  types: 0,
+  losses: 0,
+  countries: 0,
+  categories: 0
 });
 
 const filters = reactive({
@@ -255,47 +292,131 @@ interface Equipment {
   total_losses: number;
 }
 
-const equipment = ref<Equipment[]>([
-  { id: 1, name: 'T-72B3', category: 'Tanks', manufacturer: 'Uralvagonzavod', origin_country: 'Russia', image_url: null, destroyed: 892, captured: 234, total_losses: 1360 },
-  { id: 2, name: 'T-80BVM', category: 'Tanks', manufacturer: 'Omsktransmash', origin_country: 'Russia', image_url: null, destroyed: 234, captured: 89, total_losses: 391 },
-  { id: 3, name: 'T-90M', category: 'Tanks', manufacturer: 'Uralvagonzavod', origin_country: 'Russia', image_url: null, destroyed: 45, captured: 12, total_losses: 67 },
-  { id: 4, name: 'BMP-2', category: 'IFV', manufacturer: 'Kurganmashzavod', origin_country: 'Russia', image_url: null, destroyed: 567, captured: 321, total_losses: 1122 },
-  { id: 5, name: 'BTR-82A', category: 'APC', manufacturer: 'Arzamas', origin_country: 'Russia', image_url: null, destroyed: 423, captured: 178, total_losses: 891 },
-  { id: 6, name: 'Leopard 2A6', category: 'Tanks', manufacturer: 'Krauss-Maffei', origin_country: 'Germany', image_url: null, destroyed: 23, captured: 2, total_losses: 38 },
-  { id: 7, name: 'M1A1 Abrams', category: 'Tanks', manufacturer: 'General Dynamics', origin_country: 'USA', image_url: null, destroyed: 8, captured: 0, total_losses: 12 },
-  { id: 8, name: 'M777 Howitzer', category: 'Artillery', manufacturer: 'BAE Systems', origin_country: 'USA', image_url: null, destroyed: 45, captured: 3, total_losses: 68 },
-  { id: 9, name: 'HIMARS', category: 'MLRS', manufacturer: 'Lockheed Martin', origin_country: 'USA', image_url: null, destroyed: 2, captured: 0, total_losses: 3 },
-  { id: 10, name: 'Su-35', category: 'Aircraft', manufacturer: 'Sukhoi', origin_country: 'Russia', image_url: null, destroyed: 24, captured: 0, total_losses: 27 },
-  { id: 11, name: 'Ka-52', category: 'Helicopter', manufacturer: 'Kamov', origin_country: 'Russia', image_url: null, destroyed: 31, captured: 0, total_losses: 37 },
-  { id: 12, name: 'Orlan-10', category: 'UAV', manufacturer: 'Special Technology Center', origin_country: 'Russia', image_url: null, destroyed: 234, captured: 89, total_losses: 369 },
-  { id: 13, name: 'T-64BV', category: 'Tanks', manufacturer: 'Kharkiv Morozov', origin_country: 'Ukraine', image_url: null, destroyed: 156, captured: 45, total_losses: 258 },
-  { id: 14, name: 'Bradley M2A2', category: 'IFV', manufacturer: 'BAE Systems', origin_country: 'USA', image_url: null, destroyed: 34, captured: 5, total_losses: 59 },
-  { id: 15, name: 'S-300', category: 'Air Defense', manufacturer: 'Almaz-Antey', origin_country: 'Russia', image_url: null, destroyed: 18, captured: 2, total_losses: 23 },
-  { id: 16, name: 'Pantsir-S1', category: 'Air Defense', manufacturer: 'KBP', origin_country: 'Russia', image_url: null, destroyed: 34, captured: 8, total_losses: 47 }
-]);
+interface EquipmentResponse {
+  data: Equipment[];
+  meta?: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+}
+
+interface StatsResponse {
+  data: {
+    total_types: number;
+    total_losses: number;
+    countries: number;
+    categories: number;
+  };
+}
+
+const equipment = ref<Equipment[]>([]);
+
+// Debounce timer for search
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+async function fetchEquipment() {
+  loading.value = true;
+  error.value = null;
+
+  try {
+    const params: Record<string, string | number> = {
+      page: currentPage.value,
+      per_page: perPage.value
+    };
+
+    if (filters.search) params.search = filters.search;
+    if (filters.category) params.category = filters.category;
+    if (filters.country) params.country = filters.country;
+
+    const response = await api.get<EquipmentResponse>('/equipment', { params });
+
+    equipment.value = response.data || [];
+
+    if (response.meta) {
+      totalItems.value = response.meta.total;
+    }
+  } catch (err: any) {
+    console.error('Failed to fetch equipment:', err);
+    if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
+      error.value = 'Please sign in to view equipment data.';
+    } else {
+      error.value = err.message || 'Failed to load equipment. Please try again.';
+    }
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function fetchStats() {
+  try {
+    const response = await api.get<StatsResponse>('/equipment/stats');
+    if (response.data) {
+      stats.value = {
+        types: response.data.total_types,
+        losses: response.data.total_losses,
+        countries: response.data.countries,
+        categories: response.data.categories
+      };
+    }
+  } catch (err) {
+    // Stats are optional, don't show error
+    console.warn('Failed to fetch equipment stats:', err);
+  }
+}
+
+// Watch for filter changes with debounce
+watch([() => filters.search, () => filters.category, () => filters.country], () => {
+  if (searchTimeout) clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    currentPage.value = 1;
+    fetchEquipment();
+  }, 300);
+});
+
+// Watch for page changes
+watch(currentPage, () => {
+  fetchEquipment();
+});
+
+onMounted(() => {
+  fetchEquipment();
+  fetchStats();
+});
 
 const filteredEquipment = computed(() => {
-  return equipment.value.filter(item => {
-    const matchesSearch = !filters.search ||
-      item.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-      item.manufacturer.toLowerCase().includes(filters.search.toLowerCase());
-    const matchesCategory = !filters.category || item.category.toLowerCase() === filters.category;
-    const matchesCountry = !filters.country || item.origin_country.toLowerCase().includes(filters.country);
-    return matchesSearch && matchesCategory && matchesCountry;
-  });
+  // When using API, filtering is done server-side
+  return equipment.value;
+});
+
+const totalPages = computed(() => {
+  if (totalItems.value > 0) {
+    return Math.ceil(totalItems.value / perPage.value);
+  }
+  return Math.ceil(filteredEquipment.value.length / perPage.value) || 1;
 });
 
 const getCategoryBadgeClass = (category: string) => {
   const classes: Record<string, string> = {
     'Tanks': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+    'tanks': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
     'IFV': 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400',
+    'ifv': 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400',
     'APC': 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+    'apc': 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
     'Artillery': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
+    'artillery': 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
     'MLRS': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
+    'mlrs': 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
     'Aircraft': 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400',
+    'aircraft': 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400',
     'Helicopter': 'bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400',
+    'helicopter': 'bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400',
     'UAV': 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400',
-    'Air Defense': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
+    'uav': 'bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400',
+    'Air Defense': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400',
+    'air_defense': 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400'
   };
   return classes[category] || 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-400';
 };

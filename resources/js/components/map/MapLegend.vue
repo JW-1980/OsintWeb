@@ -68,8 +68,18 @@ const toggleItemVisibility = (id: string | number, type: string) => {
   position: absolute;
   bottom: 20px;
   left: 20px;
+  right: 20px;
   max-width: 300px;
   z-index: 1000;
+}
+
+@media (max-width: 767px) {
+  .map-legend {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    max-width: none;
+  }
 }
 
 .rotate-180 {

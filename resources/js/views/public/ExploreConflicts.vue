@@ -110,8 +110,31 @@
           </div>
         </div>
 
+        <!-- Loading State -->
+        <div v-if="loading" class="flex items-center justify-center py-16">
+          <div class="flex flex-col items-center space-y-4">
+            <svg class="animate-spin h-10 w-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-600 dark:text-gray-400">Loading conflicts...</p>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="text-center py-16">
+          <svg class="w-24 h-24 mx-auto text-red-400 dark:text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Unable to Load Conflicts</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">{{ error }}</p>
+          <button @click="fetchConflicts" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+            Try Again
+          </button>
+        </div>
+
         <!-- Conflicts List -->
-        <div class="space-y-6">
+        <div v-else class="space-y-6">
           <div
             v-for="conflict in filteredConflicts"
             :key="conflict.id"
@@ -136,7 +159,12 @@
                     </span>
                   </div>
 
-                  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ conflict.name }}</h3>
+                  <router-link
+                    :to="{ name: 'explore-conflict-detail', params: { id: conflict.id } }"
+                    class="group/title"
+                  >
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover/title:text-blue-600 dark:group-hover/title:text-blue-400 transition-colors">{{ conflict.name }}</h3>
+                  </router-link>
 
                   <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
                     <span class="flex items-center">
@@ -195,6 +223,15 @@
               <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <div class="flex items-center space-x-4">
                   <router-link
+                    :to="{ name: 'explore-conflict-detail', params: { id: conflict.id } }"
+                    class="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center font-medium"
+                  >
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    View Details
+                  </router-link>
+                  <router-link
                     :to="{ name: 'explore-events', query: { conflict: conflict.id } }"
                     class="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center"
                   >
@@ -222,12 +259,36 @@
         </div>
 
         <!-- Empty State -->
-        <div v-if="filteredConflicts.length === 0" class="text-center py-16">
+        <div v-if="!loading && !error && filteredConflicts.length === 0" class="text-center py-16">
           <svg class="w-24 h-24 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Conflicts Found</h3>
           <p class="text-gray-600 dark:text-gray-400">Try adjusting your filters or search terms.</p>
+        </div>
+
+        <!-- Pagination -->
+        <div v-if="!loading && !error && filteredConflicts.length > 0" class="mt-8 flex flex-col md:flex-row items-center justify-between">
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 md:mb-0">
+            Showing {{ (currentPage - 1) * perPage + 1 }} to {{ Math.min(currentPage * perPage, totalItems || filteredConflicts.length) }} of {{ totalItems || filteredConflicts.length }} conflicts
+          </p>
+          <div class="flex items-center space-x-2">
+            <button
+              @click="currentPage--"
+              :disabled="currentPage === 1"
+              class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Previous
+            </button>
+            <span class="px-4 py-2 text-gray-700 dark:text-gray-300">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button
+              @click="currentPage++"
+              :disabled="currentPage >= totalPages"
+              class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -242,9 +303,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useThemeStore } from '@/stores/theme';
+import { useApi } from '@/composables/useApi';
 
+const api = useApi();
 const themeStore = useThemeStore();
 const isDark = computed(() => themeStore.isDark);
 
@@ -252,11 +315,17 @@ const toggleTheme = () => {
   themeStore.toggleTheme();
 };
 
+const currentPage = ref(1);
+const perPage = ref(10);
+const loading = ref(false);
+const error = ref<string | null>(null);
+const totalItems = ref(0);
+
 const stats = ref({
-  active: 34,
-  highIntensity: 8,
-  regions: 12,
-  totalEvents: 45821
+  active: 0,
+  highIntensity: 0,
+  regions: 0,
+  totalEvents: 0
 });
 
 const filters = reactive({
@@ -267,6 +336,7 @@ const filters = reactive({
 
 interface Conflict {
   id: number;
+  slug?: string;
   name: string;
   conflict_type: string;
   intensity_level: 'high' | 'medium' | 'low' | 'frozen';
@@ -281,108 +351,94 @@ interface Conflict {
   actors: string[];
 }
 
-const conflicts = ref<Conflict[]>([
-  {
-    id: 1,
-    name: 'Russo-Ukrainian War',
-    conflict_type: 'INTERSTATE',
-    intensity_level: 'high',
-    region: 'Eastern Europe',
-    primary_country: 'Ukraine',
-    start_date: '2022-02-24',
-    end_date: null,
-    is_active: true,
-    description: 'Full-scale invasion of Ukraine by the Russian Federation, marking a major escalation of the ongoing conflict since 2014.',
-    events_count: 28543,
-    estimated_casualties: 500000,
-    actors: ['Russian Armed Forces', 'Ukrainian Armed Forces', 'Wagner Group', 'DPR Forces', 'LPR Forces']
-  },
-  {
-    id: 2,
-    name: 'Israel-Hamas War',
-    conflict_type: 'ETHNIC_CONFLICT',
-    intensity_level: 'high',
-    region: 'Middle East',
-    primary_country: 'Israel',
-    start_date: '2023-10-07',
-    end_date: null,
-    is_active: true,
-    description: 'Armed conflict between Israel and Hamas following attacks on Israeli territory on October 7, 2023.',
-    events_count: 8976,
-    estimated_casualties: 45000,
-    actors: ['Israeli Defense Forces', 'Hamas', 'Hezbollah', 'Palestinian Islamic Jihad']
-  },
-  {
-    id: 3,
-    name: 'Sudanese Civil War',
-    conflict_type: 'CIVIL_WAR',
-    intensity_level: 'high',
-    region: 'East Africa',
-    primary_country: 'Sudan',
-    start_date: '2023-04-15',
-    end_date: null,
-    is_active: true,
-    description: 'Armed conflict between the Sudanese Armed Forces and the Rapid Support Forces paramilitary group.',
-    events_count: 4532,
-    estimated_casualties: 15000,
-    actors: ['Sudanese Armed Forces', 'Rapid Support Forces']
-  },
-  {
-    id: 4,
-    name: 'Syrian Civil War',
-    conflict_type: 'CIVIL_WAR',
-    intensity_level: 'low',
-    region: 'Middle East',
-    primary_country: 'Syria',
-    start_date: '2011-03-15',
-    end_date: null,
-    is_active: true,
-    description: 'Multi-sided civil war in Syria involving multiple domestic and international actors.',
-    events_count: 15234,
-    estimated_casualties: 600000,
-    actors: ['Syrian Arab Army', 'Syrian Democratic Forces', 'HTS', 'ISIS remnants', 'Turkish Forces']
-  },
-  {
-    id: 5,
-    name: 'Yemeni Civil War',
-    conflict_type: 'CIVIL_WAR',
-    intensity_level: 'medium',
-    region: 'Middle East',
-    primary_country: 'Yemen',
-    start_date: '2014-09-16',
-    end_date: null,
-    is_active: true,
-    description: 'Civil war between Houthi forces and the internationally recognized Yemeni government, with Saudi-led coalition involvement.',
-    events_count: 6789,
-    estimated_casualties: 377000,
-    actors: ['Houthi Forces', 'Yemeni Government', 'Saudi-led Coalition', 'UAE Forces']
-  },
-  {
-    id: 6,
-    name: 'Myanmar Civil War',
-    conflict_type: 'CIVIL_WAR',
-    intensity_level: 'high',
-    region: 'Southeast Asia',
-    primary_country: 'Myanmar',
-    start_date: '2021-02-01',
-    end_date: null,
-    is_active: true,
-    description: 'Armed resistance following the military coup, involving ethnic armed organizations and people defense forces.',
-    events_count: 3456,
-    estimated_casualties: 50000,
-    actors: ['Myanmar Military', 'NUG', 'Various Ethnic Armed Organizations']
+interface ConflictsResponse {
+  data: Conflict[];
+  meta?: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+  stats?: {
+    active: number;
+    high_intensity: number;
+    regions: number;
+    total_events: number;
+  };
+}
+
+const conflicts = ref<Conflict[]>([]);
+
+// Debounce timer for search
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+async function fetchConflicts() {
+  loading.value = true;
+  error.value = null;
+
+  try {
+    const params: Record<string, string | number> = {
+      page: currentPage.value,
+      per_page: perPage.value
+    };
+
+    if (filters.search) params.search = filters.search;
+    if (filters.type) params.conflict_type = filters.type;
+    if (filters.intensity) params.intensity_level = filters.intensity;
+
+    // Use public endpoint - no authentication required
+    const response = await api.get<ConflictsResponse>('/public/conflicts', { params });
+
+    conflicts.value = response.data || [];
+
+    if (response.meta) {
+      totalItems.value = response.meta.total;
+    }
+
+    if (response.stats) {
+      stats.value = {
+        active: response.stats.active,
+        highIntensity: response.stats.high_intensity,
+        regions: response.stats.regions,
+        totalEvents: response.stats.total_events
+      };
+    }
+  } catch (err: any) {
+    console.error('Failed to fetch conflicts:', err);
+    error.value = err.message || 'Failed to load conflicts. Please try again.';
+  } finally {
+    loading.value = false;
   }
-]);
+}
+
+// Watch for filter changes with debounce
+watch([() => filters.search, () => filters.type, () => filters.intensity], () => {
+  if (searchTimeout) clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    currentPage.value = 1;
+    fetchConflicts();
+  }, 300);
+});
+
+// Watch for page changes
+watch(currentPage, () => {
+  fetchConflicts();
+});
+
+onMounted(() => {
+  fetchConflicts();
+});
 
 const filteredConflicts = computed(() => {
-  return conflicts.value.filter(conflict => {
-    const matchesSearch = !filters.search ||
-      conflict.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-      conflict.region.toLowerCase().includes(filters.search.toLowerCase());
-    const matchesType = !filters.type || conflict.conflict_type === filters.type;
-    const matchesIntensity = !filters.intensity || conflict.intensity_level === filters.intensity;
-    return matchesSearch && matchesType && matchesIntensity;
-  });
+  // When using API, filtering is done server-side
+  return conflicts.value;
+});
+
+const totalPages = computed(() => {
+  if (totalItems.value > 0) {
+    return Math.ceil(totalItems.value / perPage.value);
+  }
+  return Math.ceil(filteredConflicts.value.length / perPage.value) || 1;
 });
 
 const getIntensityBadgeClass = (level: string) => {

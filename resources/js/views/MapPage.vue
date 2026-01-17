@@ -36,10 +36,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="map-page flex h-screen">
-    <AppSidebar />
+  <div class="map-page flex">
+    <AppSidebar class="hidden md:flex" />
 
-    <div class="flex-1 relative">
+    <div class="flex-1 relative min-h-0">
       <div class="absolute top-4 left-4 z-[1000] space-x-2">
         <!-- Drawing button - only visible to admins and analysts -->
         <button
@@ -93,5 +93,14 @@ onMounted(() => {
 <style scoped>
 .map-page {
   height: calc(100vh - 64px);
+  height: calc(100dvh - 64px); /* Dynamic viewport height for mobile */
+}
+
+@media (max-width: 767px) {
+  .map-page {
+    /* Full height on mobile without sidebar offset */
+    height: calc(100vh - 64px);
+    height: calc(100dvh - 64px);
+  }
 }
 </style>

@@ -40,11 +40,12 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="pt-16 flex h-screen">
-      <!-- Sidebar -->
+    <div class="pt-16 flex h-[calc(100vh-64px)] md:h-[calc(100dvh-64px)]">
+      <!-- Sidebar - Fixed position on mobile for overlay behavior -->
       <aside
         :class="[
-          'w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300',
+          'bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300 z-40',
+          'fixed md:relative top-16 md:top-0 left-0 h-[calc(100vh-64px)] md:h-full w-80',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         ]"
       >
@@ -169,7 +170,7 @@
       </aside>
 
       <!-- Map Container -->
-      <div class="flex-1 relative">
+      <div class="flex-1 relative min-h-0 w-full">
         <!-- Mobile Sidebar Toggle -->
         <button
           @click="sidebarOpen = !sidebarOpen"
@@ -180,8 +181,15 @@
           </svg>
         </button>
 
+        <!-- Mobile Sidebar Overlay/Backdrop -->
+        <div
+          v-if="sidebarOpen"
+          class="md:hidden fixed inset-0 bg-black/50 z-30"
+          @click="sidebarOpen = false"
+        ></div>
+
         <!-- Map Placeholder -->
-        <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center" ref="mapContainer">
+        <div class="absolute inset-0 bg-gray-200 dark:bg-gray-700 flex items-center justify-center" ref="mapContainer">
           <div v-if="loading" class="text-center">
             <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             <p class="mt-4 text-gray-600 dark:text-gray-300">Loading map...</p>
