@@ -30,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'install.check' => \App\Http\Middleware\RedirectIfInstalled::class,
+            'log.admin' => \App\Http\Middleware\LogAdminActions::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
