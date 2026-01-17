@@ -194,7 +194,14 @@ OsintWeb provides powerful tools for:
 
 ### 📧 Email Templates Administration
 *   **Customizable Templates**: Full HTML and plain text templates for all platform emails (welcome, verification, password reset, alerts, weekly digest).
-*   **Admin Editor**: Visual editor with live preview, variable insertion, and test email sending.
+*   **Enhanced Template Editor**: Professional split-pane editor with code editing and live preview side-by-side.
+*   **Syntax Highlighting**: Real-time HTML syntax highlighting with tag, attribute, value, and variable coloring.
+*   **Variable Insertion**: Searchable dropdown for inserting template variables with descriptions.
+*   **Content Blocks**: Pre-built email components (buttons, headings, images, dividers, columns, footer, social links) for rapid template creation.
+*   **Quick Insert Toolbar**: One-click insertion for common HTML elements (bold, italic, links, paragraphs, lists).
+*   **Device Preview**: Toggle between desktop, tablet, and mobile preview widths to test responsive designs.
+*   **Undo/Redo History**: Full undo/redo support with keyboard shortcuts (Ctrl+Z, Ctrl+Y) and 50-state history.
+*   **Code Formatting**: One-click HTML code formatting with proper indentation.
 *   **10 System Templates**: Pre-built templates for welcome, email verification, password reset, account locked, new login alert, alert triggered, event verified, weekly digest, data export ready, and account deletion.
 *   **Single-Click Unsubscribe**: RFC 8058 compliant one-click unsubscribe with signed URLs for all non-essential emails.
 *   **Email Preferences**: Per-category unsubscribe options (marketing, notifications, alerts, digest) with user preference management.

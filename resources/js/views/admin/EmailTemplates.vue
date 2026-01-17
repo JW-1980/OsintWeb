@@ -263,7 +263,7 @@
       <div v-if="showModal" class="fixed inset-0 z-50 overflow-y-auto">
         <div class="flex items-center justify-center min-h-screen px-4">
           <div class="fixed inset-0 bg-black bg-opacity-50" @click="closeModal"></div>
-          <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             <div class="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between">
               <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
                 {{ editingTemplate ? 'Edit Template' : 'Create Template' }}
@@ -275,7 +275,7 @@
               </button>
             </div>
 
-            <div class="p-6 space-y-6">
+            <div class="flex-1 overflow-y-auto p-6 space-y-6">
               <!-- Basic Info -->
               <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -337,71 +337,16 @@
                 />
               </div>
 
-              <!-- Template Editor Tabs -->
-              <div>
-                <div class="flex gap-2 mb-3">
-                  <button
-                    @click="editorTab = 'html'"
-                    :class="[
-                      'px-3 py-1 text-sm rounded',
-                      editorTab === 'html'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                    ]"
-                  >
-                    HTML
-                  </button>
-                  <button
-                    @click="editorTab = 'text'"
-                    :class="[
-                      'px-3 py-1 text-sm rounded',
-                      editorTab === 'text'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                    ]"
-                  >
-                    Plain Text
-                  </button>
-                  <button
-                    @click="editorTab = 'variables'"
-                    :class="[
-                      'px-3 py-1 text-sm rounded',
-                      editorTab === 'variables'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                    ]"
-                  >
-                    Variables
-                  </button>
-                </div>
-
-                <div v-if="editorTab === 'html'">
-                  <textarea
-                    v-model="form.html_content"
-                    rows="15"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm"
-                    placeholder="HTML email content..."
-                  ></textarea>
-                </div>
-
-                <div v-if="editorTab === 'text'">
-                  <textarea
-                    v-model="form.text_content"
-                    rows="15"
-                    class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-sm"
-                    placeholder="Plain text email content..."
-                  ></textarea>
-                </div>
-
-                <div v-if="editorTab === 'variables'" class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                  <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Available Variables</h4>
-                  <div class="grid grid-cols-2 gap-2 text-sm">
-                    <div v-for="(desc, key) in availableVariables" :key="key" class="flex gap-2">
-                      <code class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-blue-600 dark:text-blue-400">{{ '{{ ' + key + ' }}' }}</code>
-                      <span class="text-gray-600 dark:text-gray-400">{{ desc }}</span>
-                    </div>
-                  </div>
-                </div>
+              <!-- Enhanced Template Editor -->
+              <div class="flex-1 min-h-[500px] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                <EmailTemplateEditor
+                  :htmlContent="form.html_content"
+                  :textContent="form.text_content"
+                  :variables="availableVariables"
+                  :templateSlug="form.slug"
+                  @update:htmlContent="form.html_content = $event"
+                  @update:textContent="form.text_content = $event"
+                />
               </div>
             </div>
 
@@ -480,6 +425,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
 import axios from 'axios';
+import EmailTemplateEditor from '@/components/admin/EmailTemplateEditor.vue';
 
 interface EmailTemplate {
   uuid: string;
@@ -519,7 +465,6 @@ const showStats = ref(false);
 const showModal = ref(false);
 const showPreview = ref(false);
 const saving = ref(false);
-const editorTab = ref('html');
 
 const tabs = [
   { id: 'templates', label: 'Templates' },
@@ -666,7 +611,6 @@ function openCreateModal() {
     category: 'notification',
     is_active: true,
   });
-  editorTab.value = 'html';
   showModal.value = true;
 }
 
@@ -682,7 +626,6 @@ function editTemplate(template: EmailTemplate) {
     category: template.category,
     is_active: template.is_active,
   });
-  editorTab.value = 'html';
   loadVariablesForTemplate(template.slug);
   showModal.value = true;
 }
