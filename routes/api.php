@@ -974,6 +974,30 @@ Route::middleware('auth:sanctum')->group(function () {
     // Admin Routes
     Route::prefix('admin')->middleware(['role:admin'])->group(function () {
         Route::apiResource('achievements', \App\Http\Controllers\Api\Admin\AchievementController::class);
+
+        // Email Templates Management
+        Route::prefix('email-templates')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'index']);
+            Route::post('/', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'store']);
+            Route::get('/categories', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'categories']);
+            Route::get('/stats', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'stats']);
+            Route::get('/logs', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'logs']);
+            Route::get('/unsubscribes', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'unsubscribes']);
+            Route::get('/{template}', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'show']);
+            Route::put('/{template}', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'update']);
+            Route::delete('/{template}', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'destroy']);
+            Route::get('/{template}/preview', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'preview']);
+            Route::post('/{template}/test', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'sendTest']);
+            Route::post('/{template}/duplicate', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'duplicate']);
+            Route::post('/{template}/reset', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'reset']);
+        });
+    });
+
+    // User Email Preferences
+    Route::prefix('email-preferences')->group(function () {
+        Route::get('/', [\App\Http\Controllers\EmailUnsubscribeController::class, 'preferences']);
+        Route::put('/', [\App\Http\Controllers\EmailUnsubscribeController::class, 'updatePreferences']);
+        Route::post('/resubscribe', [\App\Http\Controllers\EmailUnsubscribeController::class, 'resubscribe']);
     });
 
     // User Achievements

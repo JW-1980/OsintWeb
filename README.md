@@ -192,6 +192,16 @@ OsintWeb provides powerful tools for:
 *   **Alert History**: Track triggered alerts with links to relevant events.
 *   **Email & Push**: Multi-channel notification delivery options.
 
+### 📧 Email Templates Administration
+*   **Customizable Templates**: Full HTML and plain text templates for all platform emails (welcome, verification, password reset, alerts, weekly digest).
+*   **Admin Editor**: Visual editor with live preview, variable insertion, and test email sending.
+*   **10 System Templates**: Pre-built templates for welcome, email verification, password reset, account locked, new login alert, alert triggered, event verified, weekly digest, data export ready, and account deletion.
+*   **Single-Click Unsubscribe**: RFC 8058 compliant one-click unsubscribe with signed URLs for all non-essential emails.
+*   **Email Preferences**: Per-category unsubscribe options (marketing, notifications, alerts, digest) with user preference management.
+*   **Email Logging**: Track sent emails with status (pending, sent, delivered, opened, failed) and error messages.
+*   **Statistics Dashboard**: Monitor email performance with daily/weekly/monthly send counts, failure rates, and unsubscribe trends.
+*   **Template Variables**: Dynamic content insertion with 20+ common variables and template-specific variables.
+
 ### 📊 Report Generation
 *   **SITREP Builder**: Generate situation reports with customizable templates.
 *   **Export Formats**: Download reports as PDF, DOCX, or HTML.
@@ -359,6 +369,17 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 | Audio | `/api/audio` | Upload, transcriptions (manual/AI), export |
 | Skills | `/api/skills` | Match, trigger, preferences |
 | Agents | `/api/agents` | Create, run, executions |
+
+### Admin APIs (Requires Admin Role)
+| Category | Base Path | Key Operations |
+|----------|-----------|----------------|
+| Email Templates | `/api/admin/email-templates` | CRUD, preview, test, duplicate, stats, logs |
+| Achievements | `/api/admin/achievements` | CRUD for achievement management |
+
+### User Settings APIs
+| Category | Base Path | Key Operations |
+|----------|-----------|----------------|
+| Email Preferences | `/api/email-preferences` | Get/update preferences, resubscribe |
 
 ## Documentation
 

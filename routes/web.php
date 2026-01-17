@@ -21,6 +21,13 @@ Route::get('/offline', function () {
     return view('offline');
 })->name('offline');
 
+// Email Unsubscribe Routes (must be before the catch-all)
+Route::match(['get', 'post'], '/email/unsubscribe', [\App\Http\Controllers\EmailUnsubscribeController::class, 'unsubscribe'])
+    ->name('email.unsubscribe');
+
+Route::post('/email/unsubscribe/one-click', [\App\Http\Controllers\EmailUnsubscribeController::class, 'oneClickUnsubscribe'])
+    ->name('email.unsubscribe.one-click');
+
 Route::get('/{any?}', function () {
     // If installed, show the Vue SPA
     if (file_exists(storage_path('installed'))) {
