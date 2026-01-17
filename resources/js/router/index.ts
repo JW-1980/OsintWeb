@@ -269,6 +269,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/admin/EmailTemplates.vue')
       },
       {
+        path: 'site-analytics',
+        name: 'admin-site-analytics',
+        component: () => import('@/views/admin/SiteAnalytics.vue')
+      },
+      {
+        path: 'ab-testing',
+        name: 'admin-ab-testing',
+        component: () => import('@/views/admin/ABTesting.vue')
+      },
+      {
         path: 'settings',
         name: 'admin-settings',
         component: () => import('@/views/admin/Settings.vue')

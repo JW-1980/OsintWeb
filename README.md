@@ -309,6 +309,31 @@ OsintWeb provides powerful tools for:
 *   **Activity Types**: 40+ activity types covering page views, content interactions, contributions, and social actions.
 *   **Batch Activity Logging**: Efficient client-side queuing with automatic batch submission to reduce API calls.
 
+### 📈 Site Analytics Dashboard
+*   **Anonymous Aggregated Data**: Privacy-respecting analytics that track usage patterns without storing personal information.
+*   **Page View Analytics**: Track total and unique page views with hourly aggregation buckets and daily trends.
+*   **Feature Usage Tracking**: Monitor which features are actually used across 8 categories (navigation, content, tools, export, map, filter, search, media).
+*   **Session Analytics**: Daily session aggregates including bounce rate, average duration, pages per session, and device breakdown.
+*   **Search Analytics**: Track search terms, result counts, and zero-result searches to improve content discoverability.
+*   **User Flow Analysis**: Visualize navigation paths showing how users move through the platform with entry/exit page tracking.
+*   **Device Statistics**: Breakdown of desktop, mobile, and tablet usage for responsive design optimization.
+*   **Admin Dashboard**: Comprehensive analytics dashboard with charts, top pages, popular features, and export functionality.
+*   **GDPR Compliant**: Respects Do Not Track browser settings and uses cookie-based anonymous visitor hashing.
+
+### 🧪 A/B Testing (Multivariate Testing)
+*   **Experiment Management**: Create, manage, and analyze A/B tests for text, buttons, layouts, and features.
+*   **Statistical Significance Testing**: Z-score calculations with confidence intervals (95% threshold) to determine winning variants.
+*   **Cookie-Based Anonymous Assignment**: Consistent variant assignment without storing personal data using SHA-256 visitor hashing.
+*   **Multiple Experiment Types**: Support for text variations, button variants, layout changes, and feature toggles.
+*   **Conversion Tracking**: Track clicks, signups, engagement, scroll depth, time on page, form submissions, and custom goals.
+*   **Traffic Allocation**: Configure what percentage of visitors participate in each experiment (1-100%).
+*   **Variant Weighting**: Assign custom weights to control and variant groups for unequal traffic splits.
+*   **Results Dashboard**: View impressions, conversions, conversion rates, improvement percentages, and confidence levels.
+*   **Winner Detection**: Automatic winner determination when statistical significance is reached.
+*   **Experiment Lifecycle**: Draft, running, paused, and completed states with start/pause/complete controls.
+*   **Vue Composables**: Frontend composables (`useABTest`, `useABTests`, `useABContent`) for easy variant rendering.
+*   **Public API**: Endpoints for getting variants and tracking conversions from any frontend.
+
 ### 🔍 Source Verification
 *   **NATO Admiralty System**: Grade sources using the A-F reliability and 1-6 credibility scale.
 *   **Trusted Sources Database**: Maintain a list of verified and trusted intelligence sources.
@@ -381,6 +406,23 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 |----------|-----------|----------------|
 | Audit Logs | `/api/admin/audit-logs` | List, stats, filter, verify chain, export, clear old |
 | Achievements | `/api/admin/achievements` | CRUD operations for achievement system |
+| Site Analytics | `/api/admin/analytics` | Dashboard, page views, features, sessions, flows, search, export |
+| A/B Testing | `/api/admin/experiments` | CRUD, start/pause/complete, results, variants, daily stats |
+
+### Public A/B Testing APIs
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/ab/variant/{location}` | Get variant for a location |
+| `POST /api/ab/variants` | Get variants for multiple locations |
+| `POST /api/ab/conversion/{slug}` | Track conversion for experiment |
+| `POST /api/ab/conversion-location/{location}` | Track conversion by location |
+
+### Public Analytics Tracking APIs
+| Endpoint | Description |
+|----------|-------------|
+| `POST /api/track/feature` | Track feature usage event |
+| `POST /api/track/search` | Track search event |
+| `POST /api/track/batch` | Track multiple events in batch |
 
 ### AI & Automation APIs
 | Category | Base Path | Key Operations |

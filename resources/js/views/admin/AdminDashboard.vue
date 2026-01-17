@@ -350,8 +350,9 @@ const managementLinks = ref([
   { label: 'Reports', path: '/admin/reports', icon: ReportIcon, badge: null },
   { label: 'Audit Logs', path: '/admin/audit-logs', icon: DocumentIcon, badge: null },
   { label: 'Email Templates', path: '/admin/email-templates', icon: MailIcon, badge: null },
+  { label: 'Site Analytics', path: '/admin/site-analytics', icon: ChartIcon, badge: null },
+  { label: 'A/B Testing', path: '/admin/ab-testing', icon: LightbulbIcon, badge: null },
   { label: 'Settings', path: '/admin/settings', icon: CogIcon, badge: null },
-  { label: 'Analytics', path: '/analytics', icon: ChartIcon, badge: null },
 ]);
 
 // System Status
