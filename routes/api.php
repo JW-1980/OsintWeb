@@ -48,6 +48,7 @@ use App\Http\Controllers\Api\OfflineController;
 use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\TrainingController;
 use App\Http\Controllers\Api\ScheduledReportController;
+use App\Http\Controllers\Api\UserActivityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -247,6 +248,13 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
         // Activity Log
         Route::get('/activity', [UserAccountController::class, 'activityLog']);
+    });
+
+    // User Activity Logging (for frontend tracking)
+    Route::prefix('activity')->group(function () {
+        Route::post('/log', [UserActivityController::class, 'log']);
+        Route::post('/log/batch', [UserActivityController::class, 'logBatch']);
+        Route::get('/my', [UserActivityController::class, 'myActivity']);
     });
 
     // Onboarding
@@ -972,8 +980,19 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     });
 
     // Admin Routes
-    Route::prefix('admin')->middleware(['role:admin'])->group(function () {
+    Route::prefix('admin')->middleware(['role:admin', 'log.admin'])->group(function () {
         Route::apiResource('achievements', \App\Http\Controllers\Api\Admin\AchievementController::class);
+
+        // Audit Logs (requires audit.view permission)
+        Route::prefix('audit-logs')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'index']);
+            Route::get('/stats', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'stats']);
+            Route::get('/filter-options', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'filterOptions']);
+            Route::get('/verify-chain', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'verifyChain']);
+            Route::get('/export', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'export']);
+            Route::post('/clear-old', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'clearOld']);
+            Route::get('/{id}', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'show']);
+        });
 
         // Email Templates Management
         Route::prefix('email-templates')->group(function () {
@@ -1100,6 +1119,13 @@ Route::prefix('tips')->middleware('throttle:tips')->group(function () {
     Route::post('/submit', [TipController::class, 'submit']);
     Route::get('/types', [TipController::class, 'types']);
     Route::get('/status/{uuid}', [TipController::class, 'status']);
+});
+
+// Public user activity feed (for homepage)
+Route::prefix('activity')->middleware('throttle:public')->group(function () {
+    Route::get('/feed', [UserActivityController::class, 'publicFeed']);
+    Route::get('/stats', [UserActivityController::class, 'stats']);
+    Route::get('/types', [UserActivityController::class, 'types']);
 });
 
 // Public conflict information - moderate rate limiting

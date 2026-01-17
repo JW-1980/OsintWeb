@@ -297,8 +297,17 @@ OsintWeb provides powerful tools for:
 
 ### 🛡️ Privacy & Security
 *   **GDPR Compliance**: Built-in tools for consent management, data export, and "right to be forgotten".
-*   **Audit Trail**: Cryptographic logging of all changes for data integrity.
+*   **Immutable Audit Trail**: Cryptographic hash-chain logging of all admin and user actions with tamper detection and chain integrity verification.
+*   **Admin Action Logging**: Automatic middleware-based logging of all admin panel operations with IP tracking and user agent capture.
 *   **Session Management**: Track and terminate active user sessions.
+*   **Permission-Based Audit Access**: Separate `audit.view` and `audit.export` permissions control who can access the audit trail.
+
+### 📊 User Activity Tracking
+*   **Public Activity Feed**: Real-time feed of community contributions for the homepage showing events created, sources verified, and evidence submitted.
+*   **Activity Statistics**: Dashboard showing contribution counts, active contributors, and verification metrics.
+*   **User Activity Logging**: Track page views, searches, map interactions, and content views for engagement analytics.
+*   **Activity Types**: 40+ activity types covering page views, content interactions, contributions, and social actions.
+*   **Batch Activity Logging**: Efficient client-side queuing with automatic batch submission to reduce API calls.
 
 ### 🔍 Source Verification
 *   **NATO Admiralty System**: Grade sources using the A-F reliability and 1-6 credibility scale.
@@ -341,6 +350,9 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 | `GET /api/public/conflicts` | List all conflicts |
 | `GET /api/public/conflicts/active` | Get active conflicts |
 | `GET /api/public/conflicts/{slug}` | Get conflict details |
+| `GET /api/activity/feed` | Get public activity feed for homepage |
+| `GET /api/activity/stats` | Get activity statistics |
+| `GET /api/activity/types` | Get available activity types |
 | `GET /api/health` | Service health check |
 
 ### Core Data APIs (Authenticated)
@@ -362,6 +374,13 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 | Sources | `/api/sources` | Grade, cross-reference, trusted list |
 | Geolocation | `/api/geolocation` | Projects, sun-position, reverse-geocode |
 | Tips | `/api/tips` | Moderation workflow, convert to events |
+| Activity | `/api/activity` | Log activities, batch logging, user history |
+
+### Admin APIs (Requires Admin Role)
+| Category | Base Path | Key Operations |
+|----------|-----------|----------------|
+| Audit Logs | `/api/admin/audit-logs` | List, stats, filter, verify chain, export, clear old |
+| Achievements | `/api/admin/achievements` | CRUD operations for achievement system |
 
 ### AI & Automation APIs
 | Category | Base Path | Key Operations |

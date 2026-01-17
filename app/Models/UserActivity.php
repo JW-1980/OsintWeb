@@ -66,6 +66,41 @@ class UserActivity extends Model
     public const TYPE_TWO_FACTOR_DISABLE = '2fa_disable';
     public const TYPE_SESSION_TERMINATE = 'session_terminate';
 
+    // Frontend page view activities
+    public const TYPE_PAGE_VIEW = 'page_view';
+    public const TYPE_MAP_VIEW = 'map_view';
+    public const TYPE_MAP_INTERACTION = 'map_interaction';
+    public const TYPE_SEARCH = 'search';
+    public const TYPE_FILTER_APPLY = 'filter_apply';
+    public const TYPE_EXPORT_REQUEST = 'export_request';
+    public const TYPE_SHARE = 'share';
+
+    // Content interaction activities
+    public const TYPE_CONFLICT_VIEW = 'conflict_view';
+    public const TYPE_ACTOR_VIEW = 'actor_view';
+    public const TYPE_EQUIPMENT_VIEW = 'equipment_view';
+    public const TYPE_ZONE_VIEW = 'zone_view';
+    public const TYPE_SOURCE_VIEW = 'source_view';
+    public const TYPE_TIMELINE_VIEW = 'timeline_view';
+    public const TYPE_REPORT_VIEW = 'report_view';
+
+    // User contribution activities
+    public const TYPE_EVENT_CREATE = 'event_create';
+    public const TYPE_EVENT_EDIT = 'event_edit';
+    public const TYPE_EVENT_VERIFY = 'event_verify';
+    public const TYPE_EVENT_DISPUTE = 'event_dispute';
+    public const TYPE_SOURCE_CREATE = 'source_create';
+    public const TYPE_SOURCE_VERIFY = 'source_verify';
+    public const TYPE_EVIDENCE_SUBMIT = 'evidence_submit';
+    public const TYPE_TIP_SUBMIT = 'tip_submit';
+
+    // Social/community activities
+    public const TYPE_FOLLOW_USER = 'follow_user';
+    public const TYPE_UNFOLLOW_USER = 'unfollow_user';
+    public const TYPE_LIKE = 'like';
+    public const TYPE_UNLIKE = 'unlike';
+    public const TYPE_REPORT_CONTENT = 'report_content';
+
     /**
      * Get the user that performed this activity.
      */
@@ -156,6 +191,37 @@ class UserActivity extends Model
             self::TYPE_ACCOUNT_DELETE_REQUEST => 'trash',
             self::TYPE_TWO_FACTOR_ENABLE, self::TYPE_TWO_FACTOR_DISABLE => 'device-phone-mobile',
             self::TYPE_SESSION_TERMINATE => 'x-circle',
+            // Frontend page view activities
+            self::TYPE_PAGE_VIEW => 'eye',
+            self::TYPE_MAP_VIEW => 'map',
+            self::TYPE_MAP_INTERACTION => 'cursor-arrow-rays',
+            self::TYPE_SEARCH => 'magnifying-glass',
+            self::TYPE_FILTER_APPLY => 'funnel',
+            self::TYPE_EXPORT_REQUEST => 'arrow-down-tray',
+            self::TYPE_SHARE => 'share',
+            // Content interaction activities
+            self::TYPE_CONFLICT_VIEW => 'fire',
+            self::TYPE_ACTOR_VIEW => 'user-group',
+            self::TYPE_EQUIPMENT_VIEW => 'wrench-screwdriver',
+            self::TYPE_ZONE_VIEW => 'map-pin',
+            self::TYPE_SOURCE_VIEW => 'link',
+            self::TYPE_TIMELINE_VIEW => 'clock',
+            self::TYPE_REPORT_VIEW => 'document-chart-bar',
+            // User contribution activities
+            self::TYPE_EVENT_CREATE => 'plus-circle',
+            self::TYPE_EVENT_EDIT => 'pencil-square',
+            self::TYPE_EVENT_VERIFY => 'check-badge',
+            self::TYPE_EVENT_DISPUTE => 'exclamation-triangle',
+            self::TYPE_SOURCE_CREATE => 'link',
+            self::TYPE_SOURCE_VERIFY => 'check-badge',
+            self::TYPE_EVIDENCE_SUBMIT => 'document-arrow-up',
+            self::TYPE_TIP_SUBMIT => 'light-bulb',
+            // Social/community activities
+            self::TYPE_FOLLOW_USER => 'user-plus',
+            self::TYPE_UNFOLLOW_USER => 'user-minus',
+            self::TYPE_LIKE => 'heart',
+            self::TYPE_UNLIKE => 'heart',
+            self::TYPE_REPORT_CONTENT => 'flag',
             default => 'information-circle',
         };
     }
@@ -190,7 +256,76 @@ class UserActivity extends Model
             self::TYPE_TWO_FACTOR_ENABLE => 'Enabled two-factor authentication',
             self::TYPE_TWO_FACTOR_DISABLE => 'Disabled two-factor authentication',
             self::TYPE_SESSION_TERMINATE => 'Terminated a session',
+            // Frontend page view activities
+            self::TYPE_PAGE_VIEW => 'Visited a page',
+            self::TYPE_MAP_VIEW => 'Viewed the map',
+            self::TYPE_MAP_INTERACTION => 'Interacted with the map',
+            self::TYPE_SEARCH => 'Performed a search',
+            self::TYPE_FILTER_APPLY => 'Applied filters',
+            self::TYPE_EXPORT_REQUEST => 'Requested export',
+            self::TYPE_SHARE => 'Shared content',
+            // Content interaction activities
+            self::TYPE_CONFLICT_VIEW => 'Viewed a conflict',
+            self::TYPE_ACTOR_VIEW => 'Viewed an actor profile',
+            self::TYPE_EQUIPMENT_VIEW => 'Viewed equipment details',
+            self::TYPE_ZONE_VIEW => 'Viewed a control zone',
+            self::TYPE_SOURCE_VIEW => 'Viewed a source',
+            self::TYPE_TIMELINE_VIEW => 'Viewed the timeline',
+            self::TYPE_REPORT_VIEW => 'Viewed a report',
+            // User contribution activities
+            self::TYPE_EVENT_CREATE => 'Created an event',
+            self::TYPE_EVENT_EDIT => 'Edited an event',
+            self::TYPE_EVENT_VERIFY => 'Verified an event',
+            self::TYPE_EVENT_DISPUTE => 'Disputed an event',
+            self::TYPE_SOURCE_CREATE => 'Added a new source',
+            self::TYPE_SOURCE_VERIFY => 'Verified a source',
+            self::TYPE_EVIDENCE_SUBMIT => 'Submitted evidence',
+            self::TYPE_TIP_SUBMIT => 'Submitted a tip',
+            // Social/community activities
+            self::TYPE_FOLLOW_USER => 'Started following a user',
+            self::TYPE_UNFOLLOW_USER => 'Stopped following a user',
+            self::TYPE_LIKE => 'Liked content',
+            self::TYPE_UNLIKE => 'Removed like from content',
+            self::TYPE_REPORT_CONTENT => 'Reported content',
             default => 'Performed an action',
         };
+    }
+
+    /**
+     * Get activity types that should be shown in the public feed.
+     */
+    public static function getPublicActivityTypes(): array
+    {
+        return [
+            self::TYPE_EVENT_CREATE,
+            self::TYPE_EVENT_VERIFY,
+            self::TYPE_SOURCE_CREATE,
+            self::TYPE_SOURCE_VERIFY,
+            self::TYPE_EVIDENCE_SUBMIT,
+            self::TYPE_TIP_SUBMIT,
+            self::TYPE_COMMENT_CREATE,
+            self::TYPE_ARTICLE_BOOKMARK,
+        ];
+    }
+
+    /**
+     * Scope to filter for public activity feed (contributions only).
+     */
+    public function scopePublicFeed($query)
+    {
+        return $query->whereIn('activity_type', self::getPublicActivityTypes());
+    }
+
+    /**
+     * Get recent site-wide activity for display on homepage.
+     */
+    public static function getRecentPublicActivity(int $limit = 20): \Illuminate\Database\Eloquent\Collection
+    {
+        return self::with('user:id,name,avatar_url')
+            ->publicFeed()
+            ->recent(7)
+            ->orderBy('created_at', 'desc')
+            ->limit($limit)
+            ->get();
     }
 }
