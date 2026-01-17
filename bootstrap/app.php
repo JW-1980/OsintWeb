@@ -31,6 +31,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
             'install.check' => \App\Http\Middleware\RedirectIfInstalled::class,
             'log.admin' => \App\Http\Middleware\LogAdminActions::class,
+            'track.analytics' => \App\Http\Middleware\TrackAnalytics::class,
+        ]);
+
+        // Add analytics tracking to web routes (non-API)
+        $middleware->web(append: [
+            \App\Http\Middleware\TrackAnalytics::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

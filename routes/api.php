@@ -49,6 +49,9 @@ use App\Http\Controllers\Api\HealthController;
 use App\Http\Controllers\Api\TrainingController;
 use App\Http\Controllers\Api\ScheduledReportController;
 use App\Http\Controllers\Api\UserActivityController;
+use App\Http\Controllers\Api\Admin\SiteAnalyticsController;
+use App\Http\Controllers\Api\Admin\ABTestingController;
+use App\Http\Controllers\Api\ABTestingPublicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -994,6 +997,44 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
             Route::get('/{id}', [\App\Http\Controllers\Api\Admin\AuditLogController::class, 'show']);
         });
 
+        // Site Analytics (requires analytics.view permission)
+        Route::prefix('analytics')->group(function () {
+            Route::get('/dashboard', [SiteAnalyticsController::class, 'dashboard']);
+            Route::get('/page-views', [SiteAnalyticsController::class, 'pageViews']);
+            Route::get('/feature-usage', [SiteAnalyticsController::class, 'featureUsage']);
+            Route::get('/sessions', [SiteAnalyticsController::class, 'sessions']);
+            Route::get('/user-flows', [SiteAnalyticsController::class, 'userFlows']);
+            Route::get('/search-analytics', [SiteAnalyticsController::class, 'searchAnalytics']);
+            Route::get('/top-pages', [SiteAnalyticsController::class, 'topPages']);
+            Route::get('/hourly-distribution', [SiteAnalyticsController::class, 'hourlyDistribution']);
+            Route::get('/daily-trends', [SiteAnalyticsController::class, 'dailyTrends']);
+            Route::get('/device-stats', [SiteAnalyticsController::class, 'deviceStats']);
+            Route::get('/export', [SiteAnalyticsController::class, 'export']);
+        });
+
+        // A/B Testing Experiments (requires experiments.view/manage permission)
+        Route::prefix('experiments')->group(function () {
+            Route::get('/', [ABTestingController::class, 'index']);
+            Route::post('/', [ABTestingController::class, 'store']);
+            Route::get('/stats', [ABTestingController::class, 'stats']);
+            Route::get('/locations', [ABTestingController::class, 'locations']);
+            Route::get('/goals', [ABTestingController::class, 'goals']);
+            Route::get('/{experiment}', [ABTestingController::class, 'show']);
+            Route::put('/{experiment}', [ABTestingController::class, 'update']);
+            Route::delete('/{experiment}', [ABTestingController::class, 'destroy']);
+            Route::post('/{experiment}/start', [ABTestingController::class, 'start']);
+            Route::post('/{experiment}/pause', [ABTestingController::class, 'pause']);
+            Route::post('/{experiment}/complete', [ABTestingController::class, 'complete']);
+            Route::post('/{experiment}/calculate-results', [ABTestingController::class, 'calculateResults']);
+            Route::get('/{experiment}/results', [ABTestingController::class, 'results']);
+            Route::get('/{experiment}/daily-stats', [ABTestingController::class, 'dailyStats']);
+
+            // Variant management
+            Route::post('/{experiment}/variants', [ABTestingController::class, 'addVariant']);
+            Route::put('/{experiment}/variants/{variant}', [ABTestingController::class, 'updateVariant']);
+            Route::delete('/{experiment}/variants/{variant}', [ABTestingController::class, 'deleteVariant']);
+        });
+
         // Email Templates Management
         Route::prefix('email-templates')->group(function () {
             Route::get('/', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'index']);
@@ -1126,6 +1167,21 @@ Route::prefix('activity')->middleware('throttle:public')->group(function () {
     Route::get('/feed', [UserActivityController::class, 'publicFeed']);
     Route::get('/stats', [UserActivityController::class, 'stats']);
     Route::get('/types', [UserActivityController::class, 'types']);
+});
+
+// A/B Testing public endpoints (for visitors to get variants and track conversions)
+Route::prefix('ab')->middleware('throttle:public')->group(function () {
+    Route::get('/variant/{location}', [ABTestingPublicController::class, 'getVariant']);
+    Route::post('/variants', [ABTestingPublicController::class, 'getVariants']);
+    Route::post('/conversion/{experimentSlug}', [ABTestingPublicController::class, 'trackConversion']);
+    Route::post('/conversion-location/{location}', [ABTestingPublicController::class, 'trackConversionByLocation']);
+});
+
+// Analytics tracking public endpoint (for frontend feature tracking)
+Route::prefix('track')->middleware('throttle:public')->group(function () {
+    Route::post('/feature', [\App\Http\Controllers\Api\AnalyticsTrackingController::class, 'trackFeature']);
+    Route::post('/search', [\App\Http\Controllers\Api\AnalyticsTrackingController::class, 'trackSearch']);
+    Route::post('/batch', [\App\Http\Controllers\Api\AnalyticsTrackingController::class, 'trackBatch']);
 });
 
 // Public conflict information - moderate rate limiting
