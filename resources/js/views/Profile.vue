@@ -2,15 +2,20 @@
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import { useApi } from '@/composables/useApi';
 
 const router = useRouter();
 const authStore = useAuthStore();
+const api = useApi();
 
 const activeTab = ref<'profile' | 'activity' | 'security' | 'data'>('profile');
 const loading = ref(false);
 const saving = ref(false);
 const showDeleteModal = ref(false);
 const showTwoFactorModal = ref(false);
+const errorMessage = ref('');
+const successMessage = ref('');
+const deletePassword = ref('');
 
 const profile = reactive({
   // Basic Info
@@ -50,35 +55,49 @@ const twoFactor = reactive({
   verificationCode: ''
 });
 
-const activityHistory = ref([
-  { id: 1, action: 'Created event', target: 'Artillery strike near Kharkiv', date: '2026-01-16 10:30', icon: 'create' },
-  { id: 2, action: 'Updated event', target: 'Troop movement in Donetsk', date: '2026-01-15 14:22', icon: 'edit' },
-  { id: 3, action: 'Verified event', target: 'Equipment sighting in Luhansk', date: '2026-01-15 09:15', icon: 'verify' },
-  { id: 4, action: 'Commented on', target: 'Missile strike analysis', date: '2026-01-14 16:45', icon: 'comment' },
-  { id: 5, action: 'Downloaded report', target: 'Weekly conflict summary', date: '2026-01-14 11:00', icon: 'download' }
-]);
+interface Activity {
+  type: string;
+  description: string;
+  icon: string;
+  ip_address: string;
+  created_at: string;
+}
 
-const achievements = ref([
-  { id: 1, name: 'First Contribution', description: 'Created your first event', icon: 'star', earned: true, earnedDate: '2025-12-01' },
-  { id: 2, name: 'Verified Reporter', description: 'Had 10 events verified', icon: 'check', earned: true, earnedDate: '2025-12-15' },
-  { id: 3, name: 'Consistent Contributor', description: 'Contributed for 30 consecutive days', icon: 'calendar', earned: true, earnedDate: '2026-01-01' },
-  { id: 4, name: 'Expert Analyst', description: 'Achieved 100 verified events', icon: 'award', earned: false, earnedDate: null },
-  { id: 5, name: 'Community Leader', description: 'Verified 50 community events', icon: 'users', earned: false, earnedDate: null }
-]);
+interface Session {
+  uuid: string;
+  device_type: string;
+  browser: string;
+  platform: string;
+  ip_address: string;
+  location: string | null;
+  is_current: boolean;
+  last_activity_at: string;
+  created_at: string;
+}
+
+interface Achievement {
+  id: number;
+  name: string;
+  description: string;
+  icon: string;
+  earned: boolean;
+  earnedDate: string | null;
+}
+
+const activityHistory = ref<Activity[]>([]);
+
+const achievements = ref<Achievement[]>([]);
 
 const stats = ref({
-  eventsCreated: 47,
-  eventsVerified: 23,
-  contributions: 89,
-  accuracy: 94.2,
-  rank: 'Senior Analyst',
-  memberSince: '2025-11-15'
+  eventsCreated: 0,
+  eventsVerified: 0,
+  contributions: 0,
+  accuracy: 0,
+  rank: 'Member',
+  memberSince: ''
 });
 
-const sessions = ref([
-  { id: 1, device: 'Chrome on Windows', location: 'Amsterdam, NL', lastActive: 'Now', current: true },
-  { id: 2, device: 'Safari on iPhone', location: 'Amsterdam, NL', lastActive: '2 hours ago', current: false }
-]);
+const sessions = ref<Session[]>([]);
 
 // Expertise area options for OSINT analysts
 const expertiseOptions = [
@@ -138,19 +157,99 @@ const isPasswordValid = computed(() => {
     passwordForm.new === passwordForm.confirm;
 });
 
-const loadProfile = () => {
-  if (authStore.user) {
-    profile.name = authStore.user.name || '';
-    profile.email = authStore.user.email || '';
-    profile.avatarUrl = authStore.user.avatar_url || '';
+const showMessage = (message: string, isError: boolean = false) => {
+  if (isError) {
+    errorMessage.value = message;
+    successMessage.value = '';
+  } else {
+    successMessage.value = message;
+    errorMessage.value = '';
+  }
+  setTimeout(() => {
+    errorMessage.value = '';
+    successMessage.value = '';
+  }, 5000);
+};
+
+const loadProfile = async () => {
+  loading.value = true;
+  try {
+    const response = await api.get<{ data: any }>('/account/profile');
+    const data = response.data;
+
+    profile.name = data.name || '';
+    profile.email = data.email || '';
+    profile.avatarUrl = data.avatar_url || '';
+    profile.bio = data.bio || '';
+    profile.organization = data.organization || '';
+    profile.country = data.location || '';
+    profile.timezone = data.timezone || '';
+    profile.website = data.website || '';
+
+    stats.value.memberSince = data.created_at ? new Date(data.created_at).toLocaleDateString() : '';
+    stats.value.rank = data.role || 'Member';
+  } catch (error: any) {
+    console.error('Failed to load profile:', error);
+    // Fall back to auth store data
+    if (authStore.user) {
+      profile.name = authStore.user.name || '';
+      profile.email = authStore.user.email || '';
+      profile.avatarUrl = authStore.user.avatar_url || '';
+    }
+  } finally {
+    loading.value = false;
+  }
+};
+
+const loadSessions = async () => {
+  try {
+    const response = await api.get<{ data: Session[] }>('/account/sessions');
+    sessions.value = response.data;
+  } catch (error) {
+    console.error('Failed to load sessions:', error);
+  }
+};
+
+const loadActivity = async () => {
+  try {
+    const response = await api.get<{ data: Activity[] }>('/account/activity');
+    activityHistory.value = response.data;
+  } catch (error) {
+    console.error('Failed to load activity:', error);
+  }
+};
+
+const loadAchievements = async () => {
+  try {
+    const response = await api.get<{ data: Achievement[] }>('/achievements/user');
+    achievements.value = response.data;
+  } catch (error) {
+    // Use default achievements if endpoint not available
+    achievements.value = [
+      { id: 1, name: 'First Contribution', description: 'Created your first event', icon: 'star', earned: false, earnedDate: null },
+      { id: 2, name: 'Verified Reporter', description: 'Had 10 events verified', icon: 'check', earned: false, earnedDate: null },
+      { id: 3, name: 'Consistent Contributor', description: 'Contributed for 30 consecutive days', icon: 'calendar', earned: false, earnedDate: null },
+      { id: 4, name: 'Expert Analyst', description: 'Achieved 100 verified events', icon: 'award', earned: false, earnedDate: null },
+      { id: 5, name: 'Community Leader', description: 'Verified 50 community events', icon: 'users', earned: false, earnedDate: null }
+    ];
   }
 };
 
 const saveProfile = async () => {
   saving.value = true;
+  errorMessage.value = '';
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    alert('Profile updated successfully!');
+    await api.put('/account/profile', {
+      name: profile.name,
+      bio: profile.bio,
+      organization: profile.organization,
+      location: profile.country,
+      website: profile.website,
+      timezone: profile.timezone,
+    });
+    showMessage('Profile updated successfully!');
+  } catch (error: any) {
+    showMessage(error.message || 'Failed to save profile', true);
   } finally {
     saving.value = false;
   }
@@ -160,12 +259,19 @@ const changePassword = async () => {
   if (!isPasswordValid.value) return;
 
   saving.value = true;
+  errorMessage.value = '';
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await api.put('/account/password', {
+      current_password: passwordForm.current,
+      password: passwordForm.new,
+      password_confirmation: passwordForm.confirm,
+    });
     passwordForm.current = '';
     passwordForm.new = '';
     passwordForm.confirm = '';
-    alert('Password changed successfully!');
+    showMessage('Password changed successfully!');
+  } catch (error: any) {
+    showMessage(error.message || 'Failed to change password', true);
   } finally {
     saving.value = false;
   }
@@ -178,15 +284,34 @@ const uploadAvatar = () => {
   input.onchange = async (e) => {
     const file = (e.target as HTMLInputElement).files?.[0];
     if (file) {
-      alert('Avatar uploaded successfully!');
+      saving.value = true;
+      try {
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        const response = await api.post<{ data: { avatar_url: string } }>('/account/avatar/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        profile.avatarUrl = response.data.avatar_url;
+        showMessage('Avatar uploaded successfully!');
+      } catch (error: any) {
+        showMessage(error.message || 'Failed to upload avatar', true);
+      } finally {
+        saving.value = false;
+      }
     }
   };
   input.click();
 };
 
 const enableTwoFactor = async () => {
-  twoFactor.qrCode = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
-  showTwoFactorModal.value = true;
+  try {
+    const response = await api.post<{ data: { qr_code: string } }>('/account/2fa/enable');
+    twoFactor.qrCode = response.data.qr_code;
+    showTwoFactorModal.value = true;
+  } catch (error: any) {
+    showMessage(error.message || 'Failed to enable 2FA', true);
+  }
 };
 
 const verifyTwoFactor = async () => {
@@ -194,53 +319,90 @@ const verifyTwoFactor = async () => {
 
   saving.value = true;
   try {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await api.post('/account/2fa/verify', {
+      code: twoFactor.verificationCode,
+    });
     twoFactor.enabled = true;
     showTwoFactorModal.value = false;
     twoFactor.verificationCode = '';
-    alert('Two-factor authentication enabled!');
+    showMessage('Two-factor authentication enabled!');
+  } catch (error: any) {
+    showMessage(error.message || 'Failed to verify 2FA code', true);
   } finally {
     saving.value = false;
   }
 };
 
-const disableTwoFactor = () => {
+const disableTwoFactor = async () => {
   if (confirm('Are you sure you want to disable two-factor authentication?')) {
-    twoFactor.enabled = false;
-    alert('Two-factor authentication disabled');
+    try {
+      await api.post('/account/2fa/disable');
+      twoFactor.enabled = false;
+      showMessage('Two-factor authentication disabled');
+    } catch (error: any) {
+      showMessage(error.message || 'Failed to disable 2FA', true);
+    }
   }
 };
 
-const revokeSession = (sessionId: number) => {
-  sessions.value = sessions.value.filter(s => s.id !== sessionId);
-  alert('Session revoked');
+const revokeSession = async (sessionUuid: string) => {
+  try {
+    await api.delete(`/account/sessions/${sessionUuid}`);
+    sessions.value = sessions.value.filter(s => s.uuid !== sessionUuid);
+    showMessage('Session revoked');
+  } catch (error: any) {
+    showMessage(error.message || 'Failed to revoke session', true);
+  }
 };
 
-const revokeAllSessions = () => {
+const revokeAllSessions = async () => {
   if (confirm('Are you sure you want to revoke all other sessions?')) {
-    sessions.value = sessions.value.filter(s => s.current);
-    alert('All other sessions revoked');
+    try {
+      await api.delete('/account/sessions');
+      sessions.value = sessions.value.filter(s => s.is_current);
+      showMessage('All other sessions revoked');
+    } catch (error: any) {
+      showMessage(error.message || 'Failed to revoke sessions', true);
+    }
   }
 };
 
 const exportData = async (format: 'json' | 'csv') => {
   saving.value = true;
   try {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    alert(`Your data has been exported as ${format.toUpperCase()}`);
+    await api.post('/account/data-export', { format });
+    showMessage(`Your data export request has been submitted. You'll be notified when it's ready.`);
+  } catch (error: any) {
+    showMessage(error.message || 'Failed to request data export', true);
   } finally {
     saving.value = false;
   }
 };
 
 const deleteAccount = async () => {
+  if (!deletePassword.value) {
+    showMessage('Please enter your password to confirm deletion', true);
+    return;
+  }
+
   saving.value = true;
   try {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    await authStore.logout();
-    router.push('/');
+    await api.post('/account/deletion', {
+      password: deletePassword.value,
+      reason: 'user_requested',
+    });
+    showDeleteModal.value = false;
+    showMessage('Account deletion request submitted. Check your email to confirm.');
+    // Wait a bit then logout
+    setTimeout(async () => {
+      await authStore.logout();
+      router.push('/');
+    }, 3000);
+  } catch (error: any) {
+    showMessage(error.message || 'Failed to delete account', true);
   } finally {
     saving.value = false;
+    deletePassword.value = '';
   }
 };
 
@@ -278,9 +440,14 @@ const getAchievementIcon = (type: string) => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   loading.value = true;
-  loadProfile();
+  await Promise.all([
+    loadProfile(),
+    loadSessions(),
+    loadActivity(),
+    loadAchievements(),
+  ]);
   loading.value = false;
 });
 </script>
@@ -288,6 +455,20 @@ onMounted(() => {
 <template>
   <div class="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
     <div class="max-w-5xl mx-auto">
+      <!-- Success/Error Messages -->
+      <div v-if="successMessage" class="mb-4 p-4 bg-green-100 dark:bg-green-900/30 border border-green-400 dark:border-green-700 text-green-700 dark:text-green-400 rounded-lg flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        {{ successMessage }}
+      </div>
+      <div v-if="errorMessage" class="mb-4 p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-400 rounded-lg flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+        </svg>
+        {{ errorMessage }}
+      </div>
+
       <!-- Profile Header -->
       <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
         <div class="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
@@ -603,10 +784,16 @@ onMounted(() => {
       <!-- Activity Tab -->
       <div v-if="activeTab === 'activity'" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Activity History</h2>
-        <div class="space-y-4">
+        <div v-if="activityHistory.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+          <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p>No activity recorded yet</p>
+        </div>
+        <div v-else class="space-y-4">
           <div
-            v-for="activity in activityHistory"
-            :key="activity.id"
+            v-for="(activity, index) in activityHistory"
+            :key="index"
             class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
           >
             <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
@@ -615,11 +802,11 @@ onMounted(() => {
               </svg>
             </div>
             <div class="flex-1">
-              <p class="text-gray-900 dark:text-white">
-                <span class="font-medium">{{ activity.action }}</span>
-                <span class="text-gray-600 dark:text-gray-400"> {{ activity.target }}</span>
+              <p class="text-gray-900 dark:text-white font-medium">{{ activity.description }}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                {{ new Date(activity.created_at).toLocaleString() }}
+                <span v-if="activity.ip_address" class="ml-2">from {{ activity.ip_address }}</span>
               </p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">{{ activity.date }}</p>
             </div>
           </div>
         </div>
@@ -708,10 +895,13 @@ onMounted(() => {
 
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
           <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Active Sessions</h2>
-          <div class="space-y-3">
+          <div v-if="sessions.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
+            <p>No active sessions</p>
+          </div>
+          <div v-else class="space-y-3">
             <div
               v-for="session in sessions"
-              :key="session.id"
+              :key="session.uuid"
               class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
             >
               <div class="flex items-center space-x-3">
@@ -719,20 +909,23 @@ onMounted(() => {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
                 <div>
-                  <p class="font-medium text-gray-900 dark:text-white">{{ session.device }}</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">{{ session.location }} - {{ session.lastActive }}</p>
+                  <p class="font-medium text-gray-900 dark:text-white">{{ session.browser }} on {{ session.platform }}</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    {{ session.location || session.ip_address }} -
+                    {{ session.is_current ? 'Now' : new Date(session.last_activity_at).toLocaleString() }}
+                  </p>
                 </div>
               </div>
               <div class="flex items-center space-x-2">
                 <span
-                  v-if="session.current"
+                  v-if="session.is_current"
                   class="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded"
                 >
                   Current
                 </span>
                 <button
                   v-else
-                  @click="revokeSession(session.id)"
+                  @click="revokeSession(session.uuid)"
                   class="text-red-600 dark:text-red-400 hover:text-red-700 text-sm"
                 >
                   Revoke
@@ -800,21 +993,31 @@ onMounted(() => {
       >
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full p-6">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Delete Account</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-6">
+          <p class="text-gray-600 dark:text-gray-400 mb-4">
             This action is irreversible. All your data, events, and contributions will be permanently deleted.
-            Are you sure you want to proceed?
           </p>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Enter your password to confirm
+            </label>
+            <input
+              v-model="deletePassword"
+              type="password"
+              class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Your password"
+            />
+          </div>
           <div class="flex justify-end space-x-3">
             <button
-              @click="showDeleteModal = false"
+              @click="showDeleteModal = false; deletePassword = ''"
               class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg font-medium"
             >
               Cancel
             </button>
             <button
               @click="deleteAccount"
-              :disabled="saving"
-              class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 disabled:opacity-50"
+              :disabled="saving || !deletePassword"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {{ saving ? 'Deleting...' : 'Yes, Delete My Account' }}
             </button>

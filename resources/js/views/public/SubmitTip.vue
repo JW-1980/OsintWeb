@@ -93,9 +93,19 @@
             </div>
           </div>
 
+          <!-- Error Message -->
+          <div v-if="submitError" class="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-400 rounded-lg flex items-center">
+            <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+            {{ submitError }}
+          </div>
+
           <!-- Form Card -->
           <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 md:p-8">
             <form @submit.prevent="handleSubmit" class="space-y-6">
+              <!-- Honeypot field (hidden from users, but bots will fill it) -->
+              <input type="text" v-model="form.honeypot" name="website" autocomplete="off" style="display: none;" tabindex="-1" />
               <!-- Title -->
               <div>
                 <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -299,8 +309,10 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue';
 import { useThemeStore } from '@/stores/theme';
+import { useApi } from '@/composables/useApi';
 
 const themeStore = useThemeStore();
+const api = useApi();
 const isDark = computed(() => themeStore.isDark);
 
 const toggleTheme = () => {
@@ -309,6 +321,7 @@ const toggleTheme = () => {
 
 const submitted = ref(false);
 const submitting = ref(false);
+const submitError = ref('');
 
 const form = reactive({
   title: '',
@@ -320,7 +333,8 @@ const form = reactive({
   sources: '',
   contact_name: '',
   contact_email: '',
-  captcha: false
+  captcha: false,
+  honeypot: '' // Hidden honeypot field for anti-spam
 });
 
 const errors = reactive<Record<string, string>>({});
@@ -351,13 +365,41 @@ const handleSubmit = async () => {
     return;
   }
 
+  submitError.value = '';
   submitting.value = true;
 
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  try {
+    // Build occurred_at from date and time
+    let occurred_at = null;
+    if (form.date) {
+      occurred_at = form.time ? `${form.date} ${form.time}` : form.date;
+    }
 
-  submitted.value = true;
-  submitting.value = false;
+    // Parse sources into array
+    const sourceLinks = form.sources
+      .split('\n')
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    await api.post('/tips/submit', {
+      title: form.title,
+      event_type: form.event_type || null,
+      description: form.description,
+      location_description: form.location || null,
+      occurred_at: occurred_at,
+      source_links: sourceLinks.length > 0 ? sourceLinks : null,
+      contact_name: form.contact_name || null,
+      contact_email: form.contact_email || null,
+      honeypot: form.honeypot, // Anti-spam
+    });
+
+    submitted.value = true;
+  } catch (error: any) {
+    console.error('Failed to submit tip:', error);
+    submitError.value = error.message || 'Failed to submit tip. Please try again.';
+  } finally {
+    submitting.value = false;
+  }
 };
 
 const resetForm = () => {
@@ -371,6 +413,8 @@ const resetForm = () => {
   form.contact_name = '';
   form.contact_email = '';
   form.captcha = false;
+  form.honeypot = '';
   submitted.value = false;
+  submitError.value = '';
 };
 </script>

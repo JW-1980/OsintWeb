@@ -50,10 +50,24 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: false, isPublic: true }
   },
   {
+    path: '/explore/actors/:id',
+    name: 'explore-actor-detail',
+    component: () => import('@/views/public/ExploreActorDetail.vue'),
+    meta: { requiresAuth: false, isPublic: true },
+    props: true
+  },
+  {
     path: '/explore/conflicts',
     name: 'explore-conflicts',
     component: () => import('@/views/public/ExploreConflicts.vue'),
     meta: { requiresAuth: false, isPublic: true }
+  },
+  {
+    path: '/explore/conflicts/:id',
+    name: 'explore-conflict-detail',
+    component: () => import('@/views/public/ExploreConflictDetail.vue'),
+    meta: { requiresAuth: false, isPublic: true },
+    props: true
   },
   {
     path: '/submit-tip',

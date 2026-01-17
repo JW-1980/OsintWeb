@@ -57,12 +57,12 @@ watch(() => mapStore.center, (newCenter) => {
 </script>
 
 <template>
-  <div class="relative w-full h-full">
-    <div ref="mapContainer" class="w-full h-full" />
+  <div class="absolute inset-0">
+    <div ref="mapContainer" class="absolute inset-0" />
 
     <div
       v-if="mapStore.selectedEvent"
-      class="absolute top-4 right-4 bg-white shadow-lg rounded-lg p-4 w-80 max-h-96 overflow-y-auto z-[1000]"
+      class="absolute top-4 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-white shadow-lg rounded-lg p-4 max-h-[50vh] md:max-h-96 overflow-y-auto z-[1000]"
     >
       <div class="flex justify-between items-start mb-2">
         <h3 class="text-lg font-semibold">{{ mapStore.selectedEvent.title }}</h3>

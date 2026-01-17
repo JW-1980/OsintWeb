@@ -110,12 +110,41 @@
           </div>
         </div>
 
+        <!-- Loading State -->
+        <div v-if="loading" class="flex items-center justify-center py-16">
+          <div class="flex flex-col items-center space-y-4">
+            <svg class="animate-spin h-10 w-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-600 dark:text-gray-400">Loading actors...</p>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="text-center py-16">
+          <svg class="w-24 h-24 mx-auto text-red-400 dark:text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Unable to Load Actors</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">{{ error }}</p>
+          <div class="flex items-center justify-center space-x-4">
+            <button @click="fetchActors" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Try Again
+            </button>
+            <router-link to="/register" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-colors">
+              Sign Up for Access
+            </router-link>
+          </div>
+        </div>
+
         <!-- Actors Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <router-link
             v-for="actor in filteredActors"
             :key="actor.id"
-            class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all"
+            :to="{ name: 'explore-actor-detail', params: { id: actor.id } }"
+            class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all group block"
           >
             <div class="p-6">
               <div class="flex items-start justify-between mb-4">
@@ -131,10 +160,14 @@
                     </svg>
                   </div>
                   <div>
-                    <h3 class="font-semibold text-gray-900 dark:text-white">{{ actor.name }}</h3>
+                    <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ actor.name }}</h3>
                     <p v-if="actor.short_name" class="text-sm text-gray-500 dark:text-gray-400">{{ actor.short_name }}</p>
                   </div>
                 </div>
+                <!-- Arrow indicator -->
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
               </div>
 
               <!-- Actor Type & Activity -->
@@ -173,11 +206,11 @@
                 </div>
               </div>
             </div>
-          </div>
+          </router-link>
         </div>
 
         <!-- Empty State -->
-        <div v-if="filteredActors.length === 0" class="text-center py-16">
+        <div v-if="!loading && !error && filteredActors.length === 0" class="text-center py-16">
           <svg class="w-24 h-24 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
@@ -186,10 +219,27 @@
         </div>
 
         <!-- Pagination -->
-        <div v-if="filteredActors.length > 0" class="mt-8 flex flex-col md:flex-row items-center justify-between">
+        <div v-if="!loading && !error && filteredActors.length > 0" class="mt-8 flex flex-col md:flex-row items-center justify-between">
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 md:mb-0">
-            Showing {{ filteredActors.length }} actors
+            Showing {{ (currentPage - 1) * perPage + 1 }} to {{ Math.min(currentPage * perPage, totalItems || filteredActors.length) }} of {{ totalItems || filteredActors.length }} actors
           </p>
+          <div class="flex items-center space-x-2">
+            <button
+              @click="currentPage--"
+              :disabled="currentPage === 1"
+              class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Previous
+            </button>
+            <span class="px-4 py-2 text-gray-700 dark:text-gray-300">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button
+              @click="currentPage++"
+              :disabled="currentPage >= totalPages"
+              class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -204,9 +254,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useThemeStore } from '@/stores/theme';
+import { useApi } from '@/composables/useApi';
 
+const api = useApi();
 const themeStore = useThemeStore();
 const isDark = computed(() => themeStore.isDark);
 
@@ -214,11 +266,17 @@ const toggleTheme = () => {
   themeStore.toggleTheme();
 };
 
+const currentPage = ref(1);
+const perPage = ref(12);
+const loading = ref(false);
+const error = ref<string | null>(null);
+const totalItems = ref(0);
+
 const stats = ref({
-  total: 156,
-  state: 42,
-  nonState: 114,
-  active: 89
+  total: 0,
+  state: 0,
+  nonState: 0,
+  active: 0
 });
 
 const filters = reactive({
@@ -240,30 +298,97 @@ interface Actor {
   events_count: number;
 }
 
-const actors = ref<Actor[]>([
-  { id: 1, name: 'Russian Armed Forces', short_name: 'RAF', actor_type: 'STATE', country: 'Russia', flag_emoji: null, activity_level: 'high', is_designated_terrorist: false, description: 'The armed forces of the Russian Federation, consisting of ground forces, navy, aerospace forces, and strategic missile troops.', events_count: 8432 },
-  { id: 2, name: 'Ukrainian Armed Forces', short_name: 'UAF', actor_type: 'STATE', country: 'Ukraine', flag_emoji: null, activity_level: 'high', is_designated_terrorist: false, description: 'The military forces of Ukraine, including ground forces, air force, navy, and territorial defense.', events_count: 7651 },
-  { id: 3, name: 'Wagner Group', short_name: 'Wagner', actor_type: 'PMC', country: 'Russia', flag_emoji: null, activity_level: 'low', is_designated_terrorist: true, description: 'Russian private military company involved in various conflicts globally. Operations significantly reduced following 2023 mutiny.', events_count: 1234 },
-  { id: 4, name: 'Donetsk People\'s Republic', short_name: 'DPR', actor_type: 'SEPARATIST', country: 'Ukraine', flag_emoji: null, activity_level: 'high', is_designated_terrorist: false, description: 'Self-proclaimed separatist entity in eastern Ukraine, now integrated into Russian military structures.', events_count: 2156 },
-  { id: 5, name: 'Luhansk People\'s Republic', short_name: 'LPR', actor_type: 'SEPARATIST', country: 'Ukraine', flag_emoji: null, activity_level: 'high', is_designated_terrorist: false, description: 'Self-proclaimed separatist entity in eastern Ukraine, now integrated into Russian military structures.', events_count: 1843 },
-  { id: 6, name: 'Islamic State', short_name: 'ISIS', actor_type: 'TERRORIST', country: null, flag_emoji: null, activity_level: 'medium', is_designated_terrorist: true, description: 'Transnational terrorist organization operating in the Middle East and globally. Significantly degraded but still active in insurgent capacity.', events_count: 3421 },
-  { id: 7, name: 'Hamas', short_name: null, actor_type: 'MILITIA', country: 'Palestine', flag_emoji: null, activity_level: 'high', is_designated_terrorist: true, description: 'Palestinian political and military organization that controls the Gaza Strip. Designated as terrorist organization by many countries.', events_count: 2876 },
-  { id: 8, name: 'Israeli Defense Forces', short_name: 'IDF', actor_type: 'STATE', country: 'Israel', flag_emoji: null, activity_level: 'high', is_designated_terrorist: false, description: 'The military forces of the State of Israel, consisting of ground forces, air force, and navy.', events_count: 3254 },
-  { id: 9, name: 'Hezbollah', short_name: null, actor_type: 'MILITIA', country: 'Lebanon', flag_emoji: null, activity_level: 'high', is_designated_terrorist: true, description: 'Lebanese political party and militant group with significant military capabilities. Designated as terrorist by many Western nations.', events_count: 1567 },
-  { id: 10, name: 'Syrian Arab Army', short_name: 'SAA', actor_type: 'STATE', country: 'Syria', flag_emoji: null, activity_level: 'medium', is_designated_terrorist: false, description: 'The ground warfare branch of the Syrian Armed Forces. Active in ongoing civil war.', events_count: 4521 },
-  { id: 11, name: 'Rapid Support Forces', short_name: 'RSF', actor_type: 'MILITIA', country: 'Sudan', flag_emoji: null, activity_level: 'high', is_designated_terrorist: false, description: 'Sudanese paramilitary force currently engaged in civil conflict with the Sudanese Armed Forces.', events_count: 1876 },
-  { id: 12, name: 'Sudanese Armed Forces', short_name: 'SAF', actor_type: 'STATE', country: 'Sudan', flag_emoji: null, activity_level: 'high', is_designated_terrorist: false, description: 'The military forces of Sudan, currently engaged in civil conflict with RSF.', events_count: 1654 }
-]);
+interface ActorsResponse {
+  data: Actor[];
+  meta?: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+  stats?: {
+    total: number;
+    state: number;
+    non_state: number;
+    active: number;
+  };
+}
+
+const actors = ref<Actor[]>([]);
+
+// Debounce timer for search
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+async function fetchActors() {
+  loading.value = true;
+  error.value = null;
+
+  try {
+    const params: Record<string, string | number> = {
+      page: currentPage.value,
+      per_page: perPage.value
+    };
+
+    if (filters.search) params.search = filters.search;
+    if (filters.type) params.actor_type = filters.type;
+    if (filters.activity) params.activity_level = filters.activity;
+
+    const response = await api.get<ActorsResponse>('/actors', { params });
+
+    actors.value = response.data || [];
+
+    if (response.meta) {
+      totalItems.value = response.meta.total;
+    }
+
+    if (response.stats) {
+      stats.value = {
+        total: response.stats.total,
+        state: response.stats.state,
+        nonState: response.stats.non_state,
+        active: response.stats.active
+      };
+    }
+  } catch (err: any) {
+    console.error('Failed to fetch actors:', err);
+    if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
+      error.value = 'Please sign in to view actor data.';
+    } else {
+      error.value = err.message || 'Failed to load actors. Please try again.';
+    }
+  } finally {
+    loading.value = false;
+  }
+}
+
+// Watch for filter changes with debounce
+watch([() => filters.search, () => filters.type, () => filters.activity], () => {
+  if (searchTimeout) clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    currentPage.value = 1;
+    fetchActors();
+  }, 300);
+});
+
+// Watch for page changes
+watch(currentPage, () => {
+  fetchActors();
+});
+
+onMounted(() => {
+  fetchActors();
+});
 
 const filteredActors = computed(() => {
-  return actors.value.filter(actor => {
-    const matchesSearch = !filters.search ||
-      actor.name.toLowerCase().includes(filters.search.toLowerCase()) ||
-      (actor.short_name && actor.short_name.toLowerCase().includes(filters.search.toLowerCase()));
-    const matchesType = !filters.type || actor.actor_type === filters.type;
-    const matchesActivity = !filters.activity || actor.activity_level === filters.activity;
-    return matchesSearch && matchesType && matchesActivity;
-  });
+  // When using API, filtering is done server-side
+  return actors.value;
+});
+
+const totalPages = computed(() => {
+  if (totalItems.value > 0) {
+    return Math.ceil(totalItems.value / perPage.value);
+  }
+  return Math.ceil(filteredActors.value.length / perPage.value) || 1;
 });
 
 const getActorIconBg = (type: string) => {

@@ -12,10 +12,34 @@ body {
     height: 100%;
     width: 100%;
     z-index: 1;
+    background: #f3f4f6;
 }
 
 /* Ensure map fills available space */
 #map {
     height: calc(100vh - 4rem);
+    height: calc(100dvh - 4rem); /* Dynamic viewport height for mobile browsers */
     width: 100%;
+}
+
+/* Mobile-specific map adjustments */
+@media (max-width: 767px) {
+    .leaflet-control-container .leaflet-top {
+        top: 60px; /* Account for mobile toggle button */
+    }
+
+    .leaflet-control-zoom {
+        margin-top: 10px !important;
+    }
+
+    /* Ensure popups don't overflow on mobile */
+    .leaflet-popup-content {
+        max-width: 250px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .leaflet-popup-content-wrapper {
+        max-width: 280px;
+    }
 }

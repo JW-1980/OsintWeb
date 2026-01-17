@@ -129,8 +129,36 @@
           </div>
         </div>
 
+        <!-- Loading State -->
+        <div v-if="loading" class="flex items-center justify-center py-16">
+          <div class="flex flex-col items-center space-y-4">
+            <svg class="animate-spin h-10 w-10 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="text-gray-600 dark:text-gray-400">Loading events...</p>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div v-else-if="error" class="text-center py-16">
+          <svg class="w-24 h-24 mx-auto text-red-400 dark:text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Unable to Load Events</h3>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">{{ error }}</p>
+          <div class="flex items-center justify-center space-x-4">
+            <button @click="fetchEvents" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              Try Again
+            </button>
+            <router-link to="/register" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-colors">
+              Sign Up for Access
+            </router-link>
+          </div>
+        </div>
+
         <!-- Grid View -->
-        <div v-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-else-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <router-link
             v-for="event in paginatedEvents"
             :key="event.id"
@@ -172,7 +200,7 @@
         </div>
 
         <!-- List View -->
-        <div v-else class="space-y-4">
+        <div v-else-if="viewMode === 'list'" class="space-y-4">
           <router-link
             v-for="event in paginatedEvents"
             :key="event.id"
@@ -208,10 +236,19 @@
           </router-link>
         </div>
 
+        <!-- Empty State -->
+        <div v-if="!loading && !error && paginatedEvents.length === 0" class="text-center py-16">
+          <svg class="w-24 h-24 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No Events Found</h3>
+          <p class="text-gray-600 dark:text-gray-400">Try adjusting your filters or search terms.</p>
+        </div>
+
         <!-- Pagination -->
-        <div class="mt-8 flex flex-col md:flex-row items-center justify-between">
+        <div v-if="!loading && !error && paginatedEvents.length > 0" class="mt-8 flex flex-col md:flex-row items-center justify-between">
           <p class="text-sm text-gray-500 dark:text-gray-400 mb-4 md:mb-0">
-            Showing {{ (currentPage - 1) * perPage + 1 }} to {{ Math.min(currentPage * perPage, filteredEvents.length) }} of {{ filteredEvents.length }} events
+            Showing {{ (currentPage - 1) * perPage + 1 }} to {{ Math.min(currentPage * perPage, totalItems || filteredEvents.length) }} of {{ totalItems || filteredEvents.length }} events
           </p>
           <div class="flex items-center space-x-2">
             <button
@@ -258,9 +295,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import { useThemeStore } from '@/stores/theme';
+import { useApi } from '@/composables/useApi';
 
+const api = useApi();
 const themeStore = useThemeStore();
 const isDark = computed(() => themeStore.isDark);
 
@@ -271,12 +310,15 @@ const toggleTheme = () => {
 const viewMode = ref<'grid' | 'list'>('grid');
 const currentPage = ref(1);
 const perPage = ref(12);
+const loading = ref(false);
+const error = ref<string | null>(null);
+const totalItems = ref(0);
 
 const stats = ref({
-  total: 15847,
-  thisWeek: 342,
-  verifiedRate: 78,
-  countries: 24
+  total: 0,
+  thisWeek: 0,
+  verifiedRate: 0,
+  countries: 0
 });
 
 const filters = reactive({
@@ -288,6 +330,7 @@ const filters = reactive({
 
 interface PublicEvent {
   id: number;
+  uuid: string;
   title: string;
   event_type: string;
   description: string;
@@ -298,34 +341,125 @@ interface PublicEvent {
   source_count: number;
 }
 
-const events = ref<PublicEvent[]>([
-  { id: 1, title: 'Artillery strike on military positions', event_type: 'artillery_strike', description: 'Multiple MLRS strikes reported targeting defensive positions near the front line.', location_name: 'Zaporizhzhia Oblast', occurred_at: '2024-01-16T14:30:00Z', confidence_level: 'confirmed', verified: true, source_count: 5 },
-  { id: 2, title: 'Air defense engagement over Kyiv', event_type: 'airstrike', description: 'Air defense systems engaged incoming cruise missiles overnight.', location_name: 'Kyiv, Ukraine', occurred_at: '2024-01-16T06:15:00Z', confidence_level: 'confirmed', verified: true, source_count: 8 },
-  { id: 3, title: 'Tank destroyed by FPV drone', event_type: 'equipment_destroyed', description: 'T-72B3 main battle tank destroyed by first-person view drone strike.', location_name: 'Donetsk Oblast', occurred_at: '2024-01-15T18:45:00Z', confidence_level: 'confirmed', verified: true, source_count: 3 },
-  { id: 4, title: 'Troop movement detected via satellite', event_type: 'troop_movement', description: 'Satellite imagery shows significant troop concentration near border area.', location_name: 'Luhansk Oblast', occurred_at: '2024-01-15T12:00:00Z', confidence_level: 'likely', verified: true, source_count: 2 },
-  { id: 5, title: 'Missile strike on infrastructure', event_type: 'missile_strike', description: 'Cruise missile struck energy infrastructure, causing power outages.', location_name: 'Kharkiv, Ukraine', occurred_at: '2024-01-14T22:30:00Z', confidence_level: 'confirmed', verified: true, source_count: 7 },
-  { id: 6, title: 'Combat engagement near Bakhmut', event_type: 'combat_engagement', description: 'Infantry clashes reported in the suburbs with both sides claiming territorial gains.', location_name: 'Bakhmut, Donetsk Oblast', occurred_at: '2024-01-14T16:20:00Z', confidence_level: 'confirmed', verified: true, source_count: 4 },
-  { id: 7, title: 'Artillery barrage on supply routes', event_type: 'artillery_strike', description: 'Heavy artillery fire targeted logistics convoy along main supply route.', location_name: 'Kherson Oblast', occurred_at: '2024-01-13T09:45:00Z', confidence_level: 'confirmed', verified: true, source_count: 3 },
-  { id: 8, title: 'Drone swarm attack reported', event_type: 'airstrike', description: 'Multiple drones engaged over military installation.', location_name: 'Crimea', occurred_at: '2024-01-13T03:20:00Z', confidence_level: 'confirmed', verified: true, source_count: 6 },
-  { id: 9, title: 'IFV column destroyed', event_type: 'equipment_destroyed', description: 'Multiple infantry fighting vehicles destroyed in ambush operation.', location_name: 'Zaporizhzhia Oblast', occurred_at: '2024-01-12T14:15:00Z', confidence_level: 'confirmed', verified: true, source_count: 4 }
-]);
+interface EventsResponse {
+  data: PublicEvent[];
+  meta?: {
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+  };
+  stats?: {
+    total: number;
+    this_week: number;
+    verified_rate: number;
+    countries: number;
+  };
+}
 
-const filteredEvents = computed(() => {
-  return events.value.filter(event => {
-    if (!event.verified) return false;
-    const matchesSearch = !filters.search ||
-      event.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-      event.location_name.toLowerCase().includes(filters.search.toLowerCase());
-    const matchesType = !filters.type || event.event_type === filters.type;
-    const matchesDateFrom = !filters.dateFrom || new Date(event.occurred_at) >= new Date(filters.dateFrom);
-    const matchesDateTo = !filters.dateTo || new Date(event.occurred_at) <= new Date(filters.dateTo);
-    return matchesSearch && matchesType && matchesDateFrom && matchesDateTo;
-  });
+const events = ref<PublicEvent[]>([]);
+
+// Debounce timer for search
+let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+
+async function fetchEvents() {
+  loading.value = true;
+  error.value = null;
+
+  try {
+    const params: Record<string, string | number> = {
+      page: currentPage.value,
+      per_page: perPage.value
+    };
+
+    if (filters.search) params.search = filters.search;
+    if (filters.type) params.event_type = filters.type;
+    if (filters.dateFrom) params.date_from = filters.dateFrom;
+    if (filters.dateTo) params.date_to = filters.dateTo;
+
+    const response = await api.get<EventsResponse>('/events', { params });
+
+    events.value = response.data || [];
+
+    if (response.meta) {
+      totalItems.value = response.meta.total;
+    }
+
+    if (response.stats) {
+      stats.value = {
+        total: response.stats.total,
+        thisWeek: response.stats.this_week,
+        verifiedRate: response.stats.verified_rate,
+        countries: response.stats.countries
+      };
+    }
+  } catch (err: any) {
+    console.error('Failed to fetch events:', err);
+    if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
+      error.value = 'Please sign in to view event data.';
+    } else {
+      error.value = err.message || 'Failed to load events. Please try again.';
+    }
+  } finally {
+    loading.value = false;
+  }
+}
+
+// Fetch stats separately if needed
+async function fetchStats() {
+  try {
+    const response = await api.get<{ data: { total: number; this_week: number; verified_rate: number; countries: number } }>('/stats/events');
+    if (response.data) {
+      stats.value = {
+        total: response.data.total,
+        thisWeek: response.data.this_week,
+        verifiedRate: response.data.verified_rate,
+        countries: response.data.countries
+      };
+    }
+  } catch (err) {
+    // Stats are optional, don't show error
+    console.warn('Failed to fetch event stats:', err);
+  }
+}
+
+// Watch for filter changes with debounce
+watch([() => filters.search, () => filters.type, () => filters.dateFrom, () => filters.dateTo], () => {
+  if (searchTimeout) clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    currentPage.value = 1; // Reset to first page on filter change
+    fetchEvents();
+  }, 300);
 });
 
-const totalPages = computed(() => Math.ceil(filteredEvents.value.length / perPage.value) || 1);
+// Watch for page changes
+watch(currentPage, () => {
+  fetchEvents();
+});
+
+onMounted(() => {
+  fetchEvents();
+  fetchStats();
+});
+
+const filteredEvents = computed(() => {
+  // When using API, filtering is done server-side, so return all events
+  return events.value.filter(event => event.verified !== false);
+});
+
+const totalPages = computed(() => {
+  if (totalItems.value > 0) {
+    return Math.ceil(totalItems.value / perPage.value);
+  }
+  return Math.ceil(filteredEvents.value.length / perPage.value) || 1;
+});
 
 const paginatedEvents = computed(() => {
+  // When using API pagination, events are already paginated
+  if (totalItems.value > 0) {
+    return filteredEvents.value;
+  }
+  // Fallback to client-side pagination
   const start = (currentPage.value - 1) * perPage.value;
   return filteredEvents.value.slice(start, start + perPage.value);
 });
