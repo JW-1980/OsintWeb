@@ -8,6 +8,29 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * AgentExecution Model
+ *
+ * Tracks individual execution runs of intelligence agents.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property int $agent_id Foreign key to intelligence_agents table
+ * @property int|null $triggered_by Foreign key to users table (who initiated)
+ * @property string $status Execution status (pending, running, completed, failed)
+ * @property \Carbon\Carbon|null $started_at When execution started
+ * @property \Carbon\Carbon|null $completed_at When execution completed
+ * @property int $items_processed Number of items processed during execution
+ * @property int $items_matched Number of items that matched criteria
+ * @property array|null $results_summary Summary of execution results (JSON)
+ * @property string|null $error_message Error message if execution failed
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ *
+ * @property-read IntelligenceAgent $agent
+ * @property-read User|null $triggeredBy
+ * @property-read \Illuminate\Database\Eloquent\Collection|AgentDataPoint[] $dataPoints
+ */
 class AgentExecution extends Model
 {
     public const STATUS_PENDING = 'pending';

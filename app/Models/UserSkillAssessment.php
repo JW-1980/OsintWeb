@@ -7,6 +7,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * UserSkillAssessment Model
+ *
+ * Tracks user proficiency levels for OSINT skills.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property int $user_id Foreign key to users table
+ * @property int $skill_id Foreign key to osint_skills table
+ * @property string $proficiency_level Proficiency level (none, beginner, intermediate, advanced, expert)
+ * @property int $practice_count Number of practice sessions completed
+ * @property \Carbon\Carbon|null $last_practiced_at Last practice session timestamp
+ * @property array|null $notes Additional notes about user's progress (JSON)
+ * @property bool $is_certified Whether user is certified in this skill
+ * @property \Carbon\Carbon|null $certified_at When certification was granted
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ *
+ * @property-read User $user
+ * @property-read OsintSkill $skill
+ */
 class UserSkillAssessment extends Model
 {
     public const PROFICIENCY_NONE = 'none';

@@ -8,6 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
+/**
+ * OsintSkillCategory Model
+ *
+ * Categories for organizing OSINT skills.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property string $uuid Unique identifier for external reference
+ * @property string $name Category name
+ * @property string $slug URL-friendly slug (unique)
+ * @property string|null $description Category description
+ * @property string|null $icon Icon identifier for UI display
+ * @property string|null $color Hex color code for UI display
+ * @property int $sort_order Display order (lower = first)
+ * @property bool $is_active Whether category is currently active
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|OsintSkill[] $skills
+ * @property-read \Illuminate\Database\Eloquent\Collection|OsintSkill[] $activeSkills
+ */
 class OsintSkillCategory extends Model
 {
     protected $fillable = [

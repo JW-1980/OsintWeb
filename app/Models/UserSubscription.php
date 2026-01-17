@@ -9,6 +9,29 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+/**
+ * UserSubscription Model
+ *
+ * User subscription plans for premium content access.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property string $uuid Unique identifier for external reference
+ * @property int $user_id Foreign key to users table
+ * @property string $plan Plan name (free, basic, premium, enterprise)
+ * @property string $status Subscription status (active, cancelled, expired, pending)
+ * @property \Carbon\Carbon|null $starts_at When subscription started
+ * @property \Carbon\Carbon|null $ends_at When subscription expires
+ * @property \Carbon\Carbon|null $cancelled_at When subscription was cancelled
+ * @property string|null $cancellation_reason Reason for cancellation
+ * @property array|null $features Custom feature overrides (JSON)
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ *
+ * @property-read User $user
+ * @property-read array $plan_details Plan configuration details
+ * @property-read string $plan_name Human-readable plan name
+ */
 class UserSubscription extends Model
 {
     use HasFactory;

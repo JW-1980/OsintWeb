@@ -7,6 +7,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * CommentRateLimit Model
+ *
+ * Tracks comment rate limiting per user/IP to prevent spam.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property int|null $user_id Foreign key to users table
+ * @property string|null $ip_address IP address for anonymous users
+ * @property string|null $fingerprint Browser fingerprint for tracking
+ * @property \Carbon\Carbon|null $last_comment_at Timestamp of last comment
+ * @property int $comment_count_hour Number of comments in current hour
+ * @property int $comment_count_day Number of comments today
+ * @property bool $is_blocked Whether user/IP is blocked
+ * @property \Carbon\Carbon|null $blocked_until Block expiration time
+ * @property string|null $block_reason Reason for blocking
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ *
+ * @property-read User|null $user
+ */
 class CommentRateLimit extends Model
 {
     protected $fillable = [
