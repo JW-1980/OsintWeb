@@ -112,7 +112,7 @@ cd osintweb
 1.  Builds the secure application container.
 2.  Initializes the database and installs dependencies.
 3.  **Seeds the system** with:
-    - 230+ military equipment items with detailed specifications
+    - 430+ military equipment items with detailed specifications
     - 17 active global conflicts (Ukraine, Gaza, Syria, Yemen, etc.)
     - 225+ state and non-state actors (including Wagner, Hamas, Hezbollah, SDF)
     - 20+ sample events with geolocation data
@@ -129,7 +129,7 @@ For production environments or manual setup without Docker, follow these steps.
 2.  Starts a local MySQL database.
 3.  Installs all dependencies.
 4.  **Seeds the database** with comprehensive sample data:
-    - 230+ military equipment items with detailed descriptions
+    - 430+ military equipment items with detailed descriptions
     - 17 global conflicts covering all major active war zones
     - 225+ state actors (countries) and non-state armed groups
     - Sample events, control zones, and anonymous tips
@@ -160,7 +160,7 @@ OsintWeb provides powerful tools for:
 *   **Contact & About**: Professional landing pages for community engagement.
 
 ### 🚜 Military Equipment Database
-*   **Comprehensive Catalog**: 230+ pre-loaded items including ships, tanks, aircraft, helicopters, drones, artillery systems, air defense systems, support vehicles, and **50+ detailed missile systems**.
+*   **Comprehensive Catalog**: 430+ pre-loaded items including ships, tanks, aircraft, helicopters, drones, artillery systems, air defense systems, support vehicles, and **50+ detailed missile systems**.
 *   **Detailed Specs**: Track dimensions, armament, range, and production numbers.
 *   **Inventory Tracking**: Monitor per-country inventory levels and loss statistics.
 *   **CRUD Operations**: Full management capabilities via API and admin panel.
