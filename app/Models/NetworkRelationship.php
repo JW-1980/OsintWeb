@@ -7,6 +7,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * NetworkRelationship Model
+ *
+ * Relationships/edges between network entities in analysis graphs.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property int $source_id Foreign key to network_entities table (source node)
+ * @property int $target_id Foreign key to network_entities table (target node)
+ * @property string $relationship_type Type of relationship (communicates_with, member_of, etc.)
+ * @property string $direction Relationship direction (bidirectional, directed)
+ * @property float|null $strength Relationship strength/weight 0.00-1.00
+ * @property array|null $metadata Additional relationship metadata (JSON)
+ * @property string|null $notes Notes about the relationship
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ *
+ * @property-read NetworkEntity $source
+ * @property-read NetworkEntity $target
+ */
 class NetworkRelationship extends Model
 {
     public const TYPE_COMMUNICATES_WITH = 'communicates_with';

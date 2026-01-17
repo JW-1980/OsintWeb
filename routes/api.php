@@ -60,14 +60,14 @@ use App\Http\Controllers\Api\ScheduledReportController;
 |
 */
 
-// Public routes
-Route::prefix('auth')->group(function () {
+// Public authentication routes - strict rate limiting to prevent brute force
+Route::prefix('auth')->middleware('throttle:auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 });
 
-// Protected routes (require authentication)
-Route::middleware('auth:sanctum')->group(function () {
+// Protected routes (require authentication) - standard API rate limiting
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     // Authentication
     Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -147,8 +147,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', [ActorController::class, 'show']);
     });
 
-    // Export
-    Route::prefix('export')->group(function () {
+    // Export - more restrictive rate limiting for heavy operations
+    Route::prefix('export')->middleware('throttle:exports')->group(function () {
         Route::get('/kml', [ExportController::class, 'kml']);
         Route::get('/geojson', [ExportController::class, 'geojson']);
         Route::get('/csv', [ExportController::class, 'csv']);
@@ -438,8 +438,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/event/{eventUuid}/link/{weatherUuid}', [WeatherController::class, 'unlinkFromEvent']);
     });
 
-    // Audio Analysis (Forensic Audio Analysis & Spectrogram)
-    Route::prefix('audio-analysis')->group(function () {
+    // Audio Analysis (Forensic Audio Analysis & Spectrogram) - AI rate limiting
+    Route::prefix('audio-analysis')->middleware('throttle:ai')->group(function () {
         // List and statistics
         Route::get('/', [AudioAnalysisController::class, 'index']);
         Route::get('/stats', [AudioAnalysisController::class, 'stats']);
@@ -466,8 +466,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{uuid}/frequencies', [AudioAnalysisController::class, 'frequencies']);
     });
 
-    // Reverse Image Search Aggregator
-    Route::prefix('reverse-image')->group(function () {
+    // Reverse Image Search Aggregator - AI rate limiting
+    Route::prefix('reverse-image')->middleware('throttle:ai')->group(function () {
         // List user's search history
         Route::get('/', [ReverseImageController::class, 'index']);
 
@@ -492,8 +492,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{uuid}', [ReverseImageController::class, 'destroy']);
     });
 
-    // Video Frame Analysis
-    Route::prefix('video-analysis')->group(function () {
+    // Video Frame Analysis - AI rate limiting
+    Route::prefix('video-analysis')->middleware('throttle:ai')->group(function () {
         // List and statistics
         Route::get('/', [VideoAnalysisController::class, 'index']);
         Route::get('/stats', [VideoAnalysisController::class, 'stats']);
@@ -560,8 +560,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/alerts/{uuid}/triggers', [SocialMediaController::class, 'alertTriggers']);
     });
 
-    // Document OCR & Analysis
-    Route::prefix('documents')->group(function () {
+    // Document OCR & Analysis - AI rate limiting
+    Route::prefix('documents')->middleware('throttle:ai')->group(function () {
         // List and statistics
         Route::get('/', [DocumentController::class, 'index']);
         Route::get('/stats', [DocumentController::class, 'stats']);
@@ -592,8 +592,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{uuid}/translations/{language}', [DocumentController::class, 'translation']);
     });
 
-    // Disinformation Detection & Analysis
-    Route::prefix('disinformation')->group(function () {
+    // Disinformation Detection & Analysis - AI rate limiting
+    Route::prefix('disinformation')->middleware('throttle:ai')->group(function () {
         // Reference data
         Route::get('/analysis-types', [DisinformationController::class, 'analysisTypes']);
         Route::get('/pattern-types', [DisinformationController::class, 'patternTypes']);
@@ -1095,30 +1095,30 @@ Route::middleware('auth:sanctum')->group(function () {
 // PUBLIC ROUTES (No Authentication)
 // ===================================
 
-// Public tip submission
-Route::prefix('tips')->group(function () {
+// Public tip submission - strict rate limiting to prevent spam
+Route::prefix('tips')->middleware('throttle:tips')->group(function () {
     Route::post('/submit', [TipController::class, 'submit']);
     Route::get('/types', [TipController::class, 'types']);
     Route::get('/status/{uuid}', [TipController::class, 'status']);
 });
 
-// Public conflict information
-Route::prefix('public')->group(function () {
+// Public conflict information - moderate rate limiting
+Route::prefix('public')->middleware('throttle:public')->group(function () {
     Route::get('/conflicts', [ConflictController::class, 'index']);
     Route::get('/conflicts/active', [ConflictController::class, 'active']);
     Route::get('/conflicts/{slug}', [ConflictController::class, 'show']);
 });
 
-// Health check endpoints
+// Health check endpoints - allow frequent checks for monitoring
 // Public endpoints (no authentication required)
-Route::prefix('health')->group(function () {
+Route::prefix('health')->middleware('throttle:health')->group(function () {
     Route::get('/', [HealthController::class, 'health']);
     Route::get('/live', [HealthController::class, 'liveness']);
     Route::get('/ready', [HealthController::class, 'readiness']);
 });
 
 // Protected health endpoints (require authentication)
-Route::middleware('auth:sanctum')->prefix('health')->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:api'])->prefix('health')->group(function () {
     Route::get('/full', [HealthController::class, 'healthFull']);
     Route::get('/metrics', [HealthController::class, 'metrics']);
     Route::get('/history', [HealthController::class, 'history']);

@@ -10,6 +10,32 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * TrainingExercise Model
+ *
+ * Training exercises for OSINT skill development.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property string $uuid Unique identifier for external reference
+ * @property int|null $skill_id Foreign key to osint_skills table
+ * @property string $title Exercise title
+ * @property string|null $description Exercise description
+ * @property string $difficulty Difficulty level (beginner, intermediate, advanced, expert)
+ * @property string $type Exercise type (geolocation, verification, analysis, identification)
+ * @property array|null $scenario Exercise scenario data including images, context (JSON)
+ * @property array|null $correct_answer The correct answer(s) for validation (JSON)
+ * @property array|null $hints Available hints for the exercise (JSON)
+ * @property int|null $time_limit_minutes Time limit in minutes
+ * @property int $points Points awarded for completion
+ * @property bool $is_active Whether exercise is currently active
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon|null $deleted_at Soft delete timestamp
+ *
+ * @property-read OsintSkill|null $skill
+ * @property-read \Illuminate\Database\Eloquent\Collection|ExerciseAttempt[] $attempts
+ */
 class TrainingExercise extends Model
 {
     use SoftDeletes;

@@ -7,6 +7,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * ArticleRead Model
+ *
+ * Tracks article reading progress and analytics.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property int $article_id Foreign key to articles table
+ * @property int|null $user_id Foreign key to users table (null for anonymous)
+ * @property string|null $ip_address Reader's IP address
+ * @property string|null $session_id Session identifier for anonymous tracking
+ * @property int $read_percentage Reading progress percentage (0-100)
+ * @property int $time_spent_seconds Total time spent reading in seconds
+ * @property \Carbon\Carbon|null $started_at When reading started
+ * @property \Carbon\Carbon|null $completed_at When article was fully read
+ *
+ * @property-read Article $article
+ * @property-read User|null $user
+ */
 class ArticleRead extends Model
 {
     public $timestamps = false;

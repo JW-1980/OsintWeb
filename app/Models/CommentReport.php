@@ -9,6 +9,32 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+/**
+ * CommentReport Model
+ *
+ * User reports for inappropriate or rule-violating comments.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property string $uuid Unique identifier for external reference
+ * @property int $comment_id Foreign key to comments table
+ * @property int|null $reporter_id Foreign key to users table (reporter)
+ * @property string|null $reporter_ip IP address if anonymous reporter
+ * @property string $reason Report reason code (spam, harassment, hate_speech, etc.)
+ * @property string|null $details Additional details from reporter
+ * @property string $status Review status (pending, reviewed, actioned, dismissed)
+ * @property int|null $reviewed_by Foreign key to users table (reviewer)
+ * @property \Carbon\Carbon|null $reviewed_at When report was reviewed
+ * @property string|null $review_notes Reviewer's notes
+ * @property string|null $action_taken Action taken on the comment
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ *
+ * @property-read Comment $comment
+ * @property-read User|null $reporter
+ * @property-read User|null $reviewer
+ * @property-read string $reason_label Human-readable reason
+ */
 class CommentReport extends Model
 {
     use HasFactory;

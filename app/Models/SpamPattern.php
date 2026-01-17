@@ -7,6 +7,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * SpamPattern Model
+ *
+ * Patterns for detecting spam in comments and submissions.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property string $pattern The pattern to match (keyword, regex, domain, etc.)
+ * @property string $type Pattern type (keyword, regex, domain, email, ip)
+ * @property float $weight Score weight when pattern matches (0.00-1.00)
+ * @property bool $is_active Whether pattern is currently active
+ * @property int $hit_count Number of times pattern has matched
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ */
 class SpamPattern extends Model
 {
     use HasFactory;

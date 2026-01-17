@@ -8,6 +8,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * DataSource Model
+ *
+ * Configuration for external data sources (ADS-B, AIS, satellite, etc.).
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property string $uuid Unique identifier for external reference
+ * @property string $name Data source display name
+ * @property string $slug URL-friendly slug (unique)
+ * @property string $type Source type (adsb, ais, satellite, social, news, api)
+ * @property string|null $description Source description
+ * @property string|null $provider Provider name (e.g., OpenSky, MarineTraffic)
+ * @property string|null $base_url API base URL
+ * @property array|null $configuration Source-specific configuration (JSON)
+ * @property array|null $credentials Encrypted API credentials (JSON)
+ * @property bool $is_active Whether source is currently active
+ * @property bool $requires_subscription Whether source requires paid subscription
+ * @property array|null $rate_limits Rate limiting configuration (JSON)
+ * @property \Carbon\Carbon|null $last_synced_at Last successful data sync
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon|null $deleted_at Soft delete timestamp
+ */
 class DataSource extends Model
 {
     use SoftDeletes;

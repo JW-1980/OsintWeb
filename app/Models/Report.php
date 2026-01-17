@@ -9,6 +9,32 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * Report Model
+ *
+ * Generated intelligence reports (SITREP, equipment losses, timelines, etc.).
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property string $uuid Unique identifier for external reference
+ * @property int $user_id Foreign key to users table (creator)
+ * @property string $title Report title
+ * @property string|null $description Report description
+ * @property string $type Report type (event_summary, equipment_losses, timeline, custom)
+ * @property string $status Generation status (draft, generating, completed, failed)
+ * @property array|null $configuration Report configuration options (JSON)
+ * @property array|null $filters Data filtering criteria (JSON)
+ * @property array|null $sections Report sections configuration (JSON)
+ * @property string|null $output_format Output format (pdf, docx, html)
+ * @property string|null $file_path Path to generated file
+ * @property \Carbon\Carbon|null $generated_at When report was generated
+ * @property bool $is_public Whether report is publicly accessible
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon|null $deleted_at Soft delete timestamp
+ *
+ * @property-read User $user
+ */
 class Report extends Model
 {
     use SoftDeletes;

@@ -9,6 +9,38 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * IntelligenceAgent Model
+ *
+ * Automated intelligence collection and analysis agents.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property string $uuid Unique identifier for external reference
+ * @property string $name Agent display name
+ * @property string $slug URL-friendly slug (unique)
+ * @property string|null $description Agent description and purpose
+ * @property string $type Agent type (monitor, scraper, analyzer, aggregator, alert)
+ * @property string $category Intelligence category (social_media, flight, maritime, etc.)
+ * @property array|null $configuration Agent-specific configuration (JSON)
+ * @property array|null $data_sources List of data source IDs to use (JSON)
+ * @property array|null $output_format Output format specification (JSON)
+ * @property array|null $filters Data filtering rules (JSON)
+ * @property array|null $triggers Trigger conditions for automated runs (JSON)
+ * @property string|null $schedule Cron schedule for periodic execution
+ * @property bool $is_active Whether agent is currently active
+ * @property bool $requires_api_key Whether agent requires external API key
+ * @property array|null $api_providers Required API providers (JSON)
+ * @property int $rate_limit_per_minute Maximum executions per minute
+ * @property int $priority Execution priority (higher = first)
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon|null $deleted_at Soft delete timestamp
+ *
+ * @property-read \Illuminate\Database\Eloquent\Collection|AgentExecution[] $executions
+ * @property-read \Illuminate\Database\Eloquent\Collection|AgentDataPoint[] $dataPoints
+ * @property-read AgentExecution|null $latestExecution
+ */
 class IntelligenceAgent extends Model
 {
     use SoftDeletes;

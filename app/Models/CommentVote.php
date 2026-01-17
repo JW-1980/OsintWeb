@@ -7,6 +7,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * CommentVote Model
+ *
+ * Stores user votes on comments (upvote/downvote).
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property int $comment_id Foreign key to comments table
+ * @property int $user_id Foreign key to users table
+ * @property int $vote Vote value (1 for upvote, -1 for downvote)
+ * @property \Carbon\Carbon $created_at When vote was cast
+ *
+ * @property-read Comment $comment
+ * @property-read User $user
+ */
 class CommentVote extends Model
 {
     public $timestamps = false;

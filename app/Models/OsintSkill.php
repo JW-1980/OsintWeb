@@ -10,6 +10,30 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
+/**
+ * OsintSkill Model
+ *
+ * OSINT investigation skills that can be learned and assessed.
+ *
+ * Database Schema:
+ * @property int $id Primary key
+ * @property string $uuid Unique identifier for external reference
+ * @property int|null $category_id Foreign key to osint_skill_categories table
+ * @property string $name Skill name
+ * @property string $slug URL-friendly slug (unique)
+ * @property string|null $description Skill description
+ * @property string $difficulty Difficulty level (beginner, intermediate, advanced, expert)
+ * @property array|null $data Skill data including tools, resources, methodology (JSON)
+ * @property string|null $icon Icon identifier for UI display
+ * @property int $sort_order Display order (lower = first)
+ * @property bool $is_active Whether skill is currently active
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon|null $deleted_at Soft delete timestamp
+ *
+ * @property-read OsintSkillCategory|null $category
+ * @property-read \Illuminate\Database\Eloquent\Collection|UserSkillAssessment[] $userAssessments
+ */
 class OsintSkill extends Model
 {
     use SoftDeletes;
