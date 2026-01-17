@@ -69,7 +69,7 @@ Unlock a comprehensive arsenal of analysis tools designed for depth and precisio
 Dominate the visual landscape. Our advanced mapping engine allows you to draw complex control zones, color-coded by faction, to visualize territorial control instantly. Toggle between high-resolution satellite imagery and topographic maps to analyze terrain features. The dynamic legend adapts in real-time, ensuring your reports are always clear and professional. Export your operational picture as high-resolution (300 DPI) images for briefings and publications.
 
 ### 🚜 Military Equipment Database
-Access a military encyclopedia at your fingertips. The platform comes pre-loaded with over **140 detailed equipment profiles**, ranging from *Gerald R. Ford-class* aircraft carriers to *T-90M* main battle tanks and *Switchblade* drones. Each entry tracks critical specifications like range, armament, and dimensions. More importantly, it tracks **inventory and attrition**—allowing you to monitor verified losses and remaining stock for every country in a conflict.
+Access a military encyclopedia at your fingertips. The platform comes pre-loaded with over **500+ detailed equipment profiles**, ranging from *Gerald R. Ford-class* aircraft carriers to *T-90M* main battle tanks and *Switchblade* drones. Each entry tracks critical specifications like range, armament, and dimensions. More importantly, it tracks **inventory and attrition**—allowing you to monitor verified losses and remaining stock for every country in a conflict.
 
 ### 💥 Event Documentation & Forensics
 Document the reality of war with precision. Utilize **49+ specialized event templates** covering everything from airstrikes and naval engagements to cyber attacks and humanitarian crises. Every event supports rich media attachments—images, videos, and documents—creating a verifiable chain of evidence. Link specific equipment losses to events to build a forensic record of the battlefield.
@@ -112,7 +112,7 @@ cd osintweb
 1.  Builds the secure application container.
 2.  Initializes the database and installs dependencies.
 3.  **Seeds the system** with:
-    - 430+ military equipment items with detailed specifications
+    - 500+ military equipment items with detailed specifications
     - 17 active global conflicts (Ukraine, Gaza, Syria, Yemen, etc.)
     - 225+ state and non-state actors (including Wagner, Hamas, Hezbollah, SDF)
     - 20+ sample events with geolocation data
@@ -129,7 +129,7 @@ For production environments or manual setup without Docker, follow these steps.
 2.  Starts a local MySQL database.
 3.  Installs all dependencies.
 4.  **Seeds the database** with comprehensive sample data:
-    - 430+ military equipment items with detailed descriptions
+    - 500+ military equipment items with detailed descriptions
     - 17 global conflicts covering all major active war zones
     - 225+ state actors (countries) and non-state armed groups
     - Sample events, control zones, and anonymous tips
@@ -160,7 +160,7 @@ OsintWeb provides powerful tools for:
 *   **Contact & About**: Professional landing pages for community engagement.
 
 ### 🚜 Military Equipment Database
-*   **Comprehensive Catalog**: 430+ pre-loaded items including ships, tanks, aircraft, helicopters, drones, artillery systems, air defense systems, support vehicles, and **50+ detailed missile systems**.
+*   **Comprehensive Catalog**: 500+ pre-loaded items including ships, tanks, aircraft, helicopters, drones, artillery systems, air defense systems, support vehicles, and **50+ detailed missile systems**.
 *   **Detailed Specs**: Track dimensions, armament, range, and production numbers.
 *   **Inventory Tracking**: Monitor per-country inventory levels and loss statistics.
 *   **CRUD Operations**: Full management capabilities via API and admin panel.

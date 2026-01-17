@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             ExtendedEquipmentSeeder::class,
             AdditionalEquipmentSeeder::class,
             ExtensiveEquipmentSeeder::class,
+            FinalEquipmentSeeder::class,
 
             // Extended Conflicts and Non-State Actors
             ConflictSeeder::class,
