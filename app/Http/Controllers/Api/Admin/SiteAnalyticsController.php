@@ -121,7 +121,7 @@ class SiteAnalyticsController extends Controller
     /**
      * Get search analytics.
      */
-    public function searches(Request $request): JsonResponse
+    public function searchAnalytics(Request $request): JsonResponse
     {
         $user = $request->user();
         if (!$user->isAdmin() && !$user->hasPermission('analytics.view')) {
@@ -146,7 +146,7 @@ class SiteAnalyticsController extends Controller
     /**
      * Get user flow analytics.
      */
-    public function userFlow(Request $request): JsonResponse
+    public function userFlows(Request $request): JsonResponse
     {
         $user = $request->user();
         if (!$user->isAdmin() && !$user->hasPermission('analytics.view')) {
@@ -288,6 +288,108 @@ class SiteAnalyticsController extends Controller
             'type' => $type,
             'period' => ['from' => $from, 'to' => $to],
             'exported_at' => now()->toIso8601String(),
+        ]);
+    }
+
+    /**
+     * Get top pages.
+     */
+    public function topPages(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user->isAdmin() && !$user->hasPermission('analytics.view')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $from = $request->input('from', now()->subDays(30)->toDateString());
+        $to = $request->input('to', now()->toDateString());
+        $limit = $request->integer('limit', 20);
+
+        $topPages = PageViewStat::getTopPages($from, $to, $limit);
+
+        return response()->json([
+            'data' => $topPages->map(fn ($page) => [
+                'page_path' => $page->page_path,
+                'page_group' => $page->page_group,
+                'total_views' => $page->total_views,
+                'unique_views' => $page->total_unique,
+            ]),
+            'period' => ['from' => $from, 'to' => $to],
+        ]);
+    }
+
+    /**
+     * Get hourly distribution.
+     */
+    public function hourlyDistribution(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user->isAdmin() && !$user->hasPermission('analytics.view')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $from = $request->input('from', now()->subDays(30)->toDateString());
+        $to = $request->input('to', now()->toDateString());
+
+        $hourly = PageViewStat::getHourlyDistribution($from, $to);
+
+        return response()->json([
+            'data' => $hourly->map(fn ($h) => [
+                'hour' => $h->hour,
+                'total_views' => $h->total_views,
+            ]),
+            'period' => ['from' => $from, 'to' => $to],
+        ]);
+    }
+
+    /**
+     * Get daily trends.
+     */
+    public function dailyTrends(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user->isAdmin() && !$user->hasPermission('analytics.view')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $from = $request->input('from', now()->subDays(30)->toDateString());
+        $to = $request->input('to', now()->toDateString());
+
+        $daily = PageViewStat::getDailyTotals($from, $to);
+
+        return response()->json([
+            'data' => $daily->map(fn ($d) => [
+                'date' => $d->date->format('Y-m-d'),
+                'total_views' => $d->total_views,
+                'unique_views' => $d->total_unique,
+            ]),
+            'period' => ['from' => $from, 'to' => $to],
+        ]);
+    }
+
+    /**
+     * Get device statistics.
+     */
+    public function deviceStats(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user->isAdmin() && !$user->hasPermission('analytics.view')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $from = $request->input('from', now()->subDays(30)->toDateString());
+        $to = $request->input('to', now()->toDateString());
+
+        $devices = PageViewStat::getDeviceBreakdown($from, $to);
+        $total = $devices->sum('total_views');
+
+        return response()->json([
+            'data' => $devices->map(fn ($d) => [
+                'device_type' => $d->device_type ?? 'unknown',
+                'total_views' => $d->total_views,
+                'percentage' => $total > 0 ? round(($d->total_views / $total) * 100, 1) : 0,
+            ]),
+            'period' => ['from' => $from, 'to' => $to],
         ]);
     }
 

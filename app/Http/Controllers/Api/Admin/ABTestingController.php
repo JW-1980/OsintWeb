@@ -426,12 +426,15 @@ class ABTestingController extends Controller
     /**
      * Get summary stats for all experiments.
      */
-    public function summary(Request $request): JsonResponse
+    public function stats(Request $request): JsonResponse
     {
         $user = $request->user();
         if (!$user->isAdmin() && !$user->hasPermission('experiments.view')) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
+
+        $totalImpressions = \App\Models\ExperimentConversion::sum('impressions');
+        $totalConversions = \App\Models\ExperimentConversion::sum('conversions');
 
         return response()->json([
             'data' => [
@@ -440,7 +443,105 @@ class ABTestingController extends Controller
                 'draft' => Experiment::where('status', Experiment::STATUS_DRAFT)->count(),
                 'completed' => Experiment::where('status', Experiment::STATUS_COMPLETED)->count(),
                 'with_winners' => Experiment::whereHas('results', fn ($q) => $q->where('is_winner', true))->count(),
+                'total_impressions' => $totalImpressions,
+                'total_conversions' => $totalConversions,
             ],
+        ]);
+    }
+
+    /**
+     * Get available experiment locations.
+     */
+    public function locations(Request $request): JsonResponse
+    {
+        $locations = Experiment::distinct('location')->pluck('location');
+
+        return response()->json([
+            'data' => $locations,
+        ]);
+    }
+
+    /**
+     * Get available experiment goals.
+     */
+    public function goals(Request $request): JsonResponse
+    {
+        return response()->json([
+            'data' => Experiment::getGoals(),
+        ]);
+    }
+
+    /**
+     * Calculate results for an experiment.
+     */
+    public function calculateResults(Request $request, Experiment $experiment): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user->isAdmin() && !$user->hasPermission('experiments.manage')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $this->abTestingService->calculateResults($experiment);
+
+        return response()->json([
+            'data' => $this->abTestingService->getExperimentWithStats($experiment),
+            'message' => 'Results calculated successfully',
+        ]);
+    }
+
+    /**
+     * Get results for an experiment.
+     */
+    public function results(Request $request, Experiment $experiment): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user->isAdmin() && !$user->hasPermission('experiments.view')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $experiment->load(['variants', 'results']);
+
+        $results = $experiment->results()
+            ->where('goal', $experiment->primary_goal)
+            ->get()
+            ->map(fn ($result) => [
+                'variant_id' => $result->variant_id,
+                'variant_name' => $experiment->variants->find($result->variant_id)?->name ?? 'Unknown',
+                'is_control' => $experiment->variants->find($result->variant_id)?->is_control ?? false,
+                'impressions' => $result->total_impressions,
+                'conversions' => $result->total_conversions,
+                'conversion_rate' => $result->conversion_rate,
+                'improvement' => $result->lift_vs_control,
+                'confidence' => $result->confidence ? $result->confidence * 100 : null,
+                'is_significant' => $result->is_significant,
+                'is_winner' => $result->is_winner,
+            ]);
+
+        return response()->json([
+            'data' => $results,
+        ]);
+    }
+
+    /**
+     * Get daily stats for an experiment.
+     */
+    public function dailyStats(Request $request, Experiment $experiment): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user->isAdmin() && !$user->hasPermission('experiments.view')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $dailyData = [];
+        foreach ($experiment->variants as $variant) {
+            $dailyData[$variant->id] = \App\Models\ExperimentConversion::getDailyDataForVariant(
+                $variant->id,
+                $experiment->primary_goal
+            );
+        }
+
+        return response()->json([
+            'data' => $dailyData,
         ]);
     }
 }
