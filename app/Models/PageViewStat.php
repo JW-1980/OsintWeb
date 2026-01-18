@@ -48,9 +48,9 @@ class PageViewStat extends Model
     ];
 
     /**
-     * Increment page view count for a specific bucket.
+     * Record a page view for a specific bucket.
      */
-    public static function increment(
+    public static function recordPageView(
         string $pagePath,
         ?string $pageGroup = null,
         ?string $deviceType = null,
