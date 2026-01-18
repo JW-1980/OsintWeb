@@ -18,6 +18,9 @@ class DatabaseSeeder extends Seeder
             // RBAC - Permissions and Roles
             PermissionsSeeder::class,
 
+            // Users (Admins, Analysts, etc.)
+            UserSeeder::class,
+
             // Base data - Countries (required by Actors and MilitaryEquipment)
             CountriesSeeder::class,
 
