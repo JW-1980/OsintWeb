@@ -37,7 +37,7 @@ class AnalyticsService
         $isNewVisitor = $this->isNewVisitor($visitorId);
 
         // Track page view
-        PageViewStat::increment(
+        PageViewStat::recordPageView(
             pagePath: $pagePath,
             pageGroup: $pageGroup ?? $this->inferPageGroup($pagePath),
             deviceType: $this->detectDeviceType($request),
