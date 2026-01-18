@@ -18,20 +18,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property int $id
  * @property string $uuid
- * @property string $name
- * @property string|null $model_number
+ * @property string $designation
  * @property string|null $nato_designation
- * @property int|null $category_id
- * @property int|null $country_id
- * @property string|null $manufacturer
- * @property string|null $description
+ * @property string|null $common_name
+ * @property int $country_id
+ * @property int $category_id
  * @property array|null $specifications
- * @property array|null $images
- * @property int|null $year_introduced
- * @property int|null $year_retired
- * @property bool $is_active
- * @property bool $is_verified
- * @property array|null $metadata
+ * @property int|null $introduced_year
+ * @property int|null $estimated_produced
+ * @property string|null $description
+ * @property string|null $image_url
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon|null $deleted_at
@@ -44,30 +40,22 @@ class MilitaryEquipment extends Model
 
     protected $fillable = [
         'uuid',
-        'name',
-        'model_number',
+        'designation',
         'nato_designation',
-        'category_id',
+        'common_name',
         'country_id',
-        'manufacturer',
-        'description',
+        'category_id',
         'specifications',
-        'images',
-        'year_introduced',
-        'year_retired',
-        'is_active',
-        'is_verified',
-        'metadata',
+        'introduced_year',
+        'estimated_produced',
+        'description',
+        'image_url',
     ];
 
     protected $casts = [
         'specifications' => 'array',
-        'images' => 'array',
-        'year_introduced' => 'integer',
-        'year_retired' => 'integer',
-        'is_active' => 'boolean',
-        'is_verified' => 'boolean',
-        'metadata' => 'array',
+        'introduced_year' => 'integer',
+        'estimated_produced' => 'integer',
     ];
 
     /**
@@ -213,22 +201,6 @@ class MilitaryEquipment extends Model
     }
 
     /**
-     * Scope to filter active equipment
-     */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
-
-    /**
-     * Scope to filter verified equipment
-     */
-    public function scopeVerified($query)
-    {
-        return $query->where('is_verified', true);
-    }
-
-    /**
      * Scope to filter by category
      */
     public function scopeCategory($query, int $categoryId)
@@ -245,15 +217,15 @@ class MilitaryEquipment extends Model
     }
 
     /**
-     * Scope to search by name, model, or NATO designation
+     * Scope to search by designation, common name, or NATO designation
      */
     public function scopeSearch($query, string $term)
     {
         return $query->where(function ($q) use ($term) {
-            $q->where('name', 'like', "%{$term}%")
-                ->orWhere('model_number', 'like', "%{$term}%")
+            $q->where('designation', 'like', "%{$term}%")
+                ->orWhere('common_name', 'like', "%{$term}%")
                 ->orWhere('nato_designation', 'like', "%{$term}%")
-                ->orWhere('manufacturer', 'like', "%{$term}%");
+                ->orWhere('description', 'like', "%{$term}%");
         });
     }
 
@@ -263,14 +235,11 @@ class MilitaryEquipment extends Model
     public function scopeYearRange($query, ?int $from = null, ?int $to = null)
     {
         if ($from !== null) {
-            $query->where('year_introduced', '>=', $from);
+            $query->where('introduced_year', '>=', $from);
         }
 
         if ($to !== null) {
-            $query->where(function ($q) use ($to) {
-                $q->where('year_retired', '<=', $to)
-                    ->orWhereNull('year_retired');
-            });
+            $query->where('introduced_year', '<=', $to);
         }
 
         return $query;
