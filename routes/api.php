@@ -68,6 +68,8 @@ use App\Http\Controllers\Api\ABTestingPublicController;
 Route::prefix('auth')->middleware('throttle:auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 });
 
 // Protected routes (require authentication) - standard API rate limiting

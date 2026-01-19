@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
 const route = useRoute();
+const authStore = useAuthStore();
 
 const form = reactive({
   email: '',
@@ -70,16 +72,12 @@ const handleSubmit = async () => {
   loading.value = true;
 
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // In a real app, this would call the password reset API
-    // await authApi.resetPassword({
-    //   email: form.email,
-    //   password: form.password,
-    //   password_confirmation: form.password_confirmation,
-    //   token: form.token
-    // });
+    await authStore.resetPassword({
+      email: form.email,
+      token: form.token,
+      password: form.password,
+      password_confirmation: form.password_confirmation
+    });
 
     success.value = true;
 
@@ -89,7 +87,17 @@ const handleSubmit = async () => {
     }, 3000);
   } catch (err: any) {
     console.error('Password reset failed:', err);
-    error.value = err?.message || 'Failed to reset password. The link may have expired.';
+    // Extract error message from validation errors or general message
+    const errorData = err?.response?.data;
+    if (errorData?.errors?.token) {
+      error.value = errorData.errors.token[0];
+    } else if (errorData?.errors?.email) {
+      error.value = errorData.errors.email[0];
+    } else if (errorData?.message) {
+      error.value = errorData.message;
+    } else {
+      error.value = err?.message || 'Failed to reset password. The link may have expired.';
+    }
   } finally {
     loading.value = false;
   }

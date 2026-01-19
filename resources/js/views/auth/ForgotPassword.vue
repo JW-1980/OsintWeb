@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
 const form = reactive({
   email: ''
@@ -22,16 +24,11 @@ const handleSubmit = async () => {
   loading.value = true;
 
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // In a real app, this would call the password reset API
-    // await authApi.forgotPassword(form.email);
-
+    await authStore.forgotPassword(form.email);
     success.value = true;
   } catch (err: any) {
     console.error('Password reset request failed:', err);
-    error.value = err?.message || 'Failed to send reset email. Please try again.';
+    error.value = err?.response?.data?.message || err?.message || 'Failed to send reset email. Please try again.';
   } finally {
     loading.value = false;
   }
