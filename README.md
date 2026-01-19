@@ -304,6 +304,7 @@ OsintWeb provides powerful tools for:
 
 ### 🛡️ Privacy & Security
 *   **GDPR Compliance**: Built-in tools for consent management, data export, and "right to be forgotten".
+*   **Password Reset**: Secure password recovery with time-limited tokens (60 minutes), hashed token storage, and automatic session revocation on reset.
 *   **Immutable Audit Trail**: Cryptographic hash-chain logging of all admin and user actions with tamper detection and chain integrity verification.
 *   **Admin Action Logging**: Automatic middleware-based logging of all admin panel operations with IP tracking and user agent capture.
 *   **Session Management**: Track and terminate active user sessions.
@@ -376,6 +377,8 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 ### Public Endpoints (No Authentication)
 | Endpoint | Description |
 |----------|-------------|
+| `POST /api/auth/forgot-password` | Request password reset email |
+| `POST /api/auth/reset-password` | Reset password with token |
 | `POST /api/tips/submit` | Submit anonymous intelligence tip |
 | `GET /api/tips/types` | Get available tip categories |
 | `GET /api/tips/status/{uuid}` | Check tip status |
