@@ -5,6 +5,9 @@ declare(strict_types=1);
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Auth\VerifyEmailController;
+use App\Http\Controllers\Api\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Api\Auth\NewPasswordController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\EventMediaController;
 use App\Http\Controllers\Api\EventSourceController;
@@ -68,7 +71,19 @@ use App\Http\Controllers\Api\ABTestingPublicController;
 Route::prefix('auth')->middleware('throttle:auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+    // Verify Email Route (Signed, Public access via signature)
+    Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify');
+
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
+    Route::post('/reset-password', [NewPasswordController::class, 'store']);
 });
+
+// Helper route for email link redirection
+Route::get('/reset-password/{token}', function (string $token) {
+    return redirect(url('/reset-password/' . $token . '?email=' . request('email')));
+})->name('password.reset');
 
 // Protected routes (require authentication) - standard API rate limiting
 Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
@@ -78,6 +93,9 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::post('/refresh', [AuthController::class, 'refresh']);
         Route::get('/user', [AuthController::class, 'profile']);
         Route::put('/user', [AuthController::class, 'updateProfile']);
+        Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend'])
+            ->middleware('throttle:6,1')
+            ->name('verification.send');
     });
 
     // Events
