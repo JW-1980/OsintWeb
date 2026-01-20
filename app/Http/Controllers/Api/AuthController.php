@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PasswordResetMail;
+use App\Models\PasswordResetToken;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
-use App\Models\User;
 
 /**
  * Authentication controller using Laravel Sanctum
@@ -148,5 +151,87 @@ class AuthController extends Controller
         $user->update($validated);
 
         return $this->success($user->fresh());
+    }
+
+    /**
+     * Send password reset link to user's email
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        // Always return success to prevent email enumeration attacks
+        if (!$user) {
+            return $this->success([
+                'message' => 'If an account with that email exists, we have sent a password reset link.',
+            ]);
+        }
+
+        // Generate token
+        $token = PasswordResetToken::createToken($user->email);
+
+        // Build reset URL
+        $resetUrl = config('app.frontend_url', config('app.url')) . '/reset-password?token=' . $token . '&email=' . urlencode($user->email);
+
+        // Send email
+        Mail::to($user)->send(new PasswordResetMail($resetUrl, PasswordResetToken::EXPIRATION_MINUTES));
+
+        return $this->success([
+            'message' => 'If an account with that email exists, we have sent a password reset link.',
+        ]);
+    }
+
+    /**
+     * Reset user password using token
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function resetPassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+            'token' => ['required', 'string'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        // Verify token
+        if (!PasswordResetToken::verifyToken($request->email, $request->token)) {
+            throw ValidationException::withMessages([
+                'token' => ['This password reset link is invalid or has expired.'],
+            ]);
+        }
+
+        // Find user
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'email' => ['We could not find a user with that email address.'],
+            ]);
+        }
+
+        // Update password
+        $user->update([
+            'password' => Hash::make($request->password),
+            'password_changed_at' => now(),
+        ]);
+
+        // Delete the used token
+        PasswordResetToken::deleteToken($request->email);
+
+        // Revoke all existing tokens for security
+        $user->tokens()->delete();
+
+        return $this->success([
+            'message' => 'Your password has been reset successfully. You can now log in with your new password.',
+        ]);
     }
 }

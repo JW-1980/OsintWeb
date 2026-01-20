@@ -80,6 +80,29 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function forgotPassword(email: string): Promise<{ message: string }> {
+    try {
+      const response = await api.post<{ message: string }>('/auth/forgot-password', { email });
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async function resetPassword(data: {
+    email: string;
+    token: string;
+    password: string;
+    password_confirmation: string;
+  }): Promise<{ message: string }> {
+    try {
+      const response = await api.post<{ message: string }>('/auth/reset-password', data);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   return {
     user,
     token,
@@ -90,6 +113,8 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     logout,
     fetchUser,
-    updateProfile
+    updateProfile,
+    forgotPassword,
+    resetPassword
   };
 });

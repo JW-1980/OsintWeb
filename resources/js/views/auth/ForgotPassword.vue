@@ -29,7 +29,7 @@ const handleSubmit = async () => {
     success.value = true;
   } catch (err: any) {
     console.error('Password reset request failed:', err);
-    error.value = err?.message || 'Failed to send reset email. Please try again.';
+    error.value = err?.response?.data?.message || err?.message || 'Failed to send reset email. Please try again.';
   } finally {
     loading.value = false;
   }

@@ -87,7 +87,17 @@ const handleSubmit = async () => {
     }, 3000);
   } catch (err: any) {
     console.error('Password reset failed:', err);
-    error.value = err?.message || 'Failed to reset password. The link may have expired.';
+    // Extract error message from validation errors or general message
+    const errorData = err?.response?.data;
+    if (errorData?.errors?.token) {
+      error.value = errorData.errors.token[0];
+    } else if (errorData?.errors?.email) {
+      error.value = errorData.errors.email[0];
+    } else if (errorData?.message) {
+      error.value = errorData.message;
+    } else {
+      error.value = err?.message || 'Failed to reset password. The link may have expired.';
+    }
   } finally {
     loading.value = false;
   }
