@@ -20,11 +20,6 @@ return new class extends Migration
             // Drop redundant index on name (unique constraint already indexes it)
             $table->dropIndex(['name']);
         });
-
-        Schema::table('events', function (Blueprint $table) {
-            // Add spatial index to location column (supported in MySQL 8.0+ even if nullable)
-            $table->spatialIndex('location');
-        });
     }
 
     /**
@@ -38,10 +33,6 @@ return new class extends Migration
 
         Schema::table('countries', function (Blueprint $table) {
             $table->index('name');
-        });
-
-        Schema::table('events', function (Blueprint $table) {
-            $table->dropSpatialIndex(['location']);
         });
     }
 };

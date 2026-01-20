@@ -148,7 +148,7 @@ class Actor extends Model
     /**
      * Get the actor's aliases
      */
-    public function aliases(): HasMany
+    public function actorAliases(): HasMany
     {
         return $this->hasMany(ActorAlias::class);
     }
@@ -243,10 +243,15 @@ class Actor extends Model
             $names = array_merge($names, $this->alias_names);
         }
 
+        // Legacy aliases property support
+        if (isset($this->aliases) && is_array($this->aliases)) {
+            $names = array_merge($names, $this->aliases);
+        }
+
         // Get aliases from relationship (new source of truth)
-        $aliases = $this->aliases->pluck('alias')->toArray();
-        if (!empty($aliases)) {
-            $names = array_merge($names, $aliases);
+        $relatedAliases = $this->actorAliases->pluck('alias')->toArray();
+        if (!empty($relatedAliases)) {
+            $names = array_merge($names, $relatedAliases);
         }
 
         return array_unique($names);

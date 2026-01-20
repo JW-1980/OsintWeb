@@ -4,14 +4,12 @@
 
 -- Drop redundant index on users.email (since it is already unique)
 -- Note: Check if the index name is 'users_email_index' in your specific database.
-DROP INDEX users_email_index ON users;
+-- Using DROP INDEX IF EXISTS to prevent errors if the index is already removed.
+DROP INDEX IF EXISTS users_email_index ON users;
 
 -- Drop redundant index on countries.name (since it is already unique)
 -- Note: Check if the index name is 'countries_name_index' in your specific database.
-DROP INDEX countries_name_index ON countries;
-
--- Add spatial index to events.location
-ALTER TABLE events ADD SPATIAL INDEX events_location_spatial_index (location);
+DROP INDEX IF EXISTS countries_name_index ON countries;
 
 
 -- 2. Normalize Conflicts (2026_02_01_000002_normalize_conflicts.php)
