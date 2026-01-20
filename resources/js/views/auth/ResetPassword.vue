@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { useApi } from '@/composables/useApi';
 
 const router = useRouter();
 const route = useRoute();
+const api = useApi();
 
 const form = reactive({
   email: '',
@@ -70,16 +72,12 @@ const handleSubmit = async () => {
   loading.value = true;
 
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // In a real app, this would call the password reset API
-    // await authApi.resetPassword({
-    //   email: form.email,
-    //   password: form.password,
-    //   password_confirmation: form.password_confirmation,
-    //   token: form.token
-    // });
+    await api.post('/auth/reset-password', {
+      email: form.email,
+      password: form.password,
+      password_confirmation: form.password_confirmation,
+      token: form.token
+    });
 
     success.value = true;
 
