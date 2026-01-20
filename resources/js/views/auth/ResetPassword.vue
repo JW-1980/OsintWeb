@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { reactive, ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
+import { useApi } from '@/composables/useApi';
 
 const router = useRouter();
 const route = useRoute();
-const authStore = useAuthStore();
+const api = useApi();
 
 const form = reactive({
   email: '',
@@ -72,11 +72,11 @@ const handleSubmit = async () => {
   loading.value = true;
 
   try {
-    await authStore.resetPassword({
+    await api.post('/auth/reset-password', {
       email: form.email,
-      token: form.token,
       password: form.password,
-      password_confirmation: form.password_confirmation
+      password_confirmation: form.password_confirmation,
+      token: form.token
     });
 
     success.value = true;
