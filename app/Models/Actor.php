@@ -146,6 +146,14 @@ class Actor extends Model
     ];
 
     /**
+     * Get the actor's aliases
+     */
+    public function actorAliases(): HasMany
+    {
+        return $this->hasMany(ActorAlias::class);
+    }
+
+    /**
      * Get the events this actor is involved in
      */
     public function events(): BelongsToMany
@@ -221,12 +229,29 @@ class Actor extends Model
     {
         $names = [$this->name];
 
-        if ($this->full_name !== null && $this->full_name !== $this->name) {
+        if ($this->short_name) {
+            $names[] = $this->short_name;
+        }
+
+        // Legacy full_name support (if property exists)
+        if (isset($this->full_name) && $this->full_name !== $this->name) {
             $names[] = $this->full_name;
         }
 
-        if ($this->aliases !== null) {
+        // Get aliases from JSON column (deprecated)
+        if (!empty($this->alias_names)) {
+            $names = array_merge($names, $this->alias_names);
+        }
+
+        // Legacy aliases property support
+        if (isset($this->aliases) && is_array($this->aliases)) {
             $names = array_merge($names, $this->aliases);
+        }
+
+        // Get aliases from relationship (new source of truth)
+        $relatedAliases = $this->actorAliases->pluck('alias')->toArray();
+        if (!empty($relatedAliases)) {
+            $names = array_merge($names, $relatedAliases);
         }
 
         return array_unique($names);

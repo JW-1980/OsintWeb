@@ -82,9 +82,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     // Events
     Route::prefix('events')->group(function () {
-        Route::get('/', [EventController::class, 'index']);
         Route::post('/', [EventController::class, 'store']);
-        Route::get('/{uuid}', [EventController::class, 'show']);
         Route::put('/{uuid}', [EventController::class, 'update']);
         Route::delete('/{uuid}', [EventController::class, 'destroy']);
 
@@ -104,17 +102,10 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     // Equipment - Full CRUD Operations
     Route::prefix('equipment')->group(function () {
-        Route::get('/', [MilitaryEquipmentController::class, 'index']);
         Route::post('/', [MilitaryEquipmentController::class, 'store']);
-        Route::get('/categories', [MilitaryEquipmentController::class, 'categories']);
-        Route::get('/autocomplete', [MilitaryEquipmentController::class, 'autocomplete']);
-        Route::get('/stats', [MilitaryEquipmentController::class, 'stats']);
-        Route::get('/by-country/{countryId}', [MilitaryEquipmentController::class, 'byCountry']);
-        Route::get('/{id}', [MilitaryEquipmentController::class, 'show']);
         Route::put('/{id}', [MilitaryEquipmentController::class, 'update']);
         Route::delete('/{id}', [MilitaryEquipmentController::class, 'destroy']);
         Route::post('/{id}/restore', [MilitaryEquipmentController::class, 'restore']);
-        Route::get('/{uuid}/events', [EquipmentController::class, 'events']);
     });
 
     // Control Zones
@@ -145,10 +136,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     // Actors
     Route::prefix('actors')->group(function () {
-        Route::get('/', [ActorController::class, 'index']);
-        Route::get('/autocomplete', [ActorController::class, 'autocomplete']);
-        Route::get('/search', [ActorController::class, 'search']);
-        Route::get('/{id}', [ActorController::class, 'show']);
+        // CRUD operations if any
     });
 
     // Export - more restrictive rate limiting for heavy operations
@@ -1138,22 +1126,53 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
 
     // Conflicts
     Route::prefix('conflicts')->group(function () {
-        Route::get('/', [ConflictController::class, 'index']);
-        Route::get('/active', [ConflictController::class, 'active']);
-        Route::get('/regions', [ConflictController::class, 'regions']);
-        Route::get('/types', [ConflictController::class, 'types']);
-        Route::get('/search', [ConflictController::class, 'search']);
-        Route::get('/{slug}', [ConflictController::class, 'show']);
-        Route::get('/{slug}/events', [ConflictController::class, 'events']);
-        Route::get('/{slug}/zones', [ConflictController::class, 'zones']);
-        Route::get('/{slug}/statistics', [ConflictController::class, 'statistics']);
-        Route::get('/{slug}/actors', [ConflictController::class, 'actors']);
+        // Admin operations for conflicts
     });
 });
 
 // ===================================
 // PUBLIC ROUTES (No Authentication)
 // ===================================
+
+// Events (Public Access)
+Route::prefix('events')->middleware('throttle:public')->group(function () {
+    Route::get('/', [EventController::class, 'index']);
+    Route::get('/{uuid}', [EventController::class, 'show']);
+    Route::get('/{uuid}/history', [EventController::class, 'history']);
+});
+
+// Equipment (Public Access)
+Route::prefix('equipment')->middleware('throttle:public')->group(function () {
+    Route::get('/', [MilitaryEquipmentController::class, 'index']);
+    Route::get('/categories', [MilitaryEquipmentController::class, 'categories']);
+    Route::get('/autocomplete', [MilitaryEquipmentController::class, 'autocomplete']);
+    Route::get('/stats', [MilitaryEquipmentController::class, 'stats']);
+    Route::get('/by-country/{countryId}', [MilitaryEquipmentController::class, 'byCountry']);
+    Route::get('/{id}', [MilitaryEquipmentController::class, 'show']);
+    Route::get('/{uuid}/events', [EquipmentController::class, 'events']);
+});
+
+// Actors (Public Access)
+Route::prefix('actors')->middleware('throttle:public')->group(function () {
+    Route::get('/', [ActorController::class, 'index']);
+    Route::get('/autocomplete', [ActorController::class, 'autocomplete']);
+    Route::get('/search', [ActorController::class, 'search']);
+    Route::get('/{id}', [ActorController::class, 'show']);
+});
+
+// Conflicts (Public Access)
+Route::prefix('conflicts')->middleware('throttle:public')->group(function () {
+    Route::get('/', [ConflictController::class, 'index']);
+    Route::get('/active', [ConflictController::class, 'active']);
+    Route::get('/regions', [ConflictController::class, 'regions']);
+    Route::get('/types', [ConflictController::class, 'types']);
+    Route::get('/search', [ConflictController::class, 'search']);
+    Route::get('/{slug}', [ConflictController::class, 'show']);
+    Route::get('/{slug}/events', [ConflictController::class, 'events']);
+    Route::get('/{slug}/zones', [ConflictController::class, 'zones']);
+    Route::get('/{slug}/statistics', [ConflictController::class, 'statistics']);
+    Route::get('/{slug}/actors', [ConflictController::class, 'actors']);
+});
 
 // Public tip submission - strict rate limiting to prevent spam
 Route::prefix('tips')->middleware('throttle:tips')->group(function () {
