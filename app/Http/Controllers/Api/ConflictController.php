@@ -20,7 +20,13 @@ class ConflictController extends Controller
             ->orderBy('start_date', 'desc');
 
         if ($request->has('status')) {
-            $query->where('status', $request->input('status'));
+            $status = $request->input('status');
+            if ($status === 'active') {
+                $query->where('is_active', true);
+            } elseif ($status === 'inactive' || $status === 'concluded') {
+                $query->where('is_active', false);
+            }
+            // Ignore other statuses if column doesn't exist
         }
 
         if ($request->has('region')) {
@@ -42,7 +48,7 @@ class ConflictController extends Controller
             'meta' => [
                 'current_page' => $conflicts->currentPage(),
                 'total' => $conflicts->total(),
-                'active_count' => DB::table('conflicts')->where('status', 'active')->count(),
+                'active_count' => DB::table('conflicts')->where('is_active', true)->count(),
             ],
         ]);
     }
@@ -53,8 +59,8 @@ class ConflictController extends Controller
     public function active(): JsonResponse
     {
         $conflicts = DB::table('conflicts')
-            ->whereIn('status', ['active', 'tension'])
-            ->orderBy('intensity', 'desc')
+            ->where('is_active', true)
+            ->orderBy('intensity_level', 'desc')
             ->get();
 
         return response()->json([

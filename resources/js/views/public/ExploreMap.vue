@@ -257,8 +257,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useThemeStore } from '@/stores/theme';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const themeStore = useThemeStore();
 const isDark = computed(() => themeStore.isDark);
@@ -270,6 +272,9 @@ const toggleTheme = () => {
 const loading = ref(false);
 const sidebarOpen = ref(false);
 const mapContainer = ref<HTMLElement | null>(null);
+let map: L.Map | null = null;
+let eventLayer: L.LayerGroup | null = null;
+let zoneLayer: L.LayerGroup | null = null;
 
 interface MapEvent {
   id: number;
@@ -352,11 +357,82 @@ const formatDate = (dateString: string) => {
   });
 };
 
+const initMap = () => {
+  if (!mapContainer.value) return;
+
+  // Center on Ukraine for demo
+  map = L.map(mapContainer.value).setView([49.0, 32.0], 6);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  eventLayer = L.layerGroup().addTo(map);
+  zoneLayer = L.layerGroup().addTo(map);
+
+  updateLayers();
+};
+
+const updateLayers = () => {
+  if (!map || !eventLayer || !zoneLayer) return;
+
+  eventLayer.clearLayers();
+  zoneLayer.clearLayers();
+
+  if (layers.events) {
+    filteredEvents.value.forEach(event => {
+      const color = getEventColor(event.event_type);
+      const marker = L.circleMarker(event.coordinates, {
+        radius: 8,
+        fillColor: color,
+        color: '#fff',
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+      }).addTo(eventLayer!);
+
+      marker.on('click', () => {
+        selectedEvent.value = event;
+      });
+    });
+  }
+
+  // Add zones if needed (implementation omitted for brevity/demo data compatibility)
+};
+
+const getEventColor = (type: string) => {
+  const colors: Record<string, string> = {
+    'combat_engagement': '#ef4444',
+    'airstrike': '#ec4899',
+    'artillery_strike': '#a855f7',
+    'missile_strike': '#6366f1',
+    'equipment_destroyed': '#f97316',
+    'troop_movement': '#14b8a6'
+  };
+  return colors[type] || '#6b7280';
+};
+
+watch([filteredEvents, layers], () => {
+  updateLayers();
+}, { deep: true });
+
 onMounted(() => {
   loading.value = true;
+  // Simulate loading
   setTimeout(() => {
     loading.value = false;
-  }, 1000);
+    // Initialize map after loading and DOM update
+    setTimeout(() => {
+      initMap();
+    }, 100);
+  }, 500);
+});
+
+onUnmounted(() => {
+  if (map) {
+    map.remove();
+    map = null;
+  }
 });
 </script>
 
