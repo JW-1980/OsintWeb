@@ -230,7 +230,28 @@ OsintWeb provides powerful tools for:
 *   **Agent Management**: Full admin UI to create, configure, and monitor AI agents.
 *   **Smart Skills**: Keyword-triggered capabilities that enhance investigation workflows.
 *   **Skills Administration**: Manage skills with triggers, configurations, and agent assignments.
-*   **Transcription**: AI-powered audio transcription with speaker identification (via OpenRouter).
+*   **Transcription**: AI-powered audio transcription with speaker identification.
+
+### 🧠 Multi-Provider AI Inference (All Free Tier)
+*   **5 Inference Providers**: OpenRouter, Google Gemini, Groq, Cerebras, and Mistral AI - all with free tiers.
+*   **OpenAI-Compatible**: All providers use OpenAI-compatible endpoints for seamless switching.
+*   **Automatic Fallback**: If one provider is rate-limited or fails, automatically try the next available provider.
+*   **Task-Specific Routing**: Configure different providers for different tasks (vision, translation, etc.).
+*   **Provider Comparison**:
+
+| Provider | Speed | Context Window | Vision | Free Tier Highlights |
+|----------|-------|----------------|--------|---------------------|
+| [OpenRouter](https://openrouter.ai/) | Medium | Varies | Yes | Multiple free models (Llama, Mistral, Gemma) |
+| [Google Gemini](https://ai.google.dev/) | Fast | **1M tokens** | Yes | 15 RPM, 1500 requests/day |
+| [Groq](https://console.groq.com/) | **Fastest** | 128K | Yes | 30 RPM, 14,400 requests/day |
+| [Cerebras](https://cloud.cerebras.ai/) | **Fastest** | 128K | No | 30 RPM, **1B tokens/month** |
+| [Mistral AI](https://console.mistral.ai/) | Fast | 128K | Yes | Experimental tier, European provider |
+
+*   **Use Cases**:
+    - **OCR & Vision**: Gemini (1M context) or Groq (speed) for document analysis
+    - **Translation**: Mistral (multilingual) or Gemini (long documents)
+    - **Entity Extraction**: Groq or Cerebras for fastest NER processing
+    - **Classification**: Any provider with instant model switching
 
 ### 🔊 Audio Analysis & Spectrogram
 *   **Spectrogram Generation**: Create detailed frequency-time visualizations using sox/ffmpeg for audio forensic analysis.
