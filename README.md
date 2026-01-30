@@ -226,11 +226,13 @@ OsintWeb provides powerful tools for:
 *   **User Profiles**: Customizable profiles with unique generated avatars.
 
 ### 🤖 AI & Automation
+*   **Multi-Provider AI Support**: Choose between OpenRouter, Hugging Face Inference, and AIML API for AI-powered features. All providers use free-tier models and OpenAI-compatible APIs.
+*   **AI Provider Management**: Admin panel with provider status, connection testing, active model overview, and setup guide. Switch providers via a single environment variable.
 *   **AI Agents**: Deploy agents for tasks like geolocation and image verification.
 *   **Agent Management**: Full admin UI to create, configure, and monitor AI agents.
 *   **Smart Skills**: Keyword-triggered capabilities that enhance investigation workflows.
 *   **Skills Administration**: Manage skills with triggers, configurations, and agent assignments.
-*   **Transcription**: AI-powered audio transcription with speaker identification (via OpenRouter).
+*   **Transcription**: AI-powered audio transcription with speaker identification.
 
 ### 🔊 Audio Analysis & Spectrogram
 *   **Spectrogram Generation**: Create detailed frequency-time visualizations using sox/ffmpeg for audio forensic analysis.
@@ -247,7 +249,7 @@ OsintWeb provides powerful tools for:
 *   **Analysis Types**: Detect five categories of disinformation: coordinated inauthentic behavior, propaganda, fake accounts, manipulated media, and false narratives.
 *   **Pattern Library**: Comprehensive library of known disinformation tactics with linguistic, behavioral, temporal, network, and media patterns.
 *   **Threat Scoring**: Automated threat scoring (0-100) based on detected indicators with confidence metrics.
-*   **AI-Powered Analysis**: Optional integration with OpenRouter.ai free models (Llama, Gemma, Mistral) for advanced text analysis.
+*   **AI-Powered Analysis**: Optional integration with free AI models (Llama, Gemma, Mistral, DeepSeek) via OpenRouter, Hugging Face, or AIML API for advanced text analysis.
 *   **Coordinated Behavior Detection**: Analyze multiple posts for synchronized posting, content similarity, hashtag coordination, and network anomalies.
 *   **Propaganda Indicators**: Detect loaded language, fear appeals, bandwagon effects, black-and-white thinking, and whataboutism patterns.
 *   **Temporal Analysis**: Identify unusual posting times, burst activity, and bot-like regular intervals.
@@ -445,6 +447,7 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 | Category | Base Path | Key Operations |
 |----------|-----------|----------------|
 | Email Templates | `/api/admin/email-templates` | CRUD, preview, test, duplicate, stats, logs |
+| AI Settings | `/api/admin/ai-settings` | View provider config, test connection |
 | Achievements | `/api/admin/achievements` | CRUD for achievement management |
 
 ### User Settings APIs
@@ -530,6 +533,16 @@ php artisan key:generate
 # DB_CONNECTION=mysql
 # DB_HOST=127.0.0.1
 # ...
+
+# Configure AI provider (optional - choose one):
+# AI_PROVIDER=openrouter          # Default: openrouter.ai
+# OPENROUTER_API_KEY=your-key     # Get free key at https://openrouter.ai/
+#
+# AI_PROVIDER=huggingface         # Alternative: Hugging Face
+# HUGGINGFACE_API_KEY=your-key    # Get free key at https://huggingface.co/settings/tokens
+#
+# AI_PROVIDER=aimlapi             # Alternative: AIML API
+# AIMLAPI_API_KEY=your-key        # Get free key at https://aimlapi.com/
 
 # Create database & Run migrations
 php artisan migrate --seed

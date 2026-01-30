@@ -497,7 +497,7 @@ class DocumentController extends Controller
     }
 
     /**
-     * Get OpenRouter service status and available models.
+     * Get AI provider status and available models.
      *
      * GET /api/documents/ai-status
      */
@@ -514,6 +514,9 @@ class DocumentController extends Controller
             'data' => [
                 'configured' => $isConfigured,
                 'connection_test' => $connectionTest,
+                'active_provider' => $this->openRouterService->getActiveProvider(),
+                'provider_name' => $this->openRouterService->getProviderName(),
+                'available_providers' => $this->openRouterService->getAvailableProviders(),
                 'free_models' => $this->openRouterService->getFreeModels(),
                 'models' => [
                     'vision' => $this->openRouterService->getModelForTask('vision'),
