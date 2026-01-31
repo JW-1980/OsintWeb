@@ -54,6 +54,7 @@ use App\Http\Controllers\Api\ScheduledReportController;
 use App\Http\Controllers\Api\UserActivityController;
 use App\Http\Controllers\Api\Admin\SiteAnalyticsController;
 use App\Http\Controllers\Api\Admin\ABTestingController;
+use App\Http\Controllers\Api\Admin\CaptchaSettingsController;
 use App\Http\Controllers\Api\ABTestingPublicController;
 
 /*
@@ -69,14 +70,14 @@ use App\Http\Controllers\Api\ABTestingPublicController;
 
 // Public authentication routes - strict rate limiting to prevent brute force
 Route::prefix('auth')->middleware('throttle:auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register'])->middleware('captcha');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('captcha');
     // Verify Email Route (Signed, Public access via signature)
     Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
-    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store']);
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->middleware('captcha');
     Route::post('/reset-password', [NewPasswordController::class, 'store']);
 });
 
@@ -1041,6 +1042,13 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
             Route::delete('/{experiment}/variants/{variant}', [ABTestingController::class, 'deleteVariant']);
         });
 
+        // CAPTCHA Settings
+        Route::prefix('captcha')->group(function () {
+            Route::get('/', [CaptchaSettingsController::class, 'index']);
+            Route::put('/', [CaptchaSettingsController::class, 'update']);
+            Route::post('/test', [CaptchaSettingsController::class, 'test']);
+        });
+
         // Email Templates Management
         Route::prefix('email-templates')->group(function () {
             Route::get('/', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'index']);
@@ -1194,7 +1202,7 @@ Route::prefix('conflicts')->middleware('throttle:public')->group(function () {
 
 // Public tip submission - strict rate limiting to prevent spam
 Route::prefix('tips')->middleware('throttle:tips')->group(function () {
-    Route::post('/submit', [TipController::class, 'submit']);
+    Route::post('/submit', [TipController::class, 'submit'])->middleware('captcha');
     Route::get('/types', [TipController::class, 'types']);
     Route::get('/status/{uuid}', [TipController::class, 'status']);
 });
