@@ -67,8 +67,7 @@ return new class extends Migration
             $table->index('event_id');
             $table->index(['vessel_id', 'departure_time']);
 
-            // Spatial index for track path
-            $table->spatialIndex('track_path');
+            // Note: track_path is nullable so spatial index cannot be used (MySQL requires NOT NULL)
         });
     }
 

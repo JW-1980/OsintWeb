@@ -35,7 +35,7 @@ class OsintSkillsSeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            DB::table('osint_skill_categories')->insert([
+            DB::table('osint_skill_categories')->insertOrIgnore([
                 'uuid' => Str::uuid(),
                 ...$category,
                 'is_active' => true,
@@ -743,7 +743,7 @@ class OsintSkillsSeeder extends Seeder
         ];
 
         foreach ($skills as $skill) {
-            DB::table('osint_skills')->insert([
+            DB::table('osint_skills')->insertOrIgnore([
                 'uuid' => Str::uuid(),
                 'category_id' => $skill['category_id'],
                 'name' => $skill['name'],

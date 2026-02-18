@@ -200,7 +200,7 @@ class ConflictsSeeder extends Seeder
         ];
 
         foreach ($conflicts as $conflict) {
-            DB::table('conflicts')->insert(array_merge($conflict, [
+            DB::table('conflicts')->insertOrIgnore(array_merge($conflict, [
                 'uuid' => (string) Str::uuid(),
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -476,7 +476,7 @@ class ConflictsSeeder extends Seeder
 
         foreach ($conflictParties as $party) {
             if ($party['conflict_id'] && $party['actor_id']) {
-                DB::table('conflict_parties')->insert(array_merge($party, [
+                DB::table('conflict_parties')->insertOrIgnore(array_merge($party, [
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]));

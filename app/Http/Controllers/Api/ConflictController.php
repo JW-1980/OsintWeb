@@ -72,11 +72,11 @@ class ConflictController extends Controller
     /**
      * Show a specific conflict.
      */
-    public function show(string $slug): JsonResponse
+    public function show(string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {
@@ -119,11 +119,11 @@ class ConflictController extends Controller
     /**
      * Get conflict events.
      */
-    public function events(Request $request, string $slug): JsonResponse
+    public function events(Request $request, string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {
@@ -160,11 +160,11 @@ class ConflictController extends Controller
     /**
      * Get conflict zones.
      */
-    public function zones(string $slug): JsonResponse
+    public function zones(string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {
@@ -181,11 +181,11 @@ class ConflictController extends Controller
     /**
      * Get conflict statistics.
      */
-    public function statistics(string $slug): JsonResponse
+    public function statistics(string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {
@@ -237,11 +237,11 @@ class ConflictController extends Controller
     /**
      * Get conflict actors.
      */
-    public function actors(string $slug): JsonResponse
+    public function actors(string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {

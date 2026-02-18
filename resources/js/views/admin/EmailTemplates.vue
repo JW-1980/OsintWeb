@@ -630,7 +630,7 @@ function editTemplate(template: EmailTemplate) {
   showModal.value = true;
 }
 
-async function loadVariablesForTemplate(slug: string) {
+async function loadVariablesForTemplate(_slug: string) {
   try {
     const response = await axios.get(`/api/admin/email-templates/${editingTemplate.value?.uuid}`);
     if (response.data.meta?.available_variables) {

@@ -545,11 +545,14 @@ class SettingsSeeder extends Seeder
         $now = now();
 
         foreach ($settings as $setting) {
-            DB::table('settings')->insert([
-                ...$setting,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ]);
+            DB::table('settings')->updateOrInsert(
+                ['key' => $setting['key']],
+                [
+                    ...$setting,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
         }
     }
 }

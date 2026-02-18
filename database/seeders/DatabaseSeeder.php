@@ -54,8 +54,8 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             ZoneSeeder::class,
 
-            // Crowdsourced Intelligence (sample tips)
-            TipSeeder::class,
+            // Crowdsourced Intelligence - skipped (tips table not in schema)
+            // TipSeeder::class,
 
             // OSINT Skills and Intelligence Agents
             OsintSkillsSeeder::class,

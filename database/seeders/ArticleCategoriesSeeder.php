@@ -101,7 +101,7 @@ class ArticleCategoriesSeeder extends Seeder
         $now = now();
 
         foreach ($categories as $category) {
-            DB::table('article_categories')->insert([
+            DB::table('article_categories')->insertOrIgnore([
                 'uuid' => Str::uuid(),
                 ...$category,
                 'is_active' => true,

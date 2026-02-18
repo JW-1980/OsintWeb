@@ -116,7 +116,7 @@ class EquipmentPropertyCategoriesSeeder extends Seeder
         $now = now();
 
         foreach ($categories as $category) {
-            DB::table('equipment_property_categories')->insert([
+            DB::table('equipment_property_categories')->insertOrIgnore([
                 ...$category,
                 'created_at' => $now,
                 'updated_at' => $now,

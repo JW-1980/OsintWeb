@@ -85,8 +85,9 @@ return new class extends Migration
             $table->index(['search_id', 'similarity_score']);
             $table->index('first_seen_date');
 
-            // Unique constraint to prevent duplicate results
-            $table->unique(['search_id', 'engine', 'result_url'], 'unique_search_engine_url');
+            // Hash column for URL uniqueness (URLs too long for standard unique index)
+            $table->string('result_url_hash', 64)->storedAs('SHA2(result_url, 256)');
+            $table->unique(['search_id', 'engine', 'result_url_hash'], 'unique_search_engine_url');
         });
     }
 

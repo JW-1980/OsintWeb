@@ -810,7 +810,7 @@ class DisinformationPatternsSeeder extends Seeder
         ];
 
         foreach ($patterns as $pattern) {
-            DB::table('disinformation_patterns')->insert([
+            DB::table('disinformation_patterns')->insertOrIgnore([
                 ...$pattern,
                 'is_active' => true,
                 'match_count' => 0,

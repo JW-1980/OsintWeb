@@ -131,7 +131,7 @@
                 @click="insertVariable(key)"
                 class="w-full flex items-start gap-3 px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
               >
-                <code class="flex-none px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">{{ '{{ ' + key + ' }}' }}</code>
+                <code class="flex-none px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded" v-text="'{{ ' + key + ' }}'"></code>
                 <span class="text-sm text-gray-600 dark:text-gray-400">{{ desc }}</span>
               </button>
             </div>
@@ -319,8 +319,8 @@ const textHistoryIndex = ref(0);
 
 // Editor modes
 const editorModes = [
-  { id: 'html', label: 'HTML' },
-  { id: 'text', label: 'Plain Text' },
+  { id: 'html' as const, label: 'HTML' },
+  { id: 'text' as const, label: 'Plain Text' },
 ];
 
 // Preview devices
@@ -335,9 +335,9 @@ const MobileIcon = () => h('svg', { fill: 'none', stroke: 'currentColor', viewBo
 ]);
 
 const previewDevices = [
-  { id: 'desktop', label: 'Desktop', icon: DesktopIcon },
-  { id: 'tablet', label: 'Tablet', icon: TabletIcon },
-  { id: 'mobile', label: 'Mobile', icon: MobileIcon },
+  { id: 'desktop' as const, label: 'Desktop', icon: DesktopIcon },
+  { id: 'tablet' as const, label: 'Tablet', icon: TabletIcon },
+  { id: 'mobile' as const, label: 'Mobile', icon: MobileIcon },
 ];
 
 // Content block icons
@@ -492,15 +492,14 @@ const filteredVariables = computed(() => {
 
 // Undo/Redo state
 const canUndo = computed(() => {
-  const history = activeMode.value === 'html' ? htmlHistory.value : textHistory.value;
   const index = activeMode.value === 'html' ? htmlHistoryIndex.value : textHistoryIndex.value;
   return index > 0;
 });
 
 const canRedo = computed(() => {
-  const history = activeMode.value === 'html' ? htmlHistory.value : textHistory.value;
+  const _history = activeMode.value === 'html' ? htmlHistory.value : textHistory.value;
   const index = activeMode.value === 'html' ? htmlHistoryIndex.value : textHistoryIndex.value;
-  return index < history.length - 1;
+  return index < _history.length - 1;
 });
 
 // Syntax highlighting
@@ -624,10 +623,10 @@ function undo() {
 
   if (activeMode.value === 'html') {
     htmlHistoryIndex.value--;
-    emit('update:htmlContent', htmlHistory.value[htmlHistoryIndex.value]);
+    emit('update:htmlContent', htmlHistory.value[htmlHistoryIndex.value] ?? '');
   } else {
     textHistoryIndex.value--;
-    emit('update:textContent', textHistory.value[textHistoryIndex.value]);
+    emit('update:textContent', textHistory.value[textHistoryIndex.value] ?? '');
   }
 }
 
@@ -637,10 +636,10 @@ function redo() {
 
   if (activeMode.value === 'html') {
     htmlHistoryIndex.value++;
-    emit('update:htmlContent', htmlHistory.value[htmlHistoryIndex.value]);
+    emit('update:htmlContent', htmlHistory.value[htmlHistoryIndex.value] ?? '');
   } else {
     textHistoryIndex.value++;
-    emit('update:textContent', textHistory.value[textHistoryIndex.value]);
+    emit('update:textContent', textHistory.value[textHistoryIndex.value] ?? '');
   }
 }
 

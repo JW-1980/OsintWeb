@@ -154,6 +154,24 @@ class Actor extends Model
     }
 
     /**
+     * Alias for actorAliases for convenience
+     */
+    public function aliases(): HasMany
+    {
+        return $this->actorAliases();
+    }
+
+    /**
+     * Get the conflicts this actor is involved in
+     */
+    public function conflicts(): BelongsToMany
+    {
+        return $this->belongsToMany(Conflict::class, 'conflict_parties')
+            ->withPivot(['side', 'role', 'joined_date', 'left_date', 'is_currently_active', 'notes'])
+            ->withTimestamps();
+    }
+
+    /**
      * Get the events this actor is involved in
      */
     public function events(): BelongsToMany
