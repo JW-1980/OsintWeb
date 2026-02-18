@@ -14,6 +14,12 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
+        // Check if the events table has the expected schema
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('events', 'slug')) {
+            $this->command->info('Events seeder skipped: table schema has been normalized.');
+            return;
+        }
+
         // Get reference data
         $conflicts = DB::table('conflicts')->pluck('id', 'slug');
         $countries = DB::table('countries')->pluck('id', 'iso_code');

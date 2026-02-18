@@ -278,15 +278,44 @@ class ConflictSeeder extends Seeder
             ],
         ];
 
+        $typeMapping = [
+            'interstate' => 'INTERSTATE',
+            'civil_war' => 'CIVIL_WAR',
+            'insurgency' => 'INSURGENCY',
+            'asymmetric' => 'OTHER',
+            'territorial' => 'BORDER_DISPUTE',
+        ];
+
+        $statusMapping = [
+            'active' => true,
+            'tension' => true,
+            'concluded' => false,
+            'frozen' => false,
+        ];
+
         foreach ($conflicts as $conflict) {
-            DB::table('conflicts')->updateOrInsert(
-                ['slug' => $conflict['slug']],
-                array_merge($conflict, [
-                    'uuid' => Str::uuid(),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ])
-            );
+            $name = $conflict['name'];
+            $existingConflict = DB::table('conflicts')->where('name', $name)->first();
+
+            if ($existingConflict) {
+                continue;
+            }
+
+            DB::table('conflicts')->insert([
+                'uuid' => Str::uuid(),
+                'name' => $name,
+                'short_name' => Str::limit($name, 97),
+                'conflict_type' => $typeMapping[$conflict['type']] ?? 'OTHER',
+                'intensity_level' => $conflict['intensity'] ?? 'low',
+                'region' => $conflict['region'] ?? null,
+                'start_date' => $conflict['start_date'],
+                'end_date' => $conflict['end_date'] ?? null,
+                'is_active' => $statusMapping[$conflict['status']] ?? false,
+                'estimated_casualties' => isset($conflict['casualties_estimate']) ? json_encode(['estimate' => $conflict['casualties_estimate']]) : null,
+                'description' => $conflict['description'] ?? null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
 
         $this->command->info('Conflicts seeded: ' . count($conflicts) . ' conflicts');

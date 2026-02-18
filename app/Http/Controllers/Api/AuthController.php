@@ -219,10 +219,10 @@ class AuthController extends Controller
         }
 
         // Update password
-        $user->update([
+        $user->forceFill([
             'password' => Hash::make($request->password),
             'password_changed_at' => now(),
-        ]);
+        ])->save();
 
         // Delete the used token
         PasswordResetToken::deleteToken($request->email);

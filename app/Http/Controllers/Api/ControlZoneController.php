@@ -87,14 +87,14 @@ class ControlZoneController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
-        // Convert GeoJSON to MySQL geometry format
+        // Convert GeoJSON to MySQL geometry format using parameter binding
         $geometryJson = json_encode($validated['geometry']);
-        $geometry = DB::raw("ST_GeomFromGeoJSON('{$geometryJson}')");
+        $geometryValue = DB::selectOne('SELECT ST_GeomFromGeoJSON(?) as geom', [$geometryJson])->geom;
 
         $zone = ControlZone::create([
             'uuid' => \Illuminate\Support\Str::uuid(),
             'name' => $validated['name'],
-            'geometry' => $geometry,
+            'geometry' => $geometryValue,
             'controller_id' => $validated['controller_id'],
             'control_type' => $validated['control_type'],
             'valid_from' => $validated['valid_from'],
@@ -150,10 +150,10 @@ class ControlZoneController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
-        // Convert geometry if provided
+        // Convert geometry if provided using parameter binding
         if (isset($validated['geometry'])) {
             $geometryJson = json_encode($validated['geometry']);
-            $validated['geometry'] = DB::raw("ST_GeomFromGeoJSON('{$geometryJson}')");
+            $validated['geometry'] = DB::selectOne('SELECT ST_GeomFromGeoJSON(?) as geom', [$geometryJson])->geom;
         }
 
         $zone->update($validated);

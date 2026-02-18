@@ -39,7 +39,7 @@ return new class extends Migration
             $table->json('exif_data')->nullable(); // Extracted EXIF/XMP data
 
             // GPS coordinates from metadata (spatial POINT)
-            $table->point('gps_coordinates')->nullable();
+            $table->geometry('gps_coordinates', 'point', 4326)->nullable();
             $table->decimal('gps_latitude', 10, 8)->nullable(); // For non-spatial queries
             $table->decimal('gps_longitude', 11, 8)->nullable();
             $table->unsignedSmallInteger('gps_accuracy_meters')->nullable();
@@ -83,7 +83,7 @@ return new class extends Migration
             $table->index('codec');
             $table->index('container_format');
             $table->index(['gps_latitude', 'gps_longitude']);
-            $table->spatialIndex('gps_coordinates');
+            // Spatial index omitted: gps_coordinates is nullable, use lat/lng index instead
         });
 
         // Video keyframes table

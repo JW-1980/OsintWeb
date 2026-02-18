@@ -118,10 +118,10 @@ class UserAccountController extends Controller
             ], 422);
         }
 
-        $user->update([
+        $user->forceFill([
             'password' => Hash::make($validated['password']),
             'password_changed_at' => now(),
-        ]);
+        ])->save();
 
         UserActivity::log(
             $user,

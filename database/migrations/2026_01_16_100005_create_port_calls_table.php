@@ -85,8 +85,7 @@ return new class extends Migration
             $table->index('data_source');
             $table->index(['vessel_id', 'arrival_time']);
 
-            // Spatial index
-            $table->spatialIndex('position');
+            // Spatial index omitted: position is nullable, incompatible with MariaDB spatial indexes
         });
     }
 

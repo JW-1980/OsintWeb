@@ -81,8 +81,7 @@ return new class extends Migration
             $table->index(['user_id', 'is_active']);
             $table->index(['alert_type', 'is_active']);
 
-            // Spatial index for zone
-            $table->spatialIndex('zone_polygon');
+            // Spatial index omitted: zone_polygon is nullable, incompatible with MariaDB spatial indexes
         });
 
         // Create table for alert trigger history

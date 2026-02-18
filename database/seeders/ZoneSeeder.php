@@ -14,6 +14,12 @@ class ZoneSeeder extends Seeder
      */
     public function run(): void
     {
+        // Check if the control_zones table has the expected schema
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('control_zones', 'slug')) {
+            $this->command->info('Zones seeder skipped: table schema has been normalized.');
+            return;
+        }
+
         $conflicts = DB::table('conflicts')->pluck('id', 'slug');
 
         $zones = [

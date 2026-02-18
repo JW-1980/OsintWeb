@@ -66,7 +66,7 @@ class EventController extends Controller
         $query->orderBy('occurred_at', 'desc');
 
         // Eager load relationships
-        $query->with(['actor', 'media', 'sources', 'equipment']);
+        $query->with(['actors', 'media', 'sources', 'equipment']);
 
         $events = $query->paginate($this->perPage);
 
@@ -90,15 +90,16 @@ class EventController extends Controller
             'longitude' => ['required', 'numeric', 'between:-180,180'],
             'location_name' => ['nullable', 'string', 'max:255'],
             'actor_id' => ['nullable', 'exists:actors,id'],
-            'status' => ['required', 'in:draft,pending,verified,disputed'],
+            'status' => ['required', 'in:draft,pending'],
             'confidence' => ['required', 'in:confirmed,likely,unconfirmed'],
             'custom_fields' => ['nullable', 'array'],
         ]);
 
-        // Create point geometry for location
-        $location = DB::raw(
-            sprintf('POINT(%f, %f)', $validated['longitude'], $validated['latitude'])
-        );
+        // Create point geometry for location using parameter binding
+        $location = DB::selectOne(
+            'SELECT ST_GeomFromText(?) as geom',
+            [sprintf('POINT(%F %F)', (float) $validated['longitude'], (float) $validated['latitude'])]
+        )->geom;
 
         $event = Event::create([
             ...$validated,
@@ -107,7 +108,7 @@ class EventController extends Controller
             'uuid' => \Illuminate\Support\Str::uuid(),
         ]);
 
-        return $this->success($event->load(['actor', 'media', 'sources']), 201);
+        return $this->success($event->load(['actors', 'media', 'sources']), 201);
     }
 
     /**
@@ -118,7 +119,7 @@ class EventController extends Controller
      */
     public function show(string $uuid): JsonResponse
     {
-        $event = Event::with(['actor', 'media', 'sources', 'equipment', 'versions'])
+        $event = Event::with(['actors', 'media', 'sources', 'equipment', 'versions'])
             ->where('uuid', $uuid)
             ->firstOrFail();
 
@@ -162,7 +163,7 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return $this->success($event->fresh(['actor', 'media', 'sources']));
+        return $this->success($event->fresh(['actors', 'media', 'sources']));
     }
 
     /**
@@ -229,8 +230,13 @@ class EventController extends Controller
     {
         $event = Event::where('uuid', $uuid)->firstOrFail();
 
+        // Prevent creators from disputing their own events
+        if ($event->created_by === $request->user()->id) {
+            return response()->json(['message' => 'You cannot dispute your own event.'], 403);
+        }
+
         $validated = $request->validate([
-            'reason' => ['required', 'string'],
+            'reason' => ['required', 'string', 'max:2000'],
             'evidence' => ['nullable', 'array'],
         ]);
 

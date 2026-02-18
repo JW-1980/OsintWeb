@@ -664,4 +664,37 @@ Visit your domain in a browser. The installation wizard will:
 
 ---
 
+## Changelog
+
+### 2026-02-18 - Security Hardening & Bug Fixes
+
+**Security Fixes:**
+- Fixed critical SQL injection vulnerability in territorial control zone management (GeoJSON parameter binding)
+- Fixed XSS vulnerability in comment display component (sanitized user-generated content rendering)
+- Hardened User model by removing security-sensitive fields (role, permissions, account status) from mass assignment
+- Added authorization checks to event creation (restricted self-verification), dispute workflow, and source management
+- Restricted source creation and verification to moderator/admin roles
+
+**Bug Fixes:**
+- Created missing Conflict model with proper relationships and pivot table support
+- Fixed Actor model missing `aliases()` and `conflicts()` relationships causing 500 errors on actor API
+- Fixed incorrect singular relationship names (`actor` -> `actors`) in Event and Export controllers
+- Fixed Equipment controller loading relationships from wrong model
+- Connected Home page TODO placeholders to actual API endpoints (stats overview, recent events)
+- Replaced placeholder contact information with proper values
+- Fixed Vue template parsing error in Email Template Editor component
+- Fixed 7 spatial migration compatibility issues with MariaDB (geometry type, nullable spatial indexes)
+- Fixed migration ordering dependencies for scheduled reports tables
+- Fixed 5 database seeders referencing non-existent schema columns
+
+**Performance:**
+- Added 30-minute query caching to equipment losses, event statistics, timeline, and heatmap endpoints
+- Frontend built and optimized with Vite (code splitting, tree shaking)
+
+**Testing:**
+- Comprehensive browser test suite covering 126 pages/endpoints with 100% pass rate
+- API endpoint verification for all core data and authentication flows
+
+---
+
 *OsintWeb is built for the community. Join us in bringing transparency to global conflicts.*

@@ -112,7 +112,7 @@
               <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Secure Contact</h3>
               <p class="text-gray-600 dark:text-gray-400 mb-3">For sensitive communications:</p>
               <p class="text-sm text-gray-500 dark:text-gray-400">PGP Key available on request</p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Signal: +1-XXX-XXX-XXXX</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Signal: Available upon request</p>
             </div>
           </div>
 

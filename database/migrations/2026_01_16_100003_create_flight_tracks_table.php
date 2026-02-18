@@ -48,8 +48,7 @@ return new class extends Migration
             $table->index(['departure_time', 'arrival_time']);
         });
 
-        // Add spatial index on track_path
-        DB::statement('ALTER TABLE flight_tracks ADD SPATIAL INDEX flight_tracks_path_spatial(track_path)');
+        // Spatial index omitted: track_path is nullable, incompatible with MariaDB spatial indexes
     }
 
     /**

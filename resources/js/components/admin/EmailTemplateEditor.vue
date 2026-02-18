@@ -131,7 +131,7 @@
                 @click="insertVariable(key)"
                 class="w-full flex items-start gap-3 px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-left"
               >
-                <code class="flex-none px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded">{{ '{{ ' + key + ' }}' }}</code>
+                <code class="flex-none px-1.5 py-0.5 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded" v-text="'{{ ' + key + ' }}'"></code>
                 <span class="text-sm text-gray-600 dark:text-gray-400">{{ desc }}</span>
               </button>
             </div>
