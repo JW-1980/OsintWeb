@@ -88,7 +88,7 @@ class ControlZoneController extends Controller
         ]);
 
         // Convert GeoJSON to MySQL geometry format
-        $geometryJson = json_encode($validated['geometry']);
+        $geometryJson = json_encode($validated['geometry'], JSON_HEX_APOS);
         $geometry = DB::raw("ST_GeomFromGeoJSON('{$geometryJson}')");
 
         $zone = ControlZone::create([
@@ -152,7 +152,7 @@ class ControlZoneController extends Controller
 
         // Convert geometry if provided
         if (isset($validated['geometry'])) {
-            $geometryJson = json_encode($validated['geometry']);
+            $geometryJson = json_encode($validated['geometry'], JSON_HEX_APOS);
             $validated['geometry'] = DB::raw("ST_GeomFromGeoJSON('{$geometryJson}')");
         }
 
