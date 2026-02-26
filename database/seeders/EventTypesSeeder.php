@@ -1059,7 +1059,7 @@ class EventTypesSeeder extends Seeder
                 $eventType['schema'] = json_encode($schema);
             }
 
-            DB::table('event_types')->insert([
+            DB::table('event_types')->insertOrIgnore([
                 ...$eventType,
                 'is_active' => true,
                 'sort_order' => $sortOrder,

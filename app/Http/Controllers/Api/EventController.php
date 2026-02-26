@@ -57,16 +57,11 @@ class EventController extends Controller
             );
         }
 
-        // Filter by actor
-        if ($request->has('actor_id')) {
-            $query->where('actor_id', $request->actor_id);
-        }
-
         // Order by most recent
         $query->orderBy('occurred_at', 'desc');
 
-        // Eager load relationships
-        $query->with(['actor', 'media', 'sources', 'equipment']);
+        // Eager load relationships (actors omitted - no pivot table exists)
+        $query->with(['media', 'sources', 'equipment']);
 
         $events = $query->paginate($this->perPage);
 
@@ -107,7 +102,7 @@ class EventController extends Controller
             'uuid' => \Illuminate\Support\Str::uuid(),
         ]);
 
-        return $this->success($event->load(['actor', 'media', 'sources']), 201);
+        return $this->success($event->load(['media', 'sources']), 201);
     }
 
     /**
@@ -118,7 +113,7 @@ class EventController extends Controller
      */
     public function show(string $uuid): JsonResponse
     {
-        $event = Event::with(['actor', 'media', 'sources', 'equipment', 'versions'])
+        $event = Event::with(['media', 'sources', 'equipment'])
             ->where('uuid', $uuid)
             ->firstOrFail();
 
@@ -162,7 +157,7 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return $this->success($event->fresh(['actor', 'media', 'sources']));
+        return $this->success($event->fresh(['media', 'sources']));
     }
 
     /**

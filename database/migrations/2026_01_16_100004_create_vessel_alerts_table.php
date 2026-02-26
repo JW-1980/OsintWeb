@@ -81,8 +81,7 @@ return new class extends Migration
             $table->index(['user_id', 'is_active']);
             $table->index(['alert_type', 'is_active']);
 
-            // Spatial index for zone
-            $table->spatialIndex('zone_polygon');
+            // Note: zone_polygon is nullable so spatial index cannot be used (MySQL requires NOT NULL)
         });
 
         // Create table for alert trigger history

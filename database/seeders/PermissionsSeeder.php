@@ -86,7 +86,7 @@ class PermissionsSeeder extends Seeder
         $now = now();
 
         foreach ($permissions as $permission) {
-            DB::table('permissions')->insert([
+            DB::table('permissions')->insertOrIgnore([
                 ...$permission,
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -143,7 +143,7 @@ class PermissionsSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            DB::table('roles')->insert([
+            DB::table('roles')->insertOrIgnore([
                 ...$role,
                 'created_at' => $now,
                 'updated_at' => $now,
@@ -200,7 +200,7 @@ class PermissionsSeeder extends Seeder
                 $permissionId = DB::table('permissions')->where('slug', $permissionSlug)->value('id');
 
                 if ($roleId && $permissionId) {
-                    DB::table('role_permission')->insert([
+                    DB::table('role_permission')->insertOrIgnore([
                         'role_id' => $roleId,
                         'permission_id' => $permissionId,
                         'created_at' => $now,
