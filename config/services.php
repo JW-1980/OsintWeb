@@ -21,4 +21,8 @@ return [
         ],
     ],
 
+    'nominatim' => [
+        'url' => env('NOMINATIM_URL', 'https://nominatim.openstreetmap.org/reverse'),
+    ],
+
 ];
