@@ -7,7 +7,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
+use App\Domains\Intelligence\DataTransfer\EventData;
+use App\Domains\Intelligence\Actions\CreateEventAction;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -41,19 +43,15 @@ class EventController extends Controller
 
         // Filter by status
         if ($request->has('status')) {
-            $query->where('status', $request->status);
+            $query->withStatus($request->status);
         }
 
         // Filter by location radius (requires lat, lng, radius in km)
         if ($request->has(['lat', 'lng', 'radius'])) {
-            $lat = $request->lat;
-            $lng = $request->lng;
-            $radius = $request->radius;
-
-            // Using spatial query (MySQL 8.0+)
-            $query->whereRaw(
-                'ST_Distance_Sphere(location, POINT(?, ?)) <= ?',
-                [$lng, $lat, $radius * 1000]
+            $query->nearLocation(
+                (float) $request->lat,
+                (float) $request->lng,
+                (float) $request->radius
             );
         }
 
@@ -77,9 +75,10 @@ class EventController extends Controller
      * Store a newly created event
      *
      * @param Request $request
+     * @param CreateEventAction $createEventAction
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, CreateEventAction $createEventAction): JsonResponse
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -95,17 +94,21 @@ class EventController extends Controller
             'custom_fields' => ['nullable', 'array'],
         ]);
 
-        // Create point geometry for location
-        $location = DB::raw(
-            sprintf('POINT(%f, %f)', $validated['longitude'], $validated['latitude'])
+        $data = new EventData(
+            title: $validated['title'],
+            description: $validated['description'],
+            type: $validated['type'],
+            occurredAt: \Carbon\Carbon::parse($validated['occurred_at']),
+            latitude: (float) $validated['latitude'],
+            longitude: (float) $validated['longitude'],
+            status: $validated['status'],
+            confidence: $validated['confidence'],
+            locationName: $validated['location_name'] ?? null,
+            actorId: isset($validated['actor_id']) ? (int) $validated['actor_id'] : null,
+            customFields: $validated['custom_fields'] ?? null,
         );
 
-        $event = Event::create([
-            ...$validated,
-            'location' => $location,
-            'created_by' => $request->user()->id,
-            'uuid' => \Illuminate\Support\Str::uuid(),
-        ]);
+        $event = $createEventAction->execute($data, $request->user());
 
         return $this->success($event->load(['actor', 'media', 'sources']), 201);
     }

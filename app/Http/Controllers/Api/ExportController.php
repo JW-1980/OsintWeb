@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\ControlZone;
 use App\Models\MilitaryEquipment;
 use Illuminate\Support\Facades\DB;

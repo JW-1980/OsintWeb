@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Models\Actor;
 use App\Models\ControlZone;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\EventEquipment;
 use App\Models\MilitaryEquipment;
 use App\Models\Sitrep;
