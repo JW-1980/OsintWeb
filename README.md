@@ -331,6 +331,16 @@ OsintWeb provides powerful tools for:
 *   **Session Management**: Track and terminate active user sessions.
 *   **Permission-Based Audit Access**: Separate `audit.view` and `audit.export` permissions control who can access the audit trail.
 
+### 🤖 Dual-Provider CAPTCHA Protection
+*   **Google reCAPTCHA v3**: Invisible score-based bot detection (0.0 bot to 1.0 human) with configurable score threshold. No user interaction required.
+*   **Cloudflare Turnstile**: Privacy-focused CAPTCHA alternative with managed challenges. GDPR-friendly pass/fail model without tracking cookies.
+*   **Admin Provider Selector**: Toggle between providers from the admin panel with provider-specific configuration cards.
+*   **Protected Routes**: CAPTCHA middleware applied to login, registration, password reset, and public tip submission endpoints.
+*   **Database-Backed Settings**: Provider selection and API keys stored in SystemSettings with 5-minute cache for instant switching.
+*   **Graceful Degradation**: When CAPTCHA is disabled, all protected routes function normally without verification.
+*   **Secret Key Masking**: Admin panel masks secret keys, showing only the last 4 characters for security.
+*   **Connectivity Testing**: Test provider configuration from the admin panel before enabling.
+
 ### 📊 User Activity Tracking
 *   **Public Activity Feed**: Real-time feed of community contributions for the homepage showing events created, sources verified, and evidence submitted.
 *   **Activity Statistics**: Dashboard showing contribution counts, active contributors, and verification metrics.
@@ -467,6 +477,7 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 |----------|-----------|----------------|
 | Email Templates | `/api/admin/email-templates` | CRUD, preview, test, duplicate, stats, logs |
 | Achievements | `/api/admin/achievements` | CRUD for achievement management |
+| CAPTCHA Settings | `/api/admin/captcha` | Get/update settings, test provider connectivity |
 
 ### User Settings APIs
 | Category | Base Path | Key Operations |
