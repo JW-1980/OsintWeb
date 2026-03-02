@@ -11,6 +11,7 @@ use App\Models\FlightPosition;
 use App\Models\FlightTrack;
 use App\Models\TrackedAircraft;
 use App\Models\User;
+use App\Traits\GeoDistanceTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Collection;
@@ -34,6 +35,8 @@ use Illuminate\Support\Str;
  */
 class FlightTrackingService
 {
+    use GeoDistanceTrait;
+
     private const CACHE_PREFIX = 'flight:';
     private const EARTH_RADIUS_NM = 3440.065;
 
@@ -711,7 +714,8 @@ class FlightTrackingService
                 $position->latitude,
                 $position->longitude,
                 $avgLat,
-                $avgLng
+                $avgLng,
+                self::EARTH_RADIUS_NM
             );
             return $distance <= $radiusNm;
         });
@@ -965,23 +969,6 @@ class FlightTrackingService
         }
 
         return false;
-    }
-
-    /**
-     * Haversine distance calculation (nautical miles)
-     */
-    private function haversineDistance(float $lat1, float $lng1, float $lat2, float $lng2): float
-    {
-        $latDelta = deg2rad($lat2 - $lat1);
-        $lngDelta = deg2rad($lng2 - $lng1);
-
-        $a = sin($latDelta / 2) ** 2 +
-            cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
-            sin($lngDelta / 2) ** 2;
-
-        $c = 2 * asin(sqrt($a));
-
-        return self::EARTH_RADIUS_NM * $c;
     }
 
     /**
