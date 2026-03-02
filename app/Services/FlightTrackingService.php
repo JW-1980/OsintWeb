@@ -362,15 +362,9 @@ class FlightTrackingService
      */
     private function fetchFromFlightRadar24(array $options = []): Collection
     {
-        $config = $this->providers['flightradar24'];
-        $positions = collect();
-
-        // FR24 implementation would go here
-        // This is a placeholder as FR24 requires specific API access
-
         Log::warning('FlightRadar24 integration not fully implemented');
 
-        return $positions;
+        return collect();
     }
 
     /**
