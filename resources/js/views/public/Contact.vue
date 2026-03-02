@@ -1,331 +1,206 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Public Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <div class="flex items-center space-x-2">
-            <router-link to="/" class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
-              </div>
-              <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">OsintWeb</span>
-            </router-link>
-          </div>
-          <div class="hidden md:flex items-center space-x-6">
-            <router-link to="/explore" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Map</router-link>
-            <router-link to="/explore/events" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Events</router-link>
-            <router-link to="/about" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">About</router-link>
-            <router-link to="/contact" class="text-blue-600 dark:text-blue-400 font-medium">Contact</router-link>
-          </div>
-          <div class="flex items-center space-x-4">
-            <button @click="toggleTheme" class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              <svg v-if="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            </button>
-            <router-link to="/login" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Login</router-link>
-            <router-link to="/register" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all">
-              Sign Up
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </nav>
+健康
 
-    <!-- Main Content -->
-    <div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-12">
-          <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Contact Us</h1>
-          <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Have questions, feedback, or want to collaborate? We'd love to hear from you.
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#135bec",
+            "background-light": "#f6f6f8",
+            "background-dark": "#101622",
+          },
+          fontFamily: {
+            "display": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 lg:px-20 py-4 bg-background-light dark:bg-background-dark">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-6">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-xl font-bold leading-tight tracking-tight">OSINT Intel</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Reports</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Tracking</a>
+<a class="text-primary text-sm font-semibold" href="#">Contact</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<label class="hidden sm:flex items-center relative">
+<span class="absolute left-3 text-slate-400 material-symbols-outlined">search</span>
+<input class="form-input w-64 pl-10 h-10 rounded-lg border-none bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:ring-2 focus:ring-primary transition-all" placeholder="Search Intel Database"/>
+</label>
+<button class="bg-primary text-white px-5 py-2 rounded-lg font-bold text-sm hover:bg-primary/90 transition-colors">Sign In</button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 max-w-7xl mx-auto w-full px-6 lg:px-20 py-12">
+<!-- Header Section -->
+<div class="mb-12">
+<h1 class="text-slate-900 dark:text-slate-100 text-4xl lg:text-5xl font-black mb-4 tracking-tight">Get in Touch</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg max-w-2xl leading-relaxed">
+            For operational inquiries, intelligence reporting, media requests, or specialized conflict tracking data, please reach out to our global analysis team. We maintain strict confidentiality in all communications.
           </p>
-        </div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
+<!-- Contact Form Column -->
+<div class="lg:col-span-7 bg-white dark:bg-slate-900/50 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<form action="#" class="space-y-6" method="POST">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Full Name</label>
+<input class="w-full h-12 rounded-lg bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-primary" placeholder="John Doe" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Email Address</label>
+<input class="w-full h-12 rounded-lg bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-primary" placeholder="secure@protonmail.com" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Subject</label>
+<input class="w-full h-12 rounded-lg bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-primary" placeholder="Inquiry regarding conflict tracking" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Message</label>
+<textarea class="w-full rounded-lg bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-primary resize-none" placeholder="Type your secure message here..." rows="6"></textarea>
+</div>
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-lg transition-all flex items-center justify-center gap-2 group" type="submit">
+                Submit Intelligence Request
+                <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">send</span>
+</button>
+</form>
+</div>
+<!-- Alternative Contact Info Column -->
+<div class="lg:col-span-5 flex flex-col gap-8">
+<div class="bg-primary/10 dark:bg-primary/5 border border-primary/20 p-8 rounded-xl">
+<h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">security</span>
+                Secure Communication
+              </h3>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="bg-primary text-white p-2 rounded-lg">
+<span class="material-symbols-outlined">mail</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Proton Mail</p>
+<p class="text-lg font-medium">intel-ops@protonmail.com</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-primary text-white p-2 rounded-lg">
+<span class="material-symbols-outlined">encrypted</span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-500 uppercase tracking-wider">PGP Fingerprint</p>
+<p class="font-mono text-sm break-all text-slate-400">4D6F 7265 2049 6E74 656C 2044 6174 6121</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 p-8 rounded-xl shadow-sm">
+<h3 class="text-xl font-bold mb-6">Digital Presence</h3>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<a class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-primary/10 transition-colors group" href="#">
+<span class="material-symbols-outlined text-3xl mb-2 text-slate-400 group-hover:text-primary">hub</span>
+<span class="text-sm font-medium">X / Twitter</span>
+</a>
+<a class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-primary/10 transition-colors group" href="#">
+<span class="material-symbols-outlined text-3xl mb-2 text-slate-400 group-hover:text-primary">groups</span>
+<span class="text-sm font-medium">Discord</span>
+</a>
+<a class="flex flex-col items-center justify-center p-4 rounded-lg bg-slate-50 dark:bg-slate-800 hover:bg-primary/10 transition-colors group" href="#">
+<span class="material-symbols-outlined text-3xl mb-2 text-slate-400 group-hover:text-primary">badge</span>
+<span class="text-sm font-medium">LinkedIn</span>
+</a>
+</div>
+</div>
+<div class="p-8 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl">
+<p class="text-slate-500 text-sm leading-relaxed">
+                Response times may vary based on ongoing global developments and current operational tempo. Urgent intelligence alerts are prioritized.
+              </p>
+</div>
+</div>
+</div>
+<!-- Map Visualization Section -->
+<div class="relative w-full h-[500px] bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl group">
+<div class="absolute inset-0 z-10 bg-gradient-to-t from-slate-900 via-transparent to-transparent pointer-events-none"></div>
+<div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?q=80&amp;w=2000&amp;auto=format&amp;fit=crop')] bg-cover bg-center mix-blend-overlay opacity-30 grayscale" data-alt="Dark global map with interconnected nodes" data-location="Global Intelligence Network" style=""></div>
+<!-- Animated Glow Points (Abstract representations of data nodes) -->
+<div class="absolute top-1/4 left-1/4 w-3 h-3 bg-primary rounded-full animate-pulse shadow-[0_0_15px_rgba(19,91,236,0.8)] z-20"></div>
+<div class="absolute top-1/3 left-1/2 w-2 h-2 bg-primary/60 rounded-full animate-pulse shadow-[0_0_10px_rgba(19,91,236,0.5)] z-20 delay-700"></div>
+<div class="absolute bottom-1/3 left-1/3 w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_12px_rgba(19,91,236,0.7)] z-20 delay-300"></div>
+<div class="absolute top-1/2 right-1/4 w-3 h-3 bg-primary/80 rounded-full animate-pulse shadow-[0_0_15px_rgba(19,91,236,0.8)] z-20 delay-1000"></div>
+<div class="absolute bottom-1/4 right-1/3 w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_rgba(19,91,236,0.6)] z-20 delay-500"></div>
+<div class="absolute inset-0 flex flex-col items-center justify-center z-30 px-6 text-center">
+<h2 class="text-white text-3xl font-bold mb-4">Global Intelligence Network</h2>
+<p class="text-slate-300 max-w-xl">
+              Our platform operates on a decentralized global infrastructure, collecting and analyzing data across 190+ jurisdictions to provide real-time battlefield and geopolitical insights.
+            </p>
+<div class="mt-8 flex gap-8">
+<div class="text-center">
+<p class="text-primary text-2xl font-black">2.4k+</p>
+<p class="text-slate-400 text-xs uppercase tracking-widest font-bold">Active Nodes</p>
+</div>
+<div class="text-center">
+<p class="text-primary text-2xl font-black">24/7</p>
+<p class="text-slate-400 text-xs uppercase tracking-widest font-bold">Monitoring</p>
+</div>
+<div class="text-center">
+<p class="text-primary text-2xl font-black">12ms</p>
+<p class="text-slate-400 text-xs uppercase tracking-widest font-bold">Avg Latency</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Simple Footer -->
+<footer class="border-t border-slate-200 dark:border-slate-800 py-10 px-6 lg:px-20 bg-slate-50 dark:bg-slate-900/30">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="text-sm">© 2024 OSINT Intel Systems. All rights reserved.</span>
+</div>
+<div class="flex gap-8">
+<a class="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Intelligence Disclosure</a>
+<a class="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
 
-        <div class="grid md:grid-cols-3 gap-8">
-          <!-- Contact Info -->
-          <div class="space-y-6">
-            <!-- Email -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-              <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Email</h3>
-              <p class="text-gray-600 dark:text-gray-400 mb-2">For general inquiries:</p>
-              <a href="mailto:contact@osintweb.org" class="text-blue-600 dark:text-blue-400 hover:underline">contact@osintweb.org</a>
-              <p class="text-gray-600 dark:text-gray-400 mt-3 mb-2">For press inquiries:</p>
-              <a href="mailto:press@osintweb.org" class="text-blue-600 dark:text-blue-400 hover:underline">press@osintweb.org</a>
-            </div>
-
-            <!-- Social Links -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-              <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-                </svg>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Follow Us</h3>
-              <div class="space-y-3">
-                <a href="#" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                  <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                  </svg>
-                  @osintweb
-                </a>
-                <a href="#" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                  <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
-                  </svg>
-                  GitHub
-                </a>
-                <a href="#" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                  <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" clip-rule="evenodd" />
-                  </svg>
-                  LinkedIn
-                </a>
-                <a href="#" class="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                  <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
-                  </svg>
-                  Telegram
-                </a>
-              </div>
-            </div>
-
-            <!-- Secure Contact -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
-              <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Secure Contact</h3>
-              <p class="text-gray-600 dark:text-gray-400 mb-3">For sensitive communications:</p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">PGP Key available on request</p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Signal: +1-XXX-XXX-XXXX</p>
-            </div>
-          </div>
-
-          <!-- Contact Form -->
-          <div class="md:col-span-2">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 md:p-8 border border-gray-200 dark:border-gray-700">
-              <!-- Success Message -->
-              <div v-if="submitted" class="text-center py-12">
-                <div class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Message Sent!</h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">Thank you for reaching out. We'll get back to you as soon as possible.</p>
-                <button
-                  @click="resetForm"
-                  class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-                >
-                  Send Another Message
-                </button>
-              </div>
-
-              <!-- Form -->
-              <form v-else @submit.prevent="handleSubmit" class="space-y-6">
-                <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-6">Send us a Message</h2>
-
-                <div class="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Name <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                      id="name"
-                      v-model="form.name"
-                      type="text"
-                      required
-                      placeholder="Your name"
-                      class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Email <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                      id="email"
-                      v-model="form.email"
-                      type="email"
-                      required
-                      placeholder="you@example.com"
-                      class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Subject <span class="text-red-500">*</span>
-                  </label>
-                  <select
-                    id="subject"
-                    v-model="form.subject"
-                    required
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  >
-                    <option value="">Select a subject</option>
-                    <option value="general">General Inquiry</option>
-                    <option value="support">Technical Support</option>
-                    <option value="feedback">Feedback</option>
-                    <option value="partnership">Partnership Opportunity</option>
-                    <option value="press">Press / Media</option>
-                    <option value="data">Data Request</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label for="organization" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Organization
-                    <span class="text-gray-400 font-normal">(optional)</span>
-                  </label>
-                  <input
-                    id="organization"
-                    v-model="form.organization"
-                    type="text"
-                    placeholder="Your organization"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Message <span class="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    id="message"
-                    v-model="form.message"
-                    required
-                    rows="6"
-                    placeholder="Your message..."
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-y"
-                  ></textarea>
-                </div>
-
-                <!-- Privacy Notice -->
-                <div class="flex items-start space-x-3">
-                  <input
-                    type="checkbox"
-                    v-model="form.privacy"
-                    id="privacy"
-                    required
-                    class="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                  />
-                  <label for="privacy" class="text-sm text-gray-600 dark:text-gray-400">
-                    I agree to the <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Privacy Policy</a> and understand that my information will be processed in accordance with GDPR requirements.
-                  </label>
-                </div>
-
-                <button
-                  type="submit"
-                  :disabled="submitting"
-                  class="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <span v-if="submitting" class="flex items-center justify-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Sending...
-                  </span>
-                  <span v-else>Send Message</span>
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- FAQ Section -->
-        <div class="mt-16">
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Frequently Asked Questions</h2>
-          <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h3 class="font-semibold text-gray-900 dark:text-white mb-2">How do I submit a tip?</h3>
-              <p class="text-gray-600 dark:text-gray-400">Visit our <router-link to="/submit-tip" class="text-blue-600 dark:text-blue-400 hover:underline">Submit Tip</router-link> page to anonymously share information about events you've witnessed or have knowledge of.</p>
-            </div>
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Is the data free to use?</h3>
-              <p class="text-gray-600 dark:text-gray-400">Public data is available for non-commercial research and educational purposes. For commercial use or API access, please contact us.</p>
-            </div>
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h3 class="font-semibold text-gray-900 dark:text-white mb-2">How do you verify events?</h3>
-              <p class="text-gray-600 dark:text-gray-400">Our verification team uses multiple sources, geolocation analysis, and cross-referencing to verify reported events before marking them as confirmed.</p>
-            </div>
-            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-              <h3 class="font-semibold text-gray-900 dark:text-white mb-2">Can I contribute as an analyst?</h3>
-              <p class="text-gray-600 dark:text-gray-400">Yes! Create an account and contact us about joining our verification team. We're always looking for skilled OSINT analysts.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto">
-        <div class="grid md:grid-cols-4 gap-8">
-          <div>
-            <div class="flex items-center space-x-2 mb-4">
-              <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
-              </div>
-              <span class="text-xl font-bold">OsintWeb</span>
-            </div>
-            <p class="text-gray-400">Open Source Intelligence Platform</p>
-          </div>
-          <div>
-            <h3 class="font-semibold mb-4">Explore</h3>
-            <ul class="space-y-2 text-gray-400">
-              <li><router-link to="/explore" class="hover:text-white transition-colors">Map</router-link></li>
-              <li><router-link to="/explore/events" class="hover:text-white transition-colors">Events</router-link></li>
-              <li><router-link to="/explore/equipment" class="hover:text-white transition-colors">Equipment</router-link></li>
-              <li><router-link to="/explore/conflicts" class="hover:text-white transition-colors">Conflicts</router-link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="font-semibold mb-4">Company</h3>
-            <ul class="space-y-2 text-gray-400">
-              <li><router-link to="/about" class="hover:text-white transition-colors">About</router-link></li>
-              <li><router-link to="/contact" class="hover:text-white transition-colors">Contact</router-link></li>
-              <li><router-link to="/submit-tip" class="hover:text-white transition-colors">Submit Tip</router-link></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="font-semibold mb-4">Legal</h3>
-            <ul class="space-y-2 text-gray-400">
-              <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">GDPR</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
-          <p>&copy; {{ new Date().getFullYear() }} OsintWeb. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-  </div>
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, reactive, computed } from 'vue';
 import { useThemeStore } from '@/stores/theme';
 

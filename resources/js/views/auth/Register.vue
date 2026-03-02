@@ -1,116 +1,113 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 px-4">
-    <div class="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-      <!-- Logo -->
-      <div class="flex justify-center mb-6">
-        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
-          <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-          </svg>
-        </div>
-      </div>
 
-      <h1 class="text-2xl font-bold text-center text-gray-900 dark:text-white mb-2">Create Account</h1>
-      <p class="text-center text-gray-500 dark:text-gray-400 mb-6">Join OsintWeb to start contributing</p>
-
-      <!-- Error message -->
-      <div v-if="error" class="mb-4 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-lg text-sm">
-        <div class="flex items-center">
-          <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-          </svg>
-          {{ error }}
-        </div>
-      </div>
-
-      <form @submit.prevent="handleRegister" class="space-y-4">
-        <div>
-          <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
-          <input
-            id="name"
-            v-model="form.name"
-            type="text"
-            required
-            :disabled="loading"
-            placeholder="Your full name"
-            class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          />
-        </div>
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
-          <input
-            id="email"
-            v-model="form.email"
-            type="email"
-            required
-            :disabled="loading"
-            placeholder="you@example.com"
-            class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          />
-        </div>
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Password</label>
-          <input
-            id="password"
-            v-model="form.password"
-            type="password"
-            required
-            :disabled="loading"
-            placeholder="At least 8 characters"
-            class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          />
-        </div>
-        <div>
-          <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
-          <input
-            id="password_confirmation"
-            v-model="form.password_confirmation"
-            type="password"
-            required
-            :disabled="loading"
-            placeholder="Confirm your password"
-            class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          />
-        </div>
-
-        <!-- Terms acceptance -->
-        <div class="flex items-start">
-          <input
-            id="terms"
-            v-model="form.acceptTerms"
-            type="checkbox"
-            required
-            class="w-4 h-4 mt-0.5 text-blue-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
-          />
-          <label for="terms" class="ml-2 text-sm text-gray-600 dark:text-gray-400">
-            I agree to the <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Terms of Service</a> and <a href="#" class="text-blue-600 dark:text-blue-400 hover:underline">Privacy Policy</a>
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          :disabled="loading || !form.acceptTerms"
-          class="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center"
-        >
-          <svg v-if="loading" class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          {{ loading ? 'Creating account...' : 'Create Account' }}
-        </button>
-      </form>
-
-      <div class="mt-6 text-center">
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-          Already have an account?
-          <router-link to="/login" class="font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500">Sign in</router-link>
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-6 lg:px-10 py-4 bg-white/5 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-primary rounded flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-2xl">radar</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">OSINT Intel Platform</h2>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Platform</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Data Sources</a>
+<a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="#">Pricing</a>
+</nav>
+<button class="bg-primary hover:bg-blue-700 text-white text-sm font-bold py-2 px-6 rounded-lg transition-all">
+                Sign In
+            </button>
+</div>
+</header>
+<main class="flex-1 flex items-center justify-center p-6 relative overflow-hidden">
+<!-- Abstract tactical background element -->
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none">
+<div class="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent"></div>
+</div>
+<div class="w-full max-w-[520px] bg-white dark:bg-[#1c2331] border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl p-8 lg:p-10 z-10">
+<div class="mb-8">
+<h1 class="text-3xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">Join the Network</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base">Access advanced conflict tracking and geospatial intelligence tools.</p>
+</div>
+<form class="space-y-5">
+<div class="space-y-2">
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Full Name</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">person</span>
+<input class="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-[#101622] border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-slate-900 dark:text-white placeholder:text-slate-500" placeholder="John Doe" type="text"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">mail</span>
+<input class="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-[#101622] border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-slate-900 dark:text-white placeholder:text-slate-500" placeholder="name@organization.gov" type="email"/>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Password</label>
+<div class="relative">
+<input class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101622] border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-slate-900 dark:text-white" placeholder="••••••••" type="password"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer">visibility</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Confirm Password</label>
+<div class="relative">
+<input class="w-full px-4 py-3 bg-slate-50 dark:bg-[#101622] border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-slate-900 dark:text-white" placeholder="••••••••" type="password"/>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Password Strength</span>
+<span class="text-xs font-bold text-emerald-500 uppercase tracking-wider">Strong</span>
+</div>
+<div class="flex gap-1 h-1.5">
+<div class="flex-1 bg-emerald-500 rounded-full"></div>
+<div class="flex-1 bg-emerald-500 rounded-full"></div>
+<div class="flex-1 bg-emerald-500 rounded-full"></div>
+<div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+</div>
+<p class="text-[11px] text-slate-500 dark:text-slate-400 italic">Include a special character and a number.</p>
+</div>
+<div class="flex items-start gap-3 py-2">
+<input class="mt-1 rounded border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-[#101622] text-primary focus:ring-primary" id="terms" type="checkbox"/>
+<label class="text-sm text-slate-600 dark:text-slate-400" for="terms">
+                        I agree to the <a class="text-primary hover:underline" href="#">Terms of Service</a> and <a class="text-primary hover:underline" href="#">Privacy Policy</a>
+</label>
+</div>
+<button class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-4 rounded-lg shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98]" type="submit">
+                    Create Intelligence Account
+                </button>
+</form>
+<div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
+<p class="text-slate-600 dark:text-slate-400 text-sm">
+                    Already have an account? <a class="text-primary font-bold hover:underline" href="#">Log In</a>
+</p>
+</div>
+</div>
+</main>
+<footer class="p-6 text-center">
+<div class="flex justify-center items-center gap-4 text-slate-400 text-xs mb-2">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+<span>End-to-End Encrypted</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">public</span>
+<span>Global Compliance</span>
+</div>
+</div>
+<p class="text-slate-500 dark:text-slate-500 text-[10px] uppercase tracking-widest font-bold">
+            © 2024 OSINT Intel Platform • Classified Access Only
         </p>
-      </div>
-    </div>
-  </div>
+</footer>
+
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';

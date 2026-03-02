@@ -1,262 +1,247 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Public Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <div class="flex items-center space-x-2">
-            <router-link to="/" class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
-              </div>
-              <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">OsintWeb</span>
-            </router-link>
-          </div>
-          <div class="hidden md:flex items-center space-x-6">
-            <router-link to="/explore" class="text-blue-600 dark:text-blue-400 font-medium">Map</router-link>
-            <router-link to="/explore/events" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Events</router-link>
-            <router-link to="/explore/equipment" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Equipment</router-link>
-            <router-link to="/explore/actors" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Actors</router-link>
-            <router-link to="/explore/conflicts" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Conflicts</router-link>
-          </div>
-          <div class="flex items-center space-x-4">
-            <button @click="toggleTheme" class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              <svg v-if="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            </button>
-            <router-link to="/login" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Login</router-link>
-            <router-link to="/register" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all">
-              Sign Up
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="pt-16 flex h-[calc(100vh-64px)] md:h-[calc(100dvh-64px)]">
-      <!-- Sidebar - Fixed position on mobile for overlay behavior -->
-      <aside
-        :class="[
-          'bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col transition-all duration-300 z-40',
-          'fixed md:relative top-16 md:top-0 left-0 h-[calc(100vh-64px)] md:h-full w-80',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
-        ]"
-      >
-        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Explore Map</h2>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Verified events and control zones</p>
-        </div>
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-background-dark/50 backdrop-blur-md px-6 py-3 shrink-0 z-50">
+<div class="flex items-center gap-4">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">radar</span>
+</div>
+<h2 class="text-lg font-bold tracking-tight">OSINT Tactical Tracker</h2>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Dashboard</a>
+<a class="text-sm font-bold text-primary" href="#">Explore Map</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Intelligence</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Reports</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Assets</a>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<button class="p-2 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-xl">account_circle</span>
+</button>
+</div>
+</header>
+<main class="relative flex flex-1 overflow-hidden">
+<div class="absolute inset-0 z-0 bg-slate-900" data-alt="High contrast dark satellite map with tactical overlays and markers" data-location="Eastern Europe Border Region" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBFtKpsHM6ojcKhqRPzv23RpUQzeeeXagEK1mqOHnpF0tdMKc3zEffEfpxntuZmmG1qEym94gAKRvZz8Q0heLZTFXjjqhYanTVkGB2ZjEaA0UnePWDxAFDjF37f3jC5WRGntyt93_sEry_S-70Ix-mJRVM8SMCIgWC-guWHz40Qvb_mT1P0gCf9W8SrCCwb5D7aKaIoIjy1oMk1-paiA1sB0MOvn6vZLSjZFFfK3RMCkVksogjQuNAb-hMnSf33C1um7EX26e3kpxJm'); background-size: cover;">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/40 to-transparent pointer-events-none"></div>
+<div class="absolute top-[30%] left-[45%] group cursor-pointer">
+<div class="relative">
+<div class="absolute -inset-2 bg-red-500/20 rounded-full blur animate-pulse"></div>
+<span class="material-symbols-outlined text-red-500 text-3xl drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">target</span>
+</div>
+</div>
+<div class="absolute top-[50%] left-[60%] group cursor-pointer">
+<div class="relative">
+<span class="material-symbols-outlined text-primary text-3xl drop-shadow-[0_0_8px_rgba(19,91,236,0.8)]">shield</span>
+</div>
+</div>
+<div class="absolute top-[45%] left-[52%] group cursor-pointer">
+<div class="relative">
+<span class="material-symbols-outlined text-yellow-500 text-2xl drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]">help_center</span>
+</div>
+</div>
+</div>
+<div class="absolute top-6 left-1/2 -translate-x-1/2 w-full max-w-xl px-4 z-40">
+<div class="flex items-center bg-white/10 dark:bg-slate-900/80 backdrop-blur-xl rounded-xl border border-slate-200/20 dark:border-slate-700/50 shadow-2xl p-1">
+<div class="flex items-center pl-4 text-slate-400">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full bg-transparent border-none focus:ring-0 text-slate-100 placeholder:text-slate-500 px-3 py-2" placeholder="Location, Coordinates, or Keywords" type="text"/>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 transition-all">
+<span>Search</span>
+</button>
+</div>
+</div>
+<aside class="absolute top-4 bottom-4 left-4 w-80 bg-white/10 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/20 dark:border-slate-700/50 rounded-xl flex flex-col z-40 overflow-hidden shadow-2xl">
+<div class="p-4 border-b border-slate-700/50 flex justify-between items-center">
+<h3 class="font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">filter_list</span>
+                    Tactical Filters
+                </h3>
+<button class="text-xs text-slate-400 hover:text-white underline">Clear all</button>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-6">
+<div>
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 block">Date Range</label>
+<div class="space-y-3">
+<div class="bg-slate-800/50 rounded-lg p-2 border border-slate-700/50">
+<div class="flex justify-between text-xs mb-1">
+<span class="text-slate-400">Oct 05</span>
+<span class="text-white font-medium">Oct 30, 2023</span>
+</div>
+<input class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-primary" type="range"/>
+</div>
+</div>
+</div>
+<div>
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 block">Event Types</label>
+<div class="space-y-2">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="rounded border-slate-700 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900" type="checkbox"/>
+<span class="text-sm text-slate-300 group-hover:text-white">Airstrike / Artillery</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="rounded border-slate-700 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900" type="checkbox"/>
+<span class="text-sm text-slate-300 group-hover:text-white">Troop Movement</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-slate-700 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900" type="checkbox"/>
+<span class="text-sm text-slate-300 group-hover:text-white">Cyber Attack</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-slate-700 bg-slate-800 text-primary focus:ring-primary focus:ring-offset-slate-900" type="checkbox"/>
+<span class="text-sm text-slate-300 group-hover:text-white">Infrastructure Damage</span>
+</label>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 block">Conflict Zone</label>
+<select class="w-full bg-slate-800 border-slate-700 rounded-lg text-sm text-white py-2 focus:ring-primary">
+<option>Eastern Front</option>
+<option>Middle East Southern</option>
+<option>Sahel Region</option>
+</select>
+</div>
+<div>
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 block">Key Actors</label>
+<select class="w-full bg-slate-800 border-slate-700 rounded-lg text-sm text-white py-2 focus:ring-primary">
+<option>All Factions</option>
+<option>State Forces</option>
+<option>Coalition A</option>
+</select>
+</div>
+<div>
+<label class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 block">Equipment Class</label>
+<select class="w-full bg-slate-800 border-slate-700 rounded-lg text-sm text-white py-2 focus:ring-primary">
+<option>Armored Vehicles</option>
+<option>Fixed-wing Aviation</option>
+<option>Drones / UAV</option>
+</select>
+</div>
+</div>
+</div>
+<div class="p-4 bg-slate-800/40 border-t border-slate-700/50">
+<button class="w-full bg-primary py-2.5 rounded-lg text-white text-sm font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all">
+                    Apply Advanced Filters
+                </button>
+</div>
+</aside>
+<aside class="absolute top-4 bottom-4 right-4 w-96 bg-white/10 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/20 dark:border-slate-700/50 rounded-xl flex flex-col z-40 overflow-hidden shadow-2xl">
+<div class="p-4 border-b border-slate-700/50 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">dynamic_feed</span>
+<h3 class="font-bold">Live Event Feed</h3>
+<div class="ml-auto flex items-center gap-1.5 bg-green-500/10 px-2 py-0.5 rounded-full border border-green-500/20">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+<span class="text-[10px] font-bold text-green-500 uppercase">Live</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-3">
+<div class="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 hover:bg-slate-800 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-red-500/20 text-red-500 border border-red-500/30">Hostile Airstrike</span>
+<span class="text-[10px] text-slate-500">14:23 UTC</span>
+</div>
+<h4 class="text-sm font-bold text-slate-100 group-hover:text-primary transition-colors">Multiple missile strikes reported in Sector 7</h4>
+<p class="text-xs text-slate-400 mt-1 leading-relaxed">Local sources confirm 4 impacts near industrial complex. Casualties reported.</p>
+<div class="mt-2 pt-2 border-t border-slate-700/30 flex items-center justify-between">
+<span class="text-[10px] text-slate-500 font-mono">48.376° N, 31.165° E</span>
+<span class="material-symbols-outlined text-sm text-slate-500">open_in_new</span>
+</div>
+</div>
+<div class="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 hover:bg-slate-800 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">Troop Movement</span>
+<span class="text-[10px] text-slate-500">14:05 UTC</span>
+</div>
+<h4 class="text-sm font-bold text-slate-100 group-hover:text-primary transition-colors">Battalion 42 repositioning to ridge line</h4>
+<p class="text-xs text-slate-400 mt-1 leading-relaxed">Visual confirmation of 12 T-72 tanks and supply trucks moving North-West.</p>
+<div class="mt-2 pt-2 border-t border-slate-700/30 flex items-center justify-between">
+<span class="text-[10px] text-slate-500 font-mono">48.122° N, 31.541° E</span>
+<span class="material-symbols-outlined text-sm text-slate-500">open_in_new</span>
+</div>
+</div>
+<div class="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 hover:bg-slate-800 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-500 border border-yellow-500/30">UAV Spotted</span>
+<span class="text-[10px] text-slate-500">13:58 UTC</span>
+</div>
+<h4 class="text-sm font-bold text-slate-100 group-hover:text-primary transition-colors">Unidentified scout drone at medium altitude</h4>
+<p class="text-xs text-slate-400 mt-1 leading-relaxed">Radar trace detected 15km South of primary AO. Origin point unknown.</p>
+<div class="mt-2 pt-2 border-t border-slate-700/30 flex items-center justify-between">
+<span class="text-[10px] text-slate-500 font-mono">47.892° N, 31.023° E</span>
+<span class="material-symbols-outlined text-sm text-slate-500">open_in_new</span>
+</div>
+</div>
+<div class="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3 hover:bg-slate-800 transition-colors cursor-pointer group">
+<div class="flex justify-between items-start mb-2">
+<span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded bg-red-500/20 text-red-500 border border-red-500/30">Artillery</span>
+<span class="text-[10px] text-slate-500">13:42 UTC</span>
+</div>
+<h4 class="text-sm font-bold text-slate-100 group-hover:text-primary transition-colors">Counter-battery fire engaged near rail hub</h4>
+<p class="text-xs text-slate-400 mt-1 leading-relaxed">Satellite thermals show sustained engagement over 20 minutes.</p>
+<div class="mt-2 pt-2 border-t border-slate-700/30 flex items-center justify-between">
+<span class="text-[10px] text-slate-500 font-mono">48.455° N, 32.102° E</span>
+<span class="material-symbols-outlined text-sm text-slate-500">open_in_new</span>
+</div>
+</div>
+</div>
+<div class="p-3 bg-slate-900 border-t border-slate-700/50 text-center">
+<button class="text-xs font-bold text-slate-500 hover:text-primary transition-colors uppercase tracking-widest">Load Archived Events</button>
+</div>
+</aside>
+<div class="absolute bottom-6 right-104 flex flex-col gap-3 z-40" style="right: 410px;">
+<div class="flex flex-col bg-slate-900/80 backdrop-blur-md rounded-xl border border-slate-700/50 overflow-hidden shadow-2xl">
+<button class="p-3 hover:bg-primary/20 text-slate-300 hover:text-white transition-colors border-b border-slate-700/50 tooltip" title="Zoom In">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="p-3 hover:bg-primary/20 text-slate-300 hover:text-white transition-colors border-b border-slate-700/50 tooltip" title="Zoom Out">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button class="p-3 hover:bg-primary/20 text-slate-300 hover:text-white transition-colors tooltip" title="My Location">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+<div class="flex flex-col bg-slate-900/80 backdrop-blur-md rounded-xl border border-slate-700/50 overflow-hidden shadow-2xl">
+<button class="p-3 hover:bg-primary/20 text-slate-300 hover:text-white transition-colors border-b border-slate-700/50 tooltip" title="Measure Distance">
+<span class="material-symbols-outlined">square_foot</span>
+</button>
+<button class="p-3 hover:bg-primary/20 text-slate-300 hover:text-white transition-colors tooltip" title="Print Map">
+<span class="material-symbols-outlined">print</span>
+</button>
+</div>
+<div class="flex bg-slate-900/80 backdrop-blur-md rounded-xl border border-slate-700/50 p-1 shadow-2xl">
+<button class="px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold">Tactical</button>
+<button class="px-4 py-2 rounded-lg text-slate-400 hover:text-white text-xs font-bold transition-colors">Satellite</button>
+<button class="px-4 py-2 rounded-lg text-slate-400 hover:text-white text-xs font-bold transition-colors">Street</button>
+</div>
+</div>
+<div class="absolute bottom-6 left-88 z-40 bg-slate-900/80 backdrop-blur-md px-4 py-2 rounded-full border border-slate-700/50 flex items-center gap-6 shadow-2xl" style="left: 350px;">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-red-500"></span>
+<span class="text-[10px] font-bold uppercase text-slate-300">Hostile</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-[10px] font-bold uppercase text-slate-300">Friendly</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+<span class="text-[10px] font-bold uppercase text-slate-300">Neutral</span>
+</div>
+<div class="h-4 w-[1px] bg-slate-700"></div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Active Scale: 1:50,000</span>
+</div>
+</div>
+</main>
 
-        <!-- Filters -->
-        <div class="p-4 space-y-4 flex-1 overflow-y-auto">
-          <!-- Event Type Filter -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Event Type</label>
-            <select
-              v-model="filters.eventType"
-              class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">All Types</option>
-              <option value="combat_engagement">Combat Engagement</option>
-              <option value="airstrike">Airstrike</option>
-              <option value="artillery_strike">Artillery Strike</option>
-              <option value="missile_strike">Missile Strike</option>
-              <option value="equipment_destroyed">Equipment Destroyed</option>
-              <option value="troop_movement">Troop Movement</option>
-            </select>
-          </div>
-
-          <!-- Date Range -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date Range</label>
-            <div class="space-y-2">
-              <input
-                v-model="filters.dateFrom"
-                type="date"
-                class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                placeholder="From"
-              />
-              <input
-                v-model="filters.dateTo"
-                type="date"
-                class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                placeholder="To"
-              />
-            </div>
-          </div>
-
-          <!-- Layers Toggle -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Map Layers</label>
-            <div class="space-y-2">
-              <label class="flex items-center space-x-3 cursor-pointer">
-                <input type="checkbox" v-model="layers.events" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
-                <span class="text-sm text-gray-700 dark:text-gray-300">Event Markers</span>
-              </label>
-              <label class="flex items-center space-x-3 cursor-pointer">
-                <input type="checkbox" v-model="layers.zones" class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
-                <span class="text-sm text-gray-700 dark:text-gray-300">Control Zones</span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Legend -->
-          <div class="pt-4 border-t border-gray-200 dark:border-gray-700">
-            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Legend</h3>
-            <div class="space-y-2">
-              <div class="flex items-center space-x-2">
-                <span class="w-4 h-4 rounded-full bg-red-500"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">Combat Engagement</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="w-4 h-4 rounded-full bg-pink-500"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">Airstrike</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="w-4 h-4 rounded-full bg-purple-500"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">Artillery Strike</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="w-4 h-4 rounded-full bg-indigo-500"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">Missile Strike</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="w-4 h-4 rounded-full bg-orange-500"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">Equipment Destroyed</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="w-4 h-4 rounded-full bg-teal-500"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">Troop Movement</span>
-              </div>
-            </div>
-
-            <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mt-4 mb-3">Control Zones</h4>
-            <div class="space-y-2">
-              <div class="flex items-center space-x-2">
-                <span class="w-4 h-4 bg-blue-500/50 border border-blue-600"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">Full Control</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="w-4 h-4 bg-yellow-500/50 border border-yellow-600"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">Contested</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="w-4 h-4 bg-gray-500/50 border border-gray-600"></span>
-                <span class="text-sm text-gray-600 dark:text-gray-400">Claimed</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sidebar Footer -->
-        <div class="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
-          <router-link
-            to="/submit-tip"
-            class="w-full flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
-          >
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Submit a Tip
-          </router-link>
-        </div>
-      </aside>
-
-      <!-- Map Container -->
-      <div class="flex-1 relative min-h-0 w-full">
-        <!-- Mobile Sidebar Toggle -->
-        <button
-          @click="sidebarOpen = !sidebarOpen"
-          class="md:hidden absolute top-4 left-4 z-[1001] p-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg"
-        >
-          <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-
-        <!-- Mobile Sidebar Overlay/Backdrop -->
-        <div
-          v-if="sidebarOpen"
-          class="md:hidden fixed inset-0 bg-black/50 z-30"
-          @click="sidebarOpen = false"
-        ></div>
-
-        <!-- Map Placeholder -->
-        <div class="absolute inset-0 bg-gray-200 dark:bg-gray-700 flex items-center justify-center" ref="mapContainer">
-          <div v-if="loading" class="text-center">
-            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            <p class="mt-4 text-gray-600 dark:text-gray-300">Loading map...</p>
-          </div>
-          <div v-else class="text-center p-8">
-            <svg class="w-24 h-24 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-            </svg>
-            <p class="text-xl font-medium text-gray-600 dark:text-gray-300">Interactive Map</p>
-            <p class="text-gray-500 dark:text-gray-400 mt-2">{{ filteredEvents.length }} verified events</p>
-            <p class="text-gray-500 dark:text-gray-400">{{ zones.length }} control zones</p>
-          </div>
-        </div>
-
-        <!-- Event Info Panel -->
-        <div
-          v-if="selectedEvent"
-          class="absolute bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4 z-[1000]"
-        >
-          <div class="flex items-start justify-between mb-3">
-            <div>
-              <span :class="getEventBadgeClass(selectedEvent.event_type)" class="px-2 py-1 text-xs font-medium rounded-full">
-                {{ formatEventType(selectedEvent.event_type) }}
-              </span>
-              <span class="ml-2 px-2 py-1 text-xs font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
-                Verified
-              </span>
-            </div>
-            <button @click="selectedEvent = null" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">{{ selectedEvent.title }}</h3>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ selectedEvent.location_name }}</p>
-          <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">{{ selectedEvent.description }}</p>
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-gray-500 dark:text-gray-400">{{ formatDate(selectedEvent.occurred_at) }}</span>
-            <router-link
-              :to="{ name: 'explore-event-detail', params: { id: selectedEvent.id } }"
-              class="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              View Details
-            </router-link>
-          </div>
-        </div>
-
-        <!-- Map Stats Overlay -->
-        <div class="absolute top-4 right-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-3 z-[1000]">
-          <div class="grid grid-cols-2 gap-4 text-center">
-            <div>
-              <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ filteredEvents.length }}</p>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Events</p>
-            </div>
-            <div>
-              <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ zones.length }}</p>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Zones</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, reactive, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useThemeStore } from '@/stores/theme';
 import L from 'leaflet';
@@ -435,12 +420,3 @@ onUnmounted(() => {
   }
 });
 </script>
-
-<style scoped>
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-</style>

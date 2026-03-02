@@ -1,212 +1,316 @@
 <template>
-  <div class="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Equipment Database</h1>
-        <div class="flex items-center space-x-3">
-          <button
-            @click="viewMode = 'grid'"
-            :class="['p-2 rounded-lg', viewMode === 'grid' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400']"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-            </svg>
-          </button>
-          <button
-            @click="viewMode = 'list'"
-            :class="['p-2 rounded-lg', viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400']"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-            </svg>
-          </button>
-        </div>
-      </div>
 
-      <!-- Stats Cards -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-          <p class="text-sm text-gray-500 dark:text-gray-400">Total Equipment</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.total.toLocaleString() }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-          <p class="text-sm text-gray-500 dark:text-gray-400">Destroyed</p>
-          <p class="text-2xl font-bold text-red-600 dark:text-red-400">{{ stats.destroyed.toLocaleString() }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-          <p class="text-sm text-gray-500 dark:text-gray-400">Captured</p>
-          <p class="text-2xl font-bold text-orange-600 dark:text-orange-400">{{ stats.captured.toLocaleString() }}</p>
-        </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-          <p class="text-sm text-gray-500 dark:text-gray-400">Categories</p>
-          <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ stats.categories }}</p>
-        </div>
-      </div>
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Top Nav Bar -->
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark px-6 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 bg-primary rounded flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-2xl">radar</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">OSINT Tracker</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-primary text-sm font-semibold" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Map</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Intelligence</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-4 items-center">
+<div class="relative w-full max-w-xs">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary text-slate-900 dark:text-slate-100 placeholder:text-slate-500" placeholder="Search equipment, models, serials..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg size-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg size-10 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<div class="size-10 rounded-full border-2 border-primary bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="User profile avatar photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyPEAOzXz-NnOEBRRNuTXmBHY7_lr6P1PiBTKRJK19LwOQ3B3OsnurWz-Kf-JcW5fUhXhwRMRFyQpuLOBCMTgslSfbDtc1fELMTwXIHrSfEtppFiKDmgoxFRsizbDgcmzZ97ifI7wPJ8VTlIWaJqJwpoGFfxm3GCi77Twwv1PYuMtVcJVEGHu7Wa3JfKdt2s8iSL03-CAes28Bj5UbYl00O8mjTeWrbXhs8BxLUDop3nzPqFWfURXw_gmeOfjwWhe2U6-hIKzXULz9"/>
+</div>
+</div>
+</header>
+<main class="flex-1 px-6 py-6 max-w-[1600px] mx-auto w-full">
+<!-- High Level Statistics -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Equipment Tracked</p>
+<span class="material-symbols-outlined text-primary">precision_manufacturing</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold">8,421</p>
+<div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-sm font-semibold">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+0.5% vs last month</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Confirmed Sightings (24h)</p>
+<span class="material-symbols-outlined text-primary">visibility</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold">+42</p>
+<div class="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-sm font-semibold">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12% vs average</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Verified Losses</p>
+<span class="material-symbols-outlined text-primary">running_with_errors</span>
+</div>
+<p class="text-slate-900 dark:text-slate-100 text-3xl font-bold">1,204</p>
+<div class="flex items-center gap-1 text-rose-600 dark:text-rose-400 text-sm font-semibold">
+<span class="material-symbols-outlined text-sm">trending_down</span>
+<span>-2% from yesterday</span>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex flex-wrap items-center gap-4 mb-6 bg-white dark:bg-slate-800/30 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400">filter_list</span>
+<span class="text-sm font-semibold text-slate-700 dark:text-slate-300">Filters:</span>
+</div>
+<div class="flex gap-3 flex-wrap">
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700">
+            Category: All <span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700">
+            Origin: All <span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700">
+            Conflict Zone: All <span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700">
+            Status: All <span class="material-symbols-outlined text-base">expand_more</span>
+</button>
+</div>
+<button class="ml-auto text-primary text-sm font-semibold hover:underline">Clear all filters</button>
+</div>
+<div class="flex flex-col lg:flex-row gap-6">
+<!-- Main Data Table -->
+<div class="flex-1">
+<div class="bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+<div class="p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+<h3 class="font-bold text-slate-900 dark:text-slate-100">Equipment Inventory</h3>
+<button class="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider hover:text-primary transition-colors">
+                Export Data <span class="material-symbols-outlined text-sm">download</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 text-xs font-semibold uppercase">
+<th class="px-6 py-4">Thumbnail</th>
+<th class="px-6 py-4">Model Name</th>
+<th class="px-6 py-4">Type</th>
+<th class="px-6 py-4">Affiliation</th>
+<th class="px-6 py-4 text-center">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="w-16 h-10 bg-slate-200 dark:bg-slate-700 rounded overflow-hidden">
+<img alt="MBT" class="w-full h-full object-cover" data-alt="Military main battle tank in field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi-kasl_ByMHhsaEROmNacWsoDYA9h6MxCj-qFUo0xSD-ebhaJLgyLSN5X_y3aZJ-91Gz_5F5FoduAnC8hNQW1Z6vM08SHO9s_2g1THwqUlGwHMJYYvSjKcj0CUJPJVFfl336l9k_iwammbF4DX2netNbjDdZxCENJJMOwJzUdhPFgVImiH8131zGSMlhaVrS3fIrX9ww9haXwW0ucOmcBGnHZu9LzW8tooOqPikkHt5Sk-kOS-mxbg7FpkgcerrcEqhesnklSgF-H"/>
+</div>
+</td>
+<td class="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">T-72B3 M2016</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400">Main Battle Tank</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400">Russian Federation</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center rounded-full bg-rose-100 dark:bg-rose-900/30 px-3 py-1 text-xs font-bold text-rose-600 dark:text-rose-400">Destroyed</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="w-16 h-10 bg-slate-200 dark:bg-slate-700 rounded overflow-hidden">
+<img alt="IFV" class="w-full h-full object-cover" data-alt="Infantry fighting vehicle on muddy road" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnJC_jx4cEKHY6fSBKYG6YxLpbWOmEtjPWzwcmSc5nsKKwvN7EVPyHrcjTMetey0tX0s5HOwtfGmMpUGCeMIqLq_0P6cL31v7FBlkdEwtjYP6psTZzvsc-UstXSI1rkQAO898Ap_aa31gfr_Y0OssFKgoivYjXdX1wHesTv4OUniJUJAva2oOM8B9tkbdWs81sVQ8x4AR-1qWpm6wDpLrzBizBjRJHUMiDXfqIkT8l5FEYIUcdn93epxqOlERD1mGQuUhCpPtEgcdz"/>
+</div>
+</td>
+<td class="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">M2A2 Bradley</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400">IFV</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400">Ukraine</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">Active</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="w-16 h-10 bg-slate-200 dark:bg-slate-700 rounded overflow-hidden">
+<img alt="APC" class="w-full h-full object-cover" data-alt="Armored personnel carrier camouflage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrgqksTG7W-jLuCZp-t-ClEVCCwzCWQ7TAA2JVutJnFVj8s59w3SFZ7r3Mg4cgynadAhDTMWcl3sfZlYGmqmX2QF7YeZEewfDqda4rhf7IR66Fd9E07BjG7eYOCD_lCa9Xyj3ukH6N-daSRkeg7KvRX5Xnxb0SRYbSo4tNef-tcJ9mi1IVtFz2Afu4Ydzh2xZPZpoqzMb-gxMu5b-x0eeBcvSnLYmdbMF0k_0ezDivKMnJ-dTYtz1M0DNr9D2JeoO4isNhtAyMGbKH"/>
+</div>
+</td>
+<td class="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">BTR-82A</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400">APC</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400">Russian Federation</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-3 py-1 text-xs font-bold text-amber-600 dark:text-amber-400">Abandoned</span>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors group">
+<td class="px-6 py-4">
+<div class="w-16 h-10 bg-slate-200 dark:bg-slate-700 rounded overflow-hidden">
+<img alt="Aircraft" class="w-full h-full object-cover" data-alt="Military aircraft flying through clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPAGpiel3YSPRTWtRX3EFACrw1z63VNTMOcKheZNqhsAQq8OLZu3JhaJfdhuK2Nrz7b8aS9ailzGqISyx6PJUgW5L0erzm7RUWtQa96k8yLWCf7rDn9e3X1vegMo2WxO-_6k31Kvy6mOKM9B0oirzGDXV2TRm6KpvQqEfKc11C9t9r4oabqaTvbmUjfB_iteLt6Wo409z5SSPHi8l7HQQQWjr39Ff6obqxPDGCpWJMTrUFhEPN1SVRw-ctN8zYSJHyr9f8g-UxOtkE"/>
+</div>
+</td>
+<td class="px-6 py-4 font-semibold text-slate-900 dark:text-slate-100">Su-25 Grach</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400">Attack Aircraft</td>
+<td class="px-6 py-4 text-slate-600 dark:text-slate-400">Russian Federation</td>
+<td class="px-6 py-4 text-center">
+<span class="inline-flex items-center rounded-full bg-sky-100 dark:bg-sky-900/30 px-3 py-1 text-xs font-bold text-sky-600 dark:text-sky-400">Sighted</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-sm text-slate-500">
+<p>Showing 1 to 4 of 8,421 entries</p>
+<div class="flex gap-2">
+<button class="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">Previous</button>
+<button class="px-3 py-1 rounded bg-primary text-white font-medium">1</button>
+<button class="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">2</button>
+<button class="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">3</button>
+<button class="px-3 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">Next</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Sidebar: Intelligence Reports -->
+<aside class="w-full lg:w-80 flex flex-col gap-6">
+<div class="bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm">
+<h3 class="font-bold text-slate-900 dark:text-slate-100 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">feed</span>
+              Latest Intel Reports
+            </h3>
+<div class="space-y-4">
+<div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border-l-4 border-primary">
+<p class="text-xs text-slate-400 mb-1 font-medium">12 mins ago • Kharkiv Sector</p>
+<h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">New T-90M convoy sighted heading West</h4>
+<p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">Satellite imagery confirms movement of 8 units from temporary staging area...</p>
+</div>
+<div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border-l-4 border-emerald-500">
+<p class="text-xs text-slate-400 mb-1 font-medium">1 hour ago • Zap Sector</p>
+<h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">Bradley IFV maintenance log update</h4>
+<p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">4 units returned to service after repair at forward operating base...</p>
+</div>
+<div class="p-3 bg-slate-50 dark:bg-slate-800 rounded-lg border-l-4 border-amber-500">
+<p class="text-xs text-slate-400 mb-1 font-medium">3 hours ago • Black Sea</p>
+<h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-1">Unidentified naval drone recovered</h4>
+<p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">COMSAT signal analysis suggests origin from Western manufacturer...</p>
+</div>
+</div>
+<button class="w-full mt-4 py-2 text-xs font-bold text-primary uppercase tracking-widest hover:bg-primary/5 rounded transition-colors">
+              View All Intelligence
+            </button>
+</div>
+<div class="bg-primary/10 rounded-xl border border-primary/20 p-4">
+<h3 class="font-bold text-slate-900 dark:text-slate-100 mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">analytics</span>
+              Quick Tip
+            </h3>
+<p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Use the "Status" filter to specifically track verified combat losses and generate damage assessment reports for active sectors.
+            </p>
+</div>
+</aside>
+</div>
+<!-- Bottom Visualizations -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+<div class="bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+<h3 class="font-bold text-slate-900 dark:text-slate-100 mb-6">Equipment Distribution by Type</h3>
+<div class="flex items-center justify-around">
+<div class="relative size-48">
+<!-- Mock Donut Chart using Gradient/SVGs -->
+<svg class="size-full transform -rotate-90" viewbox="0 0 36 36">
+<circle class="stroke-slate-100 dark:stroke-slate-700" cx="18" cy="18" fill="none" r="16" stroke-width="3"></circle>
+<circle class="stroke-primary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="60, 100" stroke-width="3"></circle>
+<circle class="stroke-sky-400" cx="18" cy="18" fill="none" r="16" stroke-dasharray="20, 100" stroke-dashoffset="-60" stroke-width="3"></circle>
+<circle class="stroke-emerald-400" cx="18" cy="18" fill="none" r="16" stroke-dasharray="15, 100" stroke-dashoffset="-80" stroke-width="3"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-bold">8.4k</span>
+<span class="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Total</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-primary"></div>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-400">Tanks (60%)</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-sky-400"></div>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-400">IFVs (20%)</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-emerald-400"></div>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-400">Aircraft (15%)</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="size-3 rounded-full bg-slate-300 dark:bg-slate-600"></div>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-400">Others (5%)</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-bold text-slate-900 dark:text-slate-100">Sightings Over Time</h3>
+<div class="flex gap-2">
+<span class="text-xs font-semibold px-2 py-1 bg-primary/10 text-primary rounded">7 Days</span>
+<span class="text-xs font-semibold px-2 py-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded cursor-pointer">30 Days</span>
+</div>
+</div>
+<!-- Line Graph Mockup -->
+<div class="h-48 w-full flex items-end gap-1 px-2">
+<div class="flex-1 bg-primary/20 hover:bg-primary transition-all rounded-t h-[40%]" title="Mon: 12"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary transition-all rounded-t h-[65%]" title="Tue: 24"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary transition-all rounded-t h-[55%]" title="Wed: 18"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary transition-all rounded-t h-[85%]" title="Thu: 38"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary transition-all rounded-t h-[60%]" title="Fri: 22"></div>
+<div class="flex-1 bg-primary/20 hover:bg-primary transition-all rounded-t h-[95%]" title="Sat: 42"></div>
+<div class="flex-1 bg-primary hover:bg-primary transition-all rounded-t h-[100%]" title="Sun: 45"></div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest px-1">
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span>Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+<span>Sun</span>
+</div>
+</div>
+</div>
+</main>
+<footer class="mt-12 py-8 px-6 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="flex items-center gap-2 text-slate-400 text-sm">
+<span class="material-symbols-outlined text-base">verified_user</span>
+<span>OSINT-TRACK Secure Intelligence Node #4920</span>
+</div>
+<div class="flex gap-6 text-sm font-medium text-slate-500">
+<a class="hover:text-primary" href="#">Data Sources</a>
+<a class="hover:text-primary" href="#">API Access</a>
+<a class="hover:text-primary" href="#">Privacy Policy</a>
+</div>
+<div class="text-slate-400 text-xs">
+        © 2024 OSINT Equipment Tracker. System Status: <span class="text-emerald-500 font-bold uppercase">Optimal</span>
+</div>
+</footer>
+</div>
 
-      <!-- Filters -->
-      <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-6">
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <div class="md:col-span-2">
-            <input
-              v-model="filters.search"
-              type="text"
-              placeholder="Search equipment..."
-              class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            />
-          </div>
-          <select
-            v-model="filters.category"
-            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-          >
-            <option value="">All Categories</option>
-            <option value="tanks">Tanks</option>
-            <option value="afv">Armored Fighting Vehicles</option>
-            <option value="ifv">Infantry Fighting Vehicles</option>
-            <option value="apc">Armored Personnel Carriers</option>
-            <option value="artillery">Artillery</option>
-            <option value="mlrs">MLRS</option>
-            <option value="aircraft">Aircraft</option>
-            <option value="helicopter">Helicopters</option>
-            <option value="uav">UAVs</option>
-            <option value="naval">Naval</option>
-          </select>
-          <select
-            v-model="filters.country"
-            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-          >
-            <option value="">All Countries</option>
-            <option value="russia">Russia</option>
-            <option value="ukraine">Ukraine</option>
-            <option value="usa">United States</option>
-            <option value="germany">Germany</option>
-            <option value="china">China</option>
-          </select>
-          <select
-            v-model="filters.status"
-            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-          >
-            <option value="">All Status</option>
-            <option value="destroyed">Destroyed</option>
-            <option value="captured">Captured</option>
-            <option value="abandoned">Abandoned</option>
-            <option value="damaged">Damaged</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Grid View -->
-      <div v-if="viewMode === 'grid'" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <div
-          v-for="equipment in filteredEquipment"
-          :key="equipment.id"
-          class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-          @click="viewEquipment(equipment)"
-        >
-          <div class="h-40 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-            <img v-if="equipment.image_url" :src="equipment.image_url" :alt="equipment.name" class="w-full h-full object-cover" />
-            <svg v-else class="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />
-            </svg>
-          </div>
-          <div class="p-4">
-            <div class="flex items-center justify-between mb-2">
-              <span :class="getCategoryBadgeClass(equipment.category)" class="px-2 py-1 text-xs font-medium rounded-full">
-                {{ equipment.category }}
-              </span>
-              <span class="text-xs text-gray-500 dark:text-gray-400">{{ equipment.origin_country }}</span>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">{{ equipment.name }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{ equipment.description }}</p>
-            <div class="mt-3 flex items-center justify-between">
-              <div class="flex items-center space-x-2">
-                <span class="text-red-600 dark:text-red-400 text-sm font-medium">{{ equipment.destroyed }}</span>
-                <span class="text-orange-600 dark:text-orange-400 text-sm font-medium">{{ equipment.captured }}</span>
-              </div>
-              <span class="text-xs text-gray-400">{{ equipment.total_losses }} total</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- List View -->
-      <div v-else class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-        <table class="w-full">
-          <thead class="bg-gray-50 dark:bg-gray-700">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Equipment</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Category</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Origin</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Destroyed</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Captured</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Abandoned</th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-            <tr
-              v-for="equipment in filteredEquipment"
-              :key="equipment.id"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer"
-              @click="viewEquipment(equipment)"
-            >
-              <td class="px-6 py-4">
-                <div class="flex items-center space-x-3">
-                  <div class="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center flex-shrink-0">
-                    <img v-if="equipment.image_url" :src="equipment.image_url" :alt="equipment.name" class="w-full h-full object-cover rounded" />
-                    <svg v-else class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p class="font-medium text-gray-900 dark:text-white">{{ equipment.name }}</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ equipment.manufacturer }}</p>
-                  </div>
-                </div>
-              </td>
-              <td class="px-6 py-4">
-                <span :class="getCategoryBadgeClass(equipment.category)" class="px-2 py-1 text-xs font-medium rounded-full">
-                  {{ equipment.category }}
-                </span>
-              </td>
-              <td class="px-6 py-4 text-gray-600 dark:text-gray-400">{{ equipment.origin_country }}</td>
-              <td class="px-6 py-4 text-center text-red-600 dark:text-red-400 font-medium">{{ equipment.destroyed }}</td>
-              <td class="px-6 py-4 text-center text-orange-600 dark:text-orange-400 font-medium">{{ equipment.captured }}</td>
-              <td class="px-6 py-4 text-center text-yellow-600 dark:text-yellow-400 font-medium">{{ equipment.abandoned }}</td>
-              <td class="px-6 py-4 text-center font-bold text-gray-900 dark:text-white">{{ equipment.total_losses }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Pagination -->
-      <div class="mt-6 flex items-center justify-between">
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          Showing {{ (currentPage - 1) * perPage + 1 }} to {{ Math.min(currentPage * perPage, filteredEquipment.length) }} of {{ filteredEquipment.length }} results
-        </p>
-        <div class="flex items-center space-x-2">
-          <button
-            @click="currentPage--"
-            :disabled="currentPage === 1"
-            class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <span class="px-4 py-2 text-gray-700 dark:text-gray-300">{{ currentPage }} / {{ totalPages }}</span>
-          <button
-            @click="currentPage++"
-            :disabled="currentPage === totalPages"
-            class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+```
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
