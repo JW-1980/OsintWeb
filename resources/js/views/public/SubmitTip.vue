@@ -1,312 +1,455 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Public Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <div class="flex items-center space-x-2">
-            <router-link to="/" class="flex items-center space-x-2">
-              <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
-              </div>
-              <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">OsintWeb</span>
-            </router-link>
-          </div>
-          <div class="hidden md:flex items-center space-x-6">
-            <router-link to="/explore" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Map</router-link>
-            <router-link to="/explore/events" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Events</router-link>
-            <router-link to="/explore/equipment" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Equipment</router-link>
-            <router-link to="/about" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">About</router-link>
-          </div>
-          <div class="flex items-center space-x-4">
-            <button @click="toggleTheme" class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              <svg v-if="isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            </button>
-            <router-link to="/login" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Login</router-link>
-          </div>
-        </div>
-      </div>
-    </nav>
+<div>
+    <!-- Multi-step form wrapper -->
+    <div v-if="currentStep === 1">
 
-    <!-- Main Content -->
-    <div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-2xl mx-auto">
-        <!-- Success Message -->
-        <div v-if="submitted" class="text-center py-16">
-          <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-10 h-10 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Tip Submitted Successfully</h1>
-          <p class="text-lg text-gray-600 dark:text-gray-400 mb-8">
-            Thank you for your contribution. Our team will review your submission and may reach out if additional information is needed.
-          </p>
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              @click="resetForm"
-              class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
-            >
-              Submit Another Tip
-            </button>
-            <router-link
-              to="/explore/events"
-              class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium rounded-lg transition-colors"
-            >
-              Browse Events
-            </router-link>
-          </div>
-        </div>
-
-        <!-- Form -->
-        <div v-else>
-          <!-- Header -->
-          <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">Submit a Tip</h1>
-            <p class="text-gray-600 dark:text-gray-400">
-              Help us track events by submitting information. You can remain anonymous.
-            </p>
-          </div>
-
-          <!-- Info Box -->
-          <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-8">
-            <div class="flex items-start">
-              <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div class="text-sm text-blue-800 dark:text-blue-300">
-                <p class="font-medium mb-1">Privacy Notice</p>
-                <p class="text-blue-700 dark:text-blue-400">All submissions are reviewed by our verification team. Your contact information is optional and will only be used if we need to follow up on your tip. We do not share personal information with third parties.</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Error Message -->
-          <div v-if="submitError" class="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-400 rounded-lg flex items-center">
-            <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
-            {{ submitError }}
-          </div>
-
-          <!-- Form Card -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 md:p-8">
-            <form @submit.prevent="handleSubmit" class="space-y-6">
-              <!-- Honeypot field (hidden from users, but bots will fill it) -->
-              <input type="text" v-model="form.honeypot" name="website" autocomplete="off" style="display: none;" tabindex="-1" />
-              <!-- Title -->
-              <div>
-                <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Title <span class="text-red-500">*</span>
-                </label>
-                <input
-                  id="title"
-                  v-model="form.title"
-                  type="text"
-                  required
-                  placeholder="Brief description of the event"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  :class="{ 'border-red-500': errors.title }"
-                />
-                <p v-if="errors.title" class="mt-1 text-sm text-red-500">{{ errors.title }}</p>
-              </div>
-
-              <!-- Event Type -->
-              <div>
-                <label for="event_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Event Type
-                </label>
-                <select
-                  id="event_type"
-                  v-model="form.event_type"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                >
-                  <option value="">Select a type (optional)</option>
-                  <option value="combat_engagement">Combat Engagement</option>
-                  <option value="airstrike">Airstrike</option>
-                  <option value="artillery_strike">Artillery Strike</option>
-                  <option value="missile_strike">Missile Strike</option>
-                  <option value="equipment_destroyed">Equipment Destroyed</option>
-                  <option value="equipment_sighting">Equipment Sighting</option>
-                  <option value="troop_movement">Troop Movement</option>
-                  <option value="infrastructure_damage">Infrastructure Damage</option>
-                  <option value="civilian_casualties">Civilian Casualties</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <!-- Description -->
-              <div>
-                <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Description <span class="text-red-500">*</span>
-                </label>
-                <textarea
-                  id="description"
-                  v-model="form.description"
-                  required
-                  rows="5"
-                  placeholder="Provide detailed information about what you witnessed or found..."
-                  class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-y"
-                  :class="{ 'border-red-500': errors.description }"
-                ></textarea>
-                <p v-if="errors.description" class="mt-1 text-sm text-red-500">{{ errors.description }}</p>
-              </div>
-
-              <!-- Location -->
-              <div>
-                <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Location
-                  <span class="text-gray-400 font-normal">(optional)</span>
-                </label>
-                <input
-                  id="location"
-                  v-model="form.location"
-                  type="text"
-                  placeholder="City, region, or coordinates"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                />
-                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Include as much location detail as possible</p>
-              </div>
-
-              <!-- Date/Time -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label for="date" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Date
-                    <span class="text-gray-400 font-normal">(optional)</span>
-                  </label>
-                  <input
-                    id="date"
-                    v-model="form.date"
-                    type="date"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  />
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<header class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 px-8 py-4 bg-white dark:bg-background-dark sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl">shield_with_heart</span>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold tracking-tight">OSINT Intel Tracker</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Map</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Database</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="w-64 pl-10 pr-4 py-2 rounded-lg border-none bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary text-sm" placeholder="Search intel database..."/>
+</div>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="size-9 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs ring-2 ring-slate-200 dark:ring-slate-700">
+                    JD
                 </div>
-                <div>
-                  <label for="time" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Approximate Time
-                    <span class="text-gray-400 font-normal">(optional)</span>
-                  </label>
-                  <input
-                    id="time"
-                    v-model="form.time"
-                    type="time"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                  />
-                </div>
-              </div>
+</div>
+</header>
+<main class="flex-1 flex max-w-7xl mx-auto w-full px-4 py-8 gap-8">
+<aside class="w-72 hidden lg:flex flex-col gap-8 shrink-0">
+<div class="flex flex-col gap-6">
+<div>
+<h3 class="text-slate-900 dark:text-white font-bold mb-1">Submission Progress</h3>
+<p class="text-slate-500 text-xs">Complete all steps for verification</p>
+</div>
+<div class="flex flex-col gap-1">
+<div class="active-step flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border border-primary/20">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-semibold">Tip Type</span>
+<span class="material-symbols-outlined ml-auto text-sm">radio_button_checked</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">location_on</span>
+<span class="text-sm font-medium">Location</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">format_list_bulleted</span>
+<span class="text-sm font-medium">Details</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">attach_file</span>
+<span class="text-sm font-medium">Attachments</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">verified_user</span>
+<span class="text-sm font-medium">Verification</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">check_circle</span>
+<span class="text-sm font-medium">Review</span>
+</div>
+</div>
+</div>
+<div class="mt-auto p-5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-2 mb-3 text-primary">
+<span class="material-symbols-outlined">verified</span>
+<h4 class="font-bold text-sm">Verification Policy</h4>
+</div>
+<p class="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+                        Our analysts cross-reference all submissions with satellite imagery and social media geolocations. Providing clear evidence increases report confidence scores.
+                    </p>
+<a class="inline-block mt-3 text-xs font-semibold text-primary hover:underline" href="#">Read methodology</a>
+</div>
+</aside>
+<section class="flex-1 flex flex-col gap-6">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">verified_user</span>
+</div>
+<div>
+<p class="text-slate-900 dark:text-white font-bold">Secure &amp; Anonymous Submission</p>
+<p class="text-slate-500 text-sm">Military-grade encryption for all data transmissions.</p>
+</div>
+</div>
+<button class="w-full sm:w-auto px-4 py-2 text-sm font-semibold rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+                        Security Whitepaper
+                    </button>
+</div>
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8">
+<div class="mb-8">
+<h1 class="text-3xl font-black text-slate-900 dark:text-white mb-2">Select Tip Type</h1>
+<p class="text-slate-500">Choose the category that best aligns with your intelligence report to help us route it to the right analytical team.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<button class="group relative aspect-square rounded-2xl overflow-hidden border-2 border-primary ring-4 ring-primary/20 transition-all text-left">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent z-10"></div>
+<img alt="Military troop movements in the field" class="absolute inset-0 size-full object-cover transition-transform group-hover:scale-105" data-alt="Abstract dark military operation visual" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAViH6ek8I9MroK3vKKMmx11531i3UzVrQuYnjDhI6fGM9ZG_6DgL1A_AACBkNvSV97cjD23XYq-x16E0e6ynlLWaS5uRnuZC04jFuzTPwQgfda-m8W1cHyE99QyNuSmjQQPgtwhH9U7xRR7rrtZFh0bYaji4jysuntSZFmABYiHyJSSHfjBP-14plBnihbF4IvtmttLrOdtIc3U_1Sh4luouV4-GowA0BGEBkqKdZHyL329nvzu5OVhBueFPYAPs6ReqZOFdt8w4co"/>
+<div class="absolute bottom-0 left-0 p-6 z-20 w-full">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-white text-3xl">event_available</span>
+<span class="bg-primary text-white size-6 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-sm font-bold">check</span>
+</span>
+</div>
+<h3 class="text-white font-bold text-xl mb-1">Event</h3>
+<p class="text-slate-300 text-xs leading-snug">Troop movements, combat actions, or strategic maneuvers.</p>
+</div>
+</button>
+<button class="group relative aspect-square rounded-2xl overflow-hidden border-2 border-transparent hover:border-slate-400 dark:hover:border-slate-600 transition-all text-left">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent z-10"></div>
+<img alt="Military vehicle and equipment identification" class="absolute inset-0 size-full object-cover transition-transform group-hover:scale-105" data-alt="Tanks and heavy military equipment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXW5EugnAGSatI159VB84EzryXqDcMnS_Jx9mJbVumubSHKhUOu1G0fFo2XqfmVVXlkeObemg2dsZed9RiGdPixUArnlUGQU746hUBHho9MKY5hkSBRP3HnX6TiJFpmntWDxdASDHaH42gpvPhGw8XEJEVE9BC73faWDBRwkLEcHs0rDk5yJYwDkWc4OIkjX425yN2aCKQrAaMsojxUDLGvjzIdmwwhJ0KAYFT2Gjkt4Vz6tEfHy99o8C9fTJZ9VoQblDBPKrSRM5O"/>
+<div class="absolute bottom-0 left-0 p-6 z-20 w-full">
+<div class="flex items-center mb-2">
+<span class="material-symbols-outlined text-white text-3xl">local_shipping</span>
+</div>
+<h3 class="text-white font-bold text-xl mb-1">Equipment Sighting</h3>
+<p class="text-slate-300 text-xs leading-snug">Specific hardware, serial numbers, or new weapon systems.</p>
+</div>
+</button>
+<button class="group relative aspect-square rounded-2xl overflow-hidden border-2 border-transparent hover:border-slate-400 dark:hover:border-slate-600 transition-all text-left">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent z-10"></div>
+<img alt="Intelligence documents and generic digital analysis" class="absolute inset-0 size-full object-cover transition-transform group-hover:scale-105" data-alt="Abstract blue digital network background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgG68MJ22aCwspyX4JftwIE1kZRrridgJ8Dc8XqLDzKY-xBZUguvO6kGr5d6hGdgtYuR_met7UoNTq7zZGujS4b6Cj_4zKjHAPa4Q54lpxhEukKBT9WE_jYFnvaNekTiawuHZPYBZ3ONTok-eAvUeyQykKuUpt-xIgcIAgpsbprVumtEBtHX8Rn2mtSCc1BPt2SZgfr0iUVPsneVER--NJXdyLyBpSdDGKrTLG15g5te6cA2i4BOUQiuaMYMYFx8ia85ybJ2_qCS8s"/>
+<div class="absolute bottom-0 left-0 p-6 z-20 w-full">
+<div class="flex items-center mb-2">
+<span class="material-symbols-outlined text-white text-3xl">more_horiz</span>
+</div>
+<h3 class="text-white font-bold text-xl mb-1">Other</h3>
+<p class="text-slate-300 text-xs leading-snug">Financial transactions, cyber activity, or miscellaneous intel.</p>
+</div>
+</button>
+</div>
+<div class="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-2 text-slate-500 text-sm">
+<span class="material-symbols-outlined text-sm">info</span>
+<span>Selection can be changed later</span>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-3 font-semibold rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                Cancel
+                            </button>
+<button class="px-10 py-3 bg-primary text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
+<span>Continue</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
 
-              <!-- Sources -->
-              <div>
-                <label for="sources" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Sources / Links
-                  <span class="text-gray-400 font-normal">(optional)</span>
-                </label>
-                <textarea
-                  id="sources"
-                  v-model="form.sources"
-                  rows="3"
-                  placeholder="Add links to social media posts, news articles, or other sources (one per line)"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-y"
-                ></textarea>
-              </div>
+```
+</div>
+    <div v-else-if="currentStep === 2">
 
-              <!-- Divider -->
-              <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">Contact Information (Optional)</h3>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                  Provide your contact info only if you want us to follow up. This is completely optional.
-                </p>
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-slate-200 dark:border-slate-800 bg-background-light dark:bg-background-dark px-6 md:px-10 py-3 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 bg-primary rounded flex items-center justify-center text-white">
+<span class="material-symbols-outlined">radar</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">OSINT Tracker</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Map</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Intelligence</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-4 items-center">
+<label class="hidden sm:flex items-center relative min-w-40 max-w-64">
+<span class="material-symbols-outlined absolute left-3 text-slate-400 text-xl">search</span>
+<input class="form-input w-full rounded-lg border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900/50 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary pl-10 pr-4 py-2 text-sm" placeholder="Search Intel Database"/>
+</label>
+<div class="size-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-500 overflow-hidden border border-slate-300 dark:border-slate-700">
+<img class="w-full h-full object-cover" data-alt="User profile avatar placeholder" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXoTPOrb2QC8nMjn98d6UqVIKcei61GmmgNxZP77-U-fywc249QEg81kdsCpelTUN94YoYQrT_YTwNqGUIuXUFUqUt2Du2l7HiLFqTgv71vesxLBvmJn913Wch0ShY6_nSNj_EVy1wHFWsYaoA88kWqwDMRWbEX4q3Ry5AEPTLmfl88jZlV7Z9Ce-3ctFZGUjzkEcTETT21_mix8jEk6ZZmS5VD3NNKHjKa2Wh3X0XaEFdj3Yk2V2n489Si8Ho5vJwTx2bhs2UY75-"/>
+</div>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-8 px-4 md:px-10">
+<div class="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-8">
+<aside class="lg:col-span-3 flex flex-col gap-6">
+<div class="flex flex-col">
+<h1 class="text-slate-900 dark:text-slate-100 text-xl font-bold">Submit Intelligence Tip</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Provide accurate data for validation</p>
+</div>
+<nav class="flex flex-col gap-1">
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-emerald-600 dark:text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10">
+<span class="material-symbols-outlined filled-icon">check_circle</span>
+<span class="text-sm font-semibold">1. Basic Info</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary bg-primary/10 border border-primary/20">
+<span class="material-symbols-outlined filled-icon">location_on</span>
+<span class="text-sm font-semibold">2. Location</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">schedule</span>
+<span class="text-sm font-medium">3. Date &amp; Time</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined">attachment</span>
+<span class="text-sm font-medium">4. Evidence</span>
+</div>
+</nav>
+<div class="mt-4 p-4 rounded-xl bg-slate-100 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-2 mb-2 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-sm">info</span>
+<span class="text-xs font-bold uppercase tracking-wider">Guidelines</span>
+</div>
+<p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Ensure the coordinates are as precise as possible. For urban areas, include the street address or identifiable landmarks to aid verification.
+                        </p>
+</div>
+</aside>
+<section class="lg:col-span-9 flex flex-col gap-6">
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+<div class="p-6 border-b border-slate-200 dark:border-slate-800">
+<h2 class="text-slate-900 dark:text-slate-100 text-2xl font-bold">Location Details</h2>
+<p class="text-slate-500 dark:text-slate-400 text-sm mt-1">Pin the exact location of the event on the map or enter precise coordinates.</p>
+</div>
+<div class="p-6 flex flex-col gap-6">
+<div class="relative w-full aspect-[21/9] bg-slate-200 dark:bg-slate-800 rounded-lg overflow-hidden group">
+<div class="absolute inset-0 bg-cover bg-center opacity-80" data-alt="Satellite imagery map showing conflict zone terrain" data-location="Kyiv, Ukraine" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhCjSInm004snxV2BzMJ3Ggg1QePYteFxaxO9pEcACQqpn1vdw0c5aplnAm5Mgql5bwiWGnsIP9OFvVaUJQHO_HL5nVhvCf-jZJT6CwINa42BhEqJZP1ySgV_6PYjCgyLfYcKMwXMEQ9HZTdyCY5CNvbNnWaKGcfVuupZVkio3dt1vGluiLDUQ5SwpIi-fz_BHmrt1G1iIgc5nCzCrqQ060YOrMjbpkB486QhdQDb47NhJCLRum0JYtGrNZB33P9o5AKcQhGl9eno4');"></div>
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="material-symbols-outlined text-primary text-5xl filled-icon drop-shadow-md">location_on</span>
+</div>
+<div class="absolute bottom-4 right-4 flex flex-col gap-2">
+<button class="size-10 bg-white dark:bg-slate-800 rounded-lg shadow-lg flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-primary transition-colors border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="size-10 bg-white dark:bg-slate-800 rounded-lg shadow-lg flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-primary transition-colors border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+<div class="absolute top-4 left-4 bg-background-dark/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700/50 text-xs font-mono text-emerald-400">
+                                    50.4501° N, 30.5234° E
+                                </div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Latitude</label>
+<input class="form-input w-full rounded-lg border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4" placeholder="e.g. 50.4501" type="text" value="50.4501"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Longitude</label>
+<input class="form-input w-full rounded-lg border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4" placeholder="e.g. 30.5234" type="text" value="30.5234"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Location Name or Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">near_me</span>
+<input class="form-input w-full rounded-lg border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 text-slate-900 dark:text-slate-100 focus:border-primary focus:ring-1 focus:ring-primary h-12 pl-10 pr-4" placeholder="Maidan Nezalezhnosti, Kyiv, Ukraine" type="text"/>
+</div>
+</div>
+</div>
+<div class="p-6 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+<button class="flex items-center gap-2 px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-xl">arrow_back</span>
+                                Back
+                            </button>
+<button class="flex items-center gap-2 px-8 py-2.5 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
+                                Continue to Date &amp; Time
+                                <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl border border-primary/20 bg-primary/5">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-slate-900 dark:text-slate-100">Automatic Geolocation Verification</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Our system will cross-reference these coordinates with known satellite metadata upon submission.</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer class="mt-auto py-6 px-10 border-t border-slate-200 dark:border-slate-800 text-center text-slate-500 dark:text-slate-400 text-xs">
+            © 2024 OSINT Tracker Global Intelligence Network. All Rights Reserved. Restricted Access Level 3.
+        </footer>
+</div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label for="contact_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Name
-                    </label>
-                    <input
-                      id="contact_name"
-                      v-model="form.contact_name"
-                      type="text"
-                      placeholder="Your name"
-                      class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <label for="contact_email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Email
-                    </label>
-                    <input
-                      id="contact_email"
-                      v-model="form.contact_email"
-                      type="email"
-                      placeholder="your@email.com"
-                      class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
-                    />
-                  </div>
-                </div>
-              </div>
+</div>
+    <div v-else-if="currentStep === 3">
 
-              <!-- Captcha Placeholder -->
-              <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
-                <div class="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    v-model="form.captcha"
-                    id="captcha"
-                    class="w-5 h-5 text-blue-600 rounded focus:ring-blue-500"
-                  />
-                  <label for="captcha" class="text-sm text-gray-700 dark:text-gray-300">
-                    I am not a robot
-                  </label>
-                </div>
-                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                  Captcha verification placeholder - implement reCAPTCHA in production
-                </p>
-              </div>
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-accent-dark px-10 py-3 bg-white dark:bg-background-dark sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">shield_with_heart</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">OSINT Intel Tracker</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Map</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="#">Intelligence</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="#">Submit Tip</a>
+</nav>
+</div>
+<div class="flex flex-1 justify-end gap-4">
+<label class="hidden lg:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full border border-slate-200 dark:border-accent-dark bg-slate-100 dark:bg-accent-dark overflow-hidden">
+<div class="text-slate-500 dark:text-slate-400 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent text-slate-900 dark:text-white focus:ring-0 placeholder:text-slate-500 dark:placeholder:text-slate-400 px-3 text-sm font-normal" placeholder="Search Intel..." value=""/>
+</div>
+</label>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-accent-dark text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-slate-100 dark:bg-accent-dark text-slate-700 dark:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-1 flex justify-center py-8 px-4 md:px-10">
+<div class="layout-content-container flex flex-col max-w-4xl flex-1">
+<div class="flex flex-wrap gap-2 mb-6">
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-primary" href="#">Home</a>
+<span class="text-slate-400 text-sm">/</span>
+<a class="text-slate-500 dark:text-slate-400 text-sm font-medium hover:text-primary" href="#">Submit Tip</a>
+<span class="text-slate-400 text-sm">/</span>
+<span class="text-primary text-sm font-semibold">Review &amp; Submit</span>
+</div>
+<div class="mb-10">
+<h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight mb-2">Final Review &amp; Submission</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg">You are moments away from contributing to global security awareness. Please review and finalize your intelligence report.</p>
+</div>
+<div class="grid grid-cols-1 gap-8">
+<section class="bg-white dark:bg-neutral-dark rounded-xl border border-slate-200 dark:border-accent-dark overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-accent-dark bg-slate-50/50 dark:bg-accent-dark/30 flex items-center gap-3">
+<span class="flex items-center justify-center size-8 rounded-full bg-primary text-white font-bold text-sm">5</span>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold">Evidence Upload</h2>
+</div>
+<div class="p-8">
+<div class="flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-primary dark:hover:border-primary px-6 py-14 transition-colors group cursor-pointer bg-slate-50/50 dark:bg-background-dark/20">
+<div class="bg-primary/10 dark:bg-primary/20 p-4 rounded-full text-primary">
+<span class="material-symbols-outlined text-4xl">cloud_upload</span>
+</div>
+<div class="flex max-w-md flex-col items-center gap-2">
+<p class="text-slate-900 dark:text-white text-lg font-bold text-center">Drag and drop evidence files here</p>
+<p class="text-slate-600 dark:text-slate-400 text-sm text-center">
+                                            High-resolution imagery, video logs (MP4, MOV), or scanned documents (PDF). <br/>Encryption enabled. Max file size <span class="font-bold">500MB</span>.
+                                        </p>
+</div>
+<button class="flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary text-white text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all">
+<span class="truncate">Browse Local Files</span>
+</button>
+</div>
+<div class="mt-6 flex flex-wrap gap-4">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+                                        End-to-end encrypted
+                                    </div>
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs">
+<span class="material-symbols-outlined text-sm">history</span>
+                                        Metadata stripped by default
+                                    </div>
+</div>
+</div>
+</section>
+<section class="bg-white dark:bg-neutral-dark rounded-xl border border-slate-200 dark:border-accent-dark overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-slate-200 dark:border-accent-dark bg-slate-50/50 dark:bg-accent-dark/30 flex items-center gap-3">
+<span class="flex items-center justify-center size-8 rounded-full bg-primary text-white font-bold text-sm">6</span>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold">Optional Contact Info</h2>
+</div>
+<div class="p-8">
+<div class="flex items-center justify-between mb-8 p-4 bg-slate-100 dark:bg-accent-dark/50 rounded-lg">
+<div class="flex flex-col">
+<span class="text-slate-900 dark:text-white font-bold">Submit Anonymously</span>
+<span class="text-slate-600 dark:text-slate-400 text-sm">Hide your identity from analysts and public logs.</span>
+</div>
+<button class="relative inline-flex h-6 w-11 items-center rounded-full bg-primary">
+<span class="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-40 pointer-events-none">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Name / Handle</label>
+<input class="bg-slate-100 dark:bg-accent-dark border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="John Doe" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Secure Email / PGP ID</label>
+<input class="bg-slate-100 dark:bg-accent-dark border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2 text-slate-900 dark:text-white focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="proton@example.com" type="text"/>
+</div>
+</div>
+<p class="mt-4 text-xs text-slate-500 dark:text-slate-400 italic">
+                                    Anonymous submission is enabled. No personal identifiers will be logged with this tip.
+                                </p>
+</div>
+</section>
+<div class="flex flex-col gap-6 mt-4">
+<div class="flex items-start gap-4 p-4 bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-lg">
+<span class="material-symbols-outlined text-primary mt-0.5">info</span>
+<p class="text-sm text-slate-700 dark:text-slate-300">
+                                    By clicking "Submit Tip Securely", you confirm that this intelligence is accurate to the best of your knowledge and that you comply with our <a class="text-primary underline" href="#">Terms of Reporting</a>.
+                                </p>
+</div>
+<div class="flex flex-col md:flex-row items-center gap-4">
+<button class="w-full md:w-auto flex-1 flex items-center justify-center gap-3 bg-primary hover:bg-primary/90 text-white font-bold py-4 px-8 rounded-xl shadow-xl shadow-primary/30 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">lock</span>
+                                    Submit Tip Securely
+                                </button>
+<button class="w-full md:w-auto bg-slate-200 dark:bg-accent-dark hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-white font-bold py-4 px-8 rounded-xl transition-all">
+                                    Save Draft
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="border-t border-slate-200 dark:border-accent-dark py-10 px-10 bg-white dark:bg-background-dark mt-auto">
+<div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex flex-col items-center md:items-start gap-2">
+<div class="flex items-center gap-2 text-primary font-bold">
+<span class="material-symbols-outlined">security</span>
+                            OSINT Tracker
+                        </div>
+<p class="text-slate-500 dark:text-slate-400 text-xs">Verifying the battlefield, one tip at a time.</p>
+</div>
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-primary text-sm font-medium" href="#">Privacy Policy</a>
+<a class="text-slate-500 hover:text-primary text-sm font-medium" href="#">Safe Reporting Guide</a>
+<a class="text-slate-500 hover:text-primary text-sm font-medium" href="#">API Access</a>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs">© 2024 Intel Analysis Group</p>
+</div>
+</footer>
+</div>
+</div>
 
-              <!-- Submit Button -->
-              <button
-                type="submit"
-                :disabled="submitting"
-                class="w-full py-3 px-6 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span v-if="submitting" class="flex items-center justify-center">
-                  <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Submitting...
-                </span>
-                <span v-else>Submit Tip</span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto text-center">
-        <p class="text-gray-400">Your privacy is important to us. <router-link to="/about" class="text-blue-400 hover:underline">Learn more about our practices</router-link>.</p>
-      </div>
-    </footer>
-  </div>
+</div>
+</div>
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, reactive, computed } from 'vue';
 import { useThemeStore } from '@/stores/theme';
 import { useApi } from '@/composables/useApi';
@@ -417,4 +560,5 @@ const resetForm = () => {
   submitted.value = false;
   submitError.value = '';
 };
+const currentStep = ref(1);
 </script>
