@@ -777,7 +777,7 @@ class SitrepTemplatesSeeder extends Seeder
         ];
 
         foreach ($templates as $template) {
-            DB::table('sitrep_templates')->insert([
+            DB::table('sitrep_templates')->insertOrIgnore([
                 ...$template,
                 'created_at' => $now,
                 'updated_at' => $now,

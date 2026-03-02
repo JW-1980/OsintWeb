@@ -75,9 +75,6 @@ class ActorController extends Controller
             'conflicts',
             'aliases',
             'relationships.relatedActor',
-            'events' => function ($q) {
-                $q->orderBy('occurred_at', 'desc')->limit(10);
-            }
         ])->findOrFail($id);
 
         return $this->success($actor);

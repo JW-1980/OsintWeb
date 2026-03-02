@@ -35,14 +35,14 @@
     <!-- Filters -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
       <div class="flex flex-wrap gap-4">
-        <select v-model="filters.status" @change="fetchExperiments" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+        <select v-model="filters.status" @change="() => fetchExperiments()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
           <option value="">All Statuses</option>
           <option value="draft">Draft</option>
           <option value="running">Running</option>
           <option value="paused">Paused</option>
           <option value="completed">Completed</option>
         </select>
-        <select v-model="filters.type" @change="fetchExperiments" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
+        <select v-model="filters.type" @change="() => fetchExperiments()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm">
           <option value="">All Types</option>
           <option value="text">Text</option>
           <option value="button">Button</option>
@@ -582,7 +582,7 @@ const getStatusClass = (status: string): string => {
     paused: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400',
     completed: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
   };
-  return classes[status] || classes.draft;
+  return classes[status] ?? classes.draft ?? '';
 };
 
 const getConversionRateClass = (rate: number | undefined): string => {

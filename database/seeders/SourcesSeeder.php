@@ -707,7 +707,7 @@ class SourcesSeeder extends Seeder
                 continue;
             }
 
-            DB::table('sources')->insert([
+            DB::table('sources')->insertOrIgnore([
                 'uuid' => (string) Str::uuid(),
                 'name' => $sourceData['name'],
                 'url' => $sourceData['url'] ?? null,
