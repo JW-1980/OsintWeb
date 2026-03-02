@@ -232,10 +232,10 @@ OsintWeb provides powerful tools for:
 *   **Skills Administration**: Manage skills with triggers, configurations, and agent assignments.
 *   **Transcription**: AI-powered audio transcription with speaker identification.
 
-### 🧠 Multi-Provider AI Inference (All Free Tier)
-*   **5 Inference Providers**: OpenRouter, Google Gemini, Groq, Cerebras, and Mistral AI - all with free tiers.
+### 🧠 Multi-Provider AI Inference (9 Providers, All Free Tier)
+*   **9 Inference Providers**: OpenRouter, Google Gemini, Groq, Cerebras, Mistral AI, SambaNova, GitHub Models, Together AI, and Novita AI.
 *   **OpenAI-Compatible**: All providers use OpenAI-compatible endpoints for seamless switching.
-*   **Automatic Fallback**: If one provider is rate-limited or fails, automatically try the next available provider.
+*   **Automatic Fallback**: If one provider is rate-limited or fails, automatically try the next in the fallback chain.
 *   **Task-Specific Routing**: Configure different providers for different tasks (vision, translation, etc.).
 *   **Provider Comparison**:
 
@@ -246,12 +246,18 @@ OsintWeb provides powerful tools for:
 | [Groq](https://console.groq.com/) | **Fastest** | 128K | Yes | 30 RPM, 14,400 requests/day |
 | [Cerebras](https://cloud.cerebras.ai/) | **Fastest** | 128K | No | 30 RPM, **1B tokens/month** |
 | [Mistral AI](https://console.mistral.ai/) | Fast | 128K | Yes | Experimental tier, European provider |
+| [SambaNova](https://cloud.sambanova.ai/) | **Fastest** | 128K | Yes | 10-30 RPM, RDU hardware, DeepSeek/Llama/Qwen |
+| [GitHub Models](https://github.com/marketplace/models) | Medium | 128K | Yes | Free with GitHub account, Llama/Mistral/Phi |
+| [Together AI](https://www.together.ai/) | Fast | 128K | Yes | 200+ models, free credits, sub-100ms latency |
+| [Novita AI](https://novita.ai/) | Fast | 128K | No | Free models (Llama, Qwen, GLM), 300 tok/sec |
 
 *   **Use Cases**:
     - **OCR & Vision**: Gemini (1M context) or Groq (speed) for document analysis
     - **Translation**: Mistral (multilingual) or Gemini (long documents)
-    - **Entity Extraction**: Groq or Cerebras for fastest NER processing
+    - **Entity Extraction**: Groq, Cerebras, or SambaNova for fastest NER processing
     - **Classification**: Any provider with instant model switching
+    - **Large Documents**: Gemini (1M context window) for long document analysis
+    - **Rapid Prototyping**: Together AI (200+ models) or GitHub Models (free with PAT)
 
 ### 🔊 Audio Analysis & Spectrogram
 *   **Spectrogram Generation**: Create detailed frequency-time visualizations using sox/ffmpeg for audio forensic analysis.
@@ -330,6 +336,16 @@ OsintWeb provides powerful tools for:
 *   **Admin Action Logging**: Automatic middleware-based logging of all admin panel operations with IP tracking and user agent capture.
 *   **Session Management**: Track and terminate active user sessions.
 *   **Permission-Based Audit Access**: Separate `audit.view` and `audit.export` permissions control who can access the audit trail.
+
+### 🤖 Dual-Provider CAPTCHA Protection
+*   **Google reCAPTCHA v3**: Invisible score-based bot detection (0.0 bot to 1.0 human) with configurable score threshold. No user interaction required.
+*   **Cloudflare Turnstile**: Privacy-focused CAPTCHA alternative with managed challenges. GDPR-friendly pass/fail model without tracking cookies.
+*   **Admin Provider Selector**: Toggle between providers from the admin panel with provider-specific configuration cards.
+*   **Protected Routes**: CAPTCHA middleware applied to login, registration, password reset, and public tip submission endpoints.
+*   **Database-Backed Settings**: Provider selection and API keys stored in SystemSettings with 5-minute cache for instant switching.
+*   **Graceful Degradation**: When CAPTCHA is disabled, all protected routes function normally without verification.
+*   **Secret Key Masking**: Admin panel masks secret keys, showing only the last 4 characters for security.
+*   **Connectivity Testing**: Test provider configuration from the admin panel before enabling.
 
 ### 📊 User Activity Tracking
 *   **Public Activity Feed**: Real-time feed of community contributions for the homepage showing events created, sources verified, and evidence submitted.
@@ -467,6 +483,7 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 |----------|-----------|----------------|
 | Email Templates | `/api/admin/email-templates` | CRUD, preview, test, duplicate, stats, logs |
 | Achievements | `/api/admin/achievements` | CRUD for achievement management |
+| CAPTCHA Settings | `/api/admin/captcha` | Get/update settings, test provider connectivity |
 
 ### User Settings APIs
 | Category | Base Path | Key Operations |
