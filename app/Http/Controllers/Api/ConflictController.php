@@ -255,18 +255,42 @@ class ConflictController extends Controller
         $actorDetails = [];
         $allParties = array_merge($primaryParties, $secondaryParties);
 
+        $potentialActors = collect();
+        $potentialCountries = collect();
+
+        if (!empty($allParties)) {
+            // Optimize: Fetch all potential actors in one query
+            $potentialActors = DB::table('actors')
+                ->where(function ($query) use ($allParties) {
+                    foreach ($allParties as $party) {
+                        $query->orWhere('name', 'like', '%' . $party . '%');
+                    }
+                })
+                ->get();
+
+            // Optimize: Fetch all potential countries in one query
+            $potentialCountries = DB::table('countries')
+                ->where(function ($query) use ($allParties) {
+                    foreach ($allParties as $party) {
+                        $query->orWhere('name', 'like', '%' . $party . '%');
+                    }
+                })
+                ->get();
+        }
+
         foreach ($allParties as $party) {
-            $actor = DB::table('actors')
-                ->where('name', 'like', '%' . $party . '%')
-                ->first();
+            // Find in actors collection (case-insensitive check)
+            $actor = $potentialActors->first(function ($item) use ($party) {
+                return stripos($item->name, $party) !== false;
+            });
 
             if ($actor) {
                 $actorDetails[] = $actor;
             } else {
                 // Check if it's a country
-                $country = DB::table('countries')
-                    ->where('name', 'like', '%' . $party . '%')
-                    ->first();
+                $country = $potentialCountries->first(function ($item) use ($party) {
+                    return stripos($item->name, $party) !== false;
+                });
 
                 if ($country) {
                     $actorDetails[] = [
