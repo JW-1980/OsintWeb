@@ -2,6 +2,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useApi } from '@/composables/useApi';
+import { expertiseOptions, timezoneOptions, countryOptions } from '@/constants/options';
 
 import ProfileHeader from '@/components/profile/ProfileHeader.vue';
 import ProfileEditTab from '@/components/profile/ProfileEditTab.vue';
