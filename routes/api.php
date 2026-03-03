@@ -1049,6 +1049,12 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
             Route::post('/test', [CaptchaSettingsController::class, 'test']);
         });
 
+        // AI Provider Settings
+        Route::prefix('ai-settings')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Api\Admin\AISettingsController::class, 'index']);
+            Route::post('/test-connection', [\App\Http\Controllers\Api\Admin\AISettingsController::class, 'testConnection']);
+        });
+
         // Email Templates Management
         Route::prefix('email-templates')->group(function () {
             Route::get('/', [\App\Http\Controllers\Api\Admin\EmailTemplateController::class, 'index']);
