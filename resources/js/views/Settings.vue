@@ -1,719 +1,266 @@
 <template>
-  <div class="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
-    <div class="max-w-4xl mx-auto">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Settings</h1>
 
-      <!-- Settings Navigation -->
-      <div class="flex flex-wrap gap-2 mb-6">
-        <button
-          v-for="category in categories"
-          :key="category.id"
-          @click="activeCategory = category.id"
-          :class="[
-            'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-            activeCategory === category.id
-              ? 'bg-blue-600 text-white'
-              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-          ]"
-        >
-          {{ category.name }}
-        </button>
-      </div>
-
-      <!-- Profile Settings -->
-      <div v-if="activeCategory === 'profile'" class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Profile Information</h2>
-          <div class="space-y-4">
-            <div class="flex items-center space-x-4">
-              <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold">
-                {{ userInitials }}
-              </div>
-              <div>
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-                  Change Avatar
-                </button>
-                <button class="ml-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 text-sm">
-                  Remove
-                </button>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
-                <input
-                  v-model="profile.name"
-                  type="text"
-                  class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-                <input
-                  v-model="profile.email"
-                  type="email"
-                  class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone</label>
-                <input
-                  v-model="profile.phone"
-                  type="tel"
-                  class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Organization</label>
-                <input
-                  v-model="profile.organization"
-                  type="text"
-                  class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
-              <textarea
-                v-model="profile.bio"
-                rows="3"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              ></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Change Password</h2>
-          <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Password</label>
-              <input
-                v-model="password.current"
-                type="password"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New Password</label>
-                <input
-                  v-model="password.new"
-                  type="password"
-                  class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm Password</label>
-                <input
-                  v-model="password.confirm"
-                  type="password"
-                  class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-            </div>
-            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-              Update Password
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Appearance Settings -->
-      <div v-if="activeCategory === 'appearance'" class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Theme</h2>
-          <div class="grid grid-cols-3 gap-4">
-            <button
-              v-for="theme in themes"
-              :key="theme.value"
-              @click="appearance.theme = theme.value"
-              :class="[
-                'p-4 rounded-lg border-2 transition-all',
-                appearance.theme === theme.value
-                  ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/30'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-              ]"
-            >
-              <div :class="['w-full h-16 rounded mb-2', theme.preview]"></div>
-              <span class="text-sm font-medium text-gray-900 dark:text-white">{{ theme.label }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Display Options</h2>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Compact Mode</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Reduce spacing between elements</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="appearance.compactMode" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Show Sidebar Labels</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Display text labels in navigation</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="appearance.sidebarLabels" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Animations</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Enable UI animations and transitions</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="appearance.animations" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Language & Region</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Language</label>
-              <select
-                v-model="appearance.language"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="en">English</option>
-                <option value="nl">Nederlands</option>
-                <option value="de">Deutsch</option>
-                <option value="fr">Francais</option>
-                <option value="uk">Ukrainian</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Timezone</label>
-              <select
-                v-model="appearance.timezone"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="UTC">UTC</option>
-                <option value="Europe/Amsterdam">Europe/Amsterdam</option>
-                <option value="Europe/London">Europe/London</option>
-                <option value="Europe/Kiev">Europe/Kyiv</option>
-                <option value="America/New_York">America/New York</option>
-                <option value="America/Los_Angeles">America/Los Angeles</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date Format</label>
-              <select
-                v-model="appearance.dateFormat"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
-                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
-                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time Format</label>
-              <select
-                v-model="appearance.timeFormat"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="24h">24 Hour</option>
-                <option value="12h">12 Hour (AM/PM)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Notification Settings -->
-      <div v-if="activeCategory === 'notifications'" class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Email Notifications</h2>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">New Events</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Get notified when new events are added</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="notifications.newEvents" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Event Updates</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Get notified when events are updated</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="notifications.eventUpdates" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Weekly Digest</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Receive a weekly summary of activity</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="notifications.weeklyDigest" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Security Alerts</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Get notified about security-related events</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="notifications.securityAlerts" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Push Notifications</h2>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Enable Push Notifications</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Receive notifications in your browser</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="notifications.pushEnabled" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Sound</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Play sound for notifications</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="notifications.sound" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Alert Zones</h2>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Get notified about events in specific geographic areas</p>
-          <div class="space-y-3">
-            <div v-for="zone in alertZones" :key="zone.id" class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <div class="flex items-center space-x-3">
-                <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: zone.color }"></div>
-                <span class="text-gray-900 dark:text-white">{{ zone.name }}</span>
-              </div>
-              <button class="text-red-600 hover:text-red-700 text-sm">Remove</button>
-            </div>
-            <button class="w-full py-2 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-gray-500 dark:text-gray-400 hover:border-blue-500 hover:text-blue-500 transition-colors">
-              + Add Alert Zone
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Map Settings -->
-      <div v-if="activeCategory === 'map'" class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Default View</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Default Latitude</label>
-              <input
-                v-model.number="mapSettings.defaultLat"
-                type="number"
-                step="0.0001"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Default Longitude</label>
-              <input
-                v-model.number="mapSettings.defaultLng"
-                type="number"
-                step="0.0001"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Default Zoom Level</label>
-              <input
-                v-model.number="mapSettings.defaultZoom"
-                type="range"
-                min="1"
-                max="18"
-                class="w-full"
-              />
-              <span class="text-sm text-gray-500 dark:text-gray-400">Level: {{ mapSettings.defaultZoom }}</span>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Max Zoom Level</label>
-              <input
-                v-model.number="mapSettings.maxZoom"
-                type="range"
-                min="1"
-                max="20"
-                class="w-full"
-              />
-              <span class="text-sm text-gray-500 dark:text-gray-400">Level: {{ mapSettings.maxZoom }}</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Map Style</h2>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button
-              v-for="style in mapStyles"
-              :key="style.value"
-              @click="mapSettings.style = style.value"
-              :class="[
-                'p-3 rounded-lg border-2 transition-all text-center',
-                mapSettings.style === style.value
-                  ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/30'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-              ]"
-            >
-              <div class="w-full h-12 rounded mb-2 bg-gray-200 dark:bg-gray-600"></div>
-              <span class="text-sm font-medium text-gray-900 dark:text-white">{{ style.label }}</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Marker Settings</h2>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Clustering</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Group nearby markers together</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="mapSettings.clustering" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div v-if="mapSettings.clustering">
-              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Cluster Radius (px)</label>
-              <input
-                v-model.number="mapSettings.clusterRadius"
-                type="number"
-                min="20"
-                max="200"
-                class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Show Heatmap</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Display event density as heatmap</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="mapSettings.heatmap" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Show Labels</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Display labels on markers</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="mapSettings.showLabels" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Privacy Settings -->
-      <div v-if="activeCategory === 'privacy'" class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Data Privacy</h2>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Profile Visibility</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Who can see your profile information</p>
-              </div>
-              <select
-                v-model="privacy.profileVisibility"
-                class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="public">Public</option>
-                <option value="registered">Registered Users</option>
-                <option value="private">Private</option>
-              </select>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Activity Status</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Show when you are online</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="privacy.showActivityStatus" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Search Indexing</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Allow your contributions to be searchable</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="privacy.allowSearchIndexing" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Data Management</h2>
-          <div class="space-y-4">
-            <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="font-medium text-gray-900 dark:text-white">Export Your Data</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">Download a copy of all your data</p>
-                </div>
-                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-                  Export Data
-                </button>
-              </div>
-            </div>
-            <div class="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="font-medium text-red-700 dark:text-red-400">Delete Account</p>
-                  <p class="text-sm text-red-600 dark:text-red-500">Permanently delete your account and all data</p>
-                </div>
-                <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">
-                  Delete Account
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Consent Management</h2>
-          <div class="space-y-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Analytics Cookies</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Help us improve by allowing analytics</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="privacy.analyticsCookies" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">Marketing Communications</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Receive updates about new features</p>
-              </div>
-              <label class="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" v-model="privacy.marketingComms" class="sr-only peer">
-                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Security Settings -->
-      <div v-if="activeCategory === 'security'" class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Two-Factor Authentication</h2>
-          <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-            <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">{{ security.twoFactorEnabled ? 'Enabled' : 'Not Enabled' }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Add an extra layer of security to your account</p>
-              </div>
-            </div>
-            <button
-              @click="security.twoFactorEnabled = !security.twoFactorEnabled"
-              :class="[
-                'px-4 py-2 rounded-lg text-sm font-medium',
-                security.twoFactorEnabled
-                  ? 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400'
-                  : 'bg-blue-600 text-white hover:bg-blue-700'
-              ]"
-            >
-              {{ security.twoFactorEnabled ? 'Disable' : 'Enable' }}
-            </button>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Active Sessions</h2>
-          <div class="space-y-3">
-            <div v-for="session in sessions" :key="session.id" class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <div class="flex items-center space-x-4">
-                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                  <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <p class="font-medium text-gray-900 dark:text-white">{{ session.device }}</p>
-                  <p class="text-sm text-gray-500 dark:text-gray-400">{{ session.location }} - {{ session.lastActive }}</p>
-                </div>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span v-if="session.current" class="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded">Current</span>
-                <button v-else class="text-red-600 hover:text-red-700 text-sm">Revoke</button>
-              </div>
-            </div>
-          </div>
-          <button class="mt-4 text-red-600 hover:text-red-700 text-sm font-medium">
-            Revoke All Other Sessions
-          </button>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Login History</h2>
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-              <thead>
-                <tr class="text-left text-gray-500 dark:text-gray-400 border-b dark:border-gray-700">
-                  <th class="pb-3 font-medium">Date</th>
-                  <th class="pb-3 font-medium">IP Address</th>
-                  <th class="pb-3 font-medium">Location</th>
-                  <th class="pb-3 font-medium">Status</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y dark:divide-gray-700">
-                <tr v-for="login in loginHistory" :key="login.id">
-                  <td class="py-3 text-gray-900 dark:text-white">{{ login.date }}</td>
-                  <td class="py-3 text-gray-600 dark:text-gray-400">{{ login.ip }}</td>
-                  <td class="py-3 text-gray-600 dark:text-gray-400">{{ login.location }}</td>
-                  <td class="py-3">
-                    <span :class="[
-                      'px-2 py-1 text-xs font-medium rounded',
-                      login.success
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                    ]">
-                      {{ login.success ? 'Success' : 'Failed' }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- API Settings -->
-      <div v-if="activeCategory === 'api'" class="space-y-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">API Tokens</h2>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Manage API tokens for external integrations</p>
-          <div class="space-y-3">
-            <div v-for="token in apiTokens" :key="token.id" class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">{{ token.name }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Created: {{ token.created }} - Last used: {{ token.lastUsed }}</p>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span class="text-xs text-gray-500 dark:text-gray-400 font-mono">{{ token.preview }}</span>
-                <button class="text-red-600 hover:text-red-700 text-sm">Revoke</button>
-              </div>
-            </div>
-          </div>
-          <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-            Create New Token
-          </button>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Webhooks</h2>
-          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Configure webhooks to receive event notifications</p>
-          <div class="space-y-3">
-            <div v-for="webhook in webhooks" :key="webhook.id" class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <div>
-                <p class="font-medium text-gray-900 dark:text-white">{{ webhook.url }}</p>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Events: {{ webhook.events.join(', ') }}</p>
-              </div>
-              <div class="flex items-center space-x-2">
-                <span :class="[
-                  'px-2 py-1 text-xs font-medium rounded',
-                  webhook.active
-                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                    : 'bg-gray-100 text-gray-700 dark:bg-gray-600 dark:text-gray-300'
-                ]">
-                  {{ webhook.active ? 'Active' : 'Inactive' }}
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 flex-shrink-0 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark flex flex-col h-full">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-xl">radar</span>
+</div>
+<div>
+<h1 class="text-sm font-bold tracking-tight uppercase">OSINT Tracker</h1>
+<p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Intelligence Analysis</p>
+</div>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">person</span>
+<span class="text-sm font-medium">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined font-fill">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary">public</span>
+<span class="text-sm font-medium">Map</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 px-2 py-3 bg-slate-50 dark:bg-slate-900/50 rounded-xl">
+<div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+<img alt="Avatar" data-alt="User avatar of the intelligence analyst" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMwb-P3o4XsBswbq5a3wnUEwJeLyUiCpEPezVQe6F90xwnmuha8H1g-kh6um2YP12jOwYg6mWZ1J_ALMP8z0-8T-sgImAkH2ElrOB1GcT0BM5jH67_YXL9Kvcun4iOoGsKxdWagf-nGlNE_T4dGymFir4J3VanfBk4qc06peOs9d8rxnFHc32OPP91cuz8Kee86Zl8b2A4iJUO6ZjJZP9Bftr5nxq2Zsl3cCuWjDJRewqOqdAgtZSGdhx3CgoqMWRgpzHyfgzBL_ZT"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-semibold truncate">Analyst-724</p>
+<p class="text-[10px] text-slate-500 truncate">L3 Clearance</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-sm">logout</span>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+<header class="h-16 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 bg-white/50 dark:bg-background-dark/50 backdrop-blur-md sticky top-0 z-10">
+<div>
+<h2 class="text-lg font-bold">System Settings</h2>
+<p class="text-xs text-slate-500 dark:text-slate-400">Configure tactical display and operational parameters</p>
+</div>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-2 px-3 py-1 bg-green-500/10 text-green-500 rounded-full text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                    System Live
                 </span>
-                <button class="text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 text-sm">Edit</button>
-                <button class="text-red-600 hover:text-red-700 text-sm">Delete</button>
-              </div>
-            </div>
-          </div>
-          <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-            Add Webhook
-          </button>
-        </div>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-8">
+<div class="max-w-4xl mx-auto space-y-10 pb-24">
+<!-- Map Preferences Section -->
+<section>
+<div class="flex items-center gap-2 mb-6 border-b border-slate-200 dark:border-slate-800 pb-2">
+<span class="material-symbols-outlined text-primary">map</span>
+<h3 class="text-base font-bold uppercase tracking-wide">Map Preferences</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-4">
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Default Layer</label>
+<select class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all">
+<option value="tactical">Tactical Vector (Night)</option>
+<option value="satellite">Satellite Imagery (High Res)</option>
+<option value="topographic">Topographic Terrain</option>
+<option value="infrared">Infrared Heat Signature</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Coordinate Format</label>
+<select class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all">
+<option value="dd">Decimal Degrees (40.446, -79.982)</option>
+<option value="mgrs">MGRS (Military Grid Reference)</option>
+<option value="dms">Degrees, Minutes, Seconds</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300">Default Operating Region</label>
+<div class="relative group h-44 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800">
+<div class="absolute inset-0 bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+<div class="w-full h-full opacity-60 bg-cover bg-center" data-alt="Tactical map interface for selecting region" data-location="Eastern Europe Center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA3YYmR4Wy6ZaY8igLDC3pI4KGhMtMUUSGT0lG1xCEMQu_segSWwbzcoTc65UM3MxdEaRnMffDgQktLlAX4kBfSlTjMvZqOp_soLFJ_OGbUCHuEfbWYFlkzQWfXZyBR4t_ptLS0QgBulxc7nJXotqvhWHdm_7c6o5twaGjg3dbcOmfkmvixKGCfUADzDgsznP3u40DlGQsqy1c6en67IZ0VBV8JcUQ_S8Yppxo9bq1ViIqwD3jlqXj7QtnK2TSnHVm8xaEivWcf0S9K')"></div>
+<div class="absolute inset-0 bg-primary/10 border-2 border-primary/50 m-8 rounded-lg flex items-center justify-center pointer-events-none">
+<span class="bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase">Focus Area</span>
+</div>
+</div>
+<button class="absolute bottom-2 right-2 bg-white/90 dark:bg-slate-900/90 p-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">my_location</span>
+                                    Recenter
+                                </button>
+</div>
+<p class="text-[10px] text-slate-500 italic">Operating region restricts initial data load for performance.</p>
+</div>
+</div>
+</section>
+<!-- Notification Control Matrix -->
+<section>
+<div class="flex items-center gap-2 mb-6 border-b border-slate-200 dark:border-slate-800 pb-2">
+<span class="material-symbols-outlined text-primary">notifications_active</span>
+<h3 class="text-base font-bold uppercase tracking-wide">Notification Control</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-sm text-left border-collapse">
+<thead>
+<tr class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800">
+<th class="py-4 font-semibold">Category</th>
+<th class="py-4 font-semibold text-center">Real-time</th>
+<th class="py-4 font-semibold text-center">Daily Digest</th>
+<th class="py-4 font-semibold text-center">SMS Alert</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800/50">
+<tr>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-red-500 text-lg">bolt</span>
+<div>
+<p class="font-medium">Conflict Escalation</p>
+<p class="text-[10px] text-slate-500">Major kinetic movements</p>
+</div>
+</div>
+</td>
+<td class="py-4 text-center">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox"/>
+</td>
+<td class="py-4 text-center">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox"/>
+</td>
+<td class="py-4 text-center">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox"/>
+</td>
+</tr>
+<tr>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-500 text-lg">group</span>
+<div>
+<p class="font-medium">State Actor Activity</p>
+<p class="text-[10px] text-slate-500">Diplomatic or cyber events</p>
+</div>
+</div>
+</td>
+<td class="py-4 text-center">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox"/>
+</td>
+<td class="py-4 text-center">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox"/>
+</td>
+<td class="py-4 text-center">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox"/>
+</td>
+</tr>
+<tr>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-orange-500 text-lg">deployed_code</span>
+<div>
+<p class="font-medium">Equipment Tracking</p>
+<p class="text-[10px] text-slate-500">Logistics and deployment</p>
+</div>
+</div>
+</td>
+<td class="py-4 text-center">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox"/>
+</td>
+<td class="py-4 text-center">
+<input checked="" class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox"/>
+</td>
+<td class="py-4 text-center">
+<input class="w-4 h-4 rounded border-slate-300 dark:border-slate-700 text-primary focus:ring-primary bg-transparent" type="checkbox"/>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- System Display Section -->
+<section>
+<div class="flex items-center gap-2 mb-6 border-b border-slate-200 dark:border-slate-800 pb-2">
+<span class="material-symbols-outlined text-primary">desktop_windows</span>
+<h3 class="text-base font-bold uppercase tracking-wide">System Display</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-6">
+<div>
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 block">Theme Preference</label>
+<div class="grid grid-cols-3 gap-2 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+<button class="flex flex-col items-center gap-1.5 py-2 rounded-lg text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-lg">light_mode</span>
+<span class="text-[10px] font-bold uppercase">Light</span>
+</button>
+<button class="flex flex-col items-center gap-1.5 py-2 bg-primary rounded-lg text-white shadow-lg shadow-primary/25">
+<span class="material-symbols-outlined text-lg">dark_mode</span>
+<span class="text-[10px] font-bold uppercase">Dark</span>
+</button>
+<button class="flex flex-col items-center gap-1.5 py-2 rounded-lg text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-lg">settings_suggest</span>
+<span class="text-[10px] font-bold uppercase">System</span>
+</button>
+</div>
+</div>
+</div>
+<div class="space-y-6">
+<div>
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 block">Data Density</label>
+<div class="flex gap-4">
+<label class="flex-1 cursor-pointer">
+<input checked="" class="hidden peer" name="density" type="radio"/>
+<div class="p-3 border border-slate-200 dark:border-slate-800 rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 transition-all text-center">
+<span class="material-symbols-outlined mb-1 block">view_compact</span>
+<span class="text-xs font-bold block">Compact</span>
+<span class="text-[10px] text-slate-500">Maximum visibility</span>
+</div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="hidden peer" name="density" type="radio"/>
+<div class="p-3 border border-slate-200 dark:border-slate-800 rounded-xl peer-checked:border-primary peer-checked:bg-primary/5 transition-all text-center">
+<span class="material-symbols-outlined mb-1 block">view_comfy</span>
+<span class="text-xs font-bold block">Comfortable</span>
+<span class="text-[10px] text-slate-500">More whitespace</span>
+</div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Footer Action Bar -->
+<footer class="absolute bottom-0 left-0 right-0 h-20 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 z-20">
+<div class="flex items-center gap-4">
+<button class="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-red-500 transition-colors underline underline-offset-4">
+                    Reset to Default
+                </button>
+</div>
+<div class="flex items-center gap-4">
+<p class="text-xs text-slate-500 dark:text-slate-400 hidden md:block">Last synced: 2 minutes ago</p>
+<div class="h-8 w-[1px] bg-slate-200 dark:border-slate-800 hidden md:block mx-2"></div>
+<button class="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-lg shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all active:scale-95">
+                    Save Changes
+                </button>
+</div>
+</footer>
+</main>
+</div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Rate Limits</h2>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <p class="text-2xl font-bold text-gray-900 dark:text-white">1,000</p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Requests / Hour</p>
-            </div>
-            <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <p class="text-2xl font-bold text-gray-900 dark:text-white">847</p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Used This Hour</p>
-            </div>
-            <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <p class="text-2xl font-bold text-green-600 dark:text-green-400">153</p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Remaining</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Save Button -->
-      <div class="mt-6 flex justify-end">
-        <button
-          @click="saveSettings"
-          :disabled="saving"
-          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-        >
-          <svg v-if="saving" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span>{{ saving ? 'Saving...' : 'Save Settings' }}</span>
-        </button>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, reactive, computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 
