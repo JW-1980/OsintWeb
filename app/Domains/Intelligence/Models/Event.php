@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Models;
+namespace App\Domains\Intelligence\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Domains\Intelligence\Queries\EventQueryBuilder;
 use App\Models\WeatherData;
 
 /**
@@ -119,6 +120,17 @@ class Event extends Model
         'tags' => 'array',
         'metadata' => 'array',
     ];
+
+    /**
+     * Create a new Eloquent query builder for the model.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return \App\Domains\Intelligence\Queries\EventQueryBuilder
+     */
+    public function newEloquentBuilder($query)
+    {
+        return new EventQueryBuilder($query);
+    }
 
     /**
      * Get the event type

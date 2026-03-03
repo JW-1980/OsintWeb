@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\WeatherData;
 use App\Services\WeatherService;
 use Carbon\Carbon;

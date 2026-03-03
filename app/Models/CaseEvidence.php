@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  *
  * @property int $id
  * @property int $case_id Foreign key to cases table
- * @property string $evidence_type Polymorphic type (e.g., App\Models\Event)
+ * @property string $evidence_type Polymorphic type (e.g., App\Domains\Intelligence\Models\Event)
  * @property int $evidence_id Polymorphic ID
  * @property int $relevance_score Relevance rating 1-5 (5 = most relevant)
  * @property string|null $notes Analyst notes about this evidence

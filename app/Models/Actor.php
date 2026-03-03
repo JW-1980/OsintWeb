@@ -87,7 +87,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property-read array $all_names
  *
- * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\Event> $events
+ * @property-read \Illuminate\Database\Eloquent\Collection<\App\Domains\Intelligence\Models\Event> $events
  * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\ActorRelationship> $relationships
  * @property-read \Illuminate\Database\Eloquent\Collection<\App\Models\ActorRelationship> $inverseRelationships
  *

@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Models\OfflineCacheManifest;
 use App\Models\SyncQueue;
 use App\Models\User;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\MilitaryEquipment;
 use App\Models\Country;
 use App\Models\Faction;
