@@ -58,8 +58,8 @@ class EventController extends Controller
         // Order by most recent
         $query->orderBy('occurred_at', 'desc');
 
-        // Eager load relationships (actors omitted - no pivot table exists)
-        $query->with(['media', 'sources', 'equipment']);
+        // Eager load relationships
+        $query->with(['actors', 'media', 'sources', 'equipment']);
 
         $events = $query->paginate($this->perPage);
 
@@ -84,7 +84,7 @@ class EventController extends Controller
             'longitude' => ['required', 'numeric', 'between:-180,180'],
             'location_name' => ['nullable', 'string', 'max:255'],
             'actor_id' => ['nullable', 'exists:actors,id'],
-            'status' => ['required', 'in:draft,pending,verified,disputed'],
+            'status' => ['required', 'in:draft,pending'],
             'confidence' => ['required', 'in:confirmed,likely,unconfirmed'],
             'custom_fields' => ['nullable', 'array'],
         ]);
@@ -105,7 +105,7 @@ class EventController extends Controller
 
         $event = $createEventAction->execute($data, $request->user());
 
-        return $this->success($event->load(['media', 'sources']), 201);
+        return $this->success($event->load(['actors', 'media', 'sources']), 201);
     }
 
     /**
@@ -116,7 +116,7 @@ class EventController extends Controller
      */
     public function show(string $uuid): JsonResponse
     {
-        $event = Event::with(['media', 'sources', 'equipment'])
+        $event = Event::with(['actors', 'media', 'sources', 'equipment', 'versions'])
             ->where('uuid', $uuid)
             ->firstOrFail();
 
@@ -160,7 +160,7 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return $this->success($event->fresh(['media', 'sources']));
+        return $this->success($event->fresh(['actors', 'media', 'sources']));
     }
 
     /**
@@ -227,8 +227,13 @@ class EventController extends Controller
     {
         $event = Event::where('uuid', $uuid)->firstOrFail();
 
+        // Prevent creators from disputing their own events
+        if ($event->created_by === $request->user()->id) {
+            return response()->json(['message' => 'You cannot dispute your own event.'], 403);
+        }
+
         $validated = $request->validate([
-            'reason' => ['required', 'string'],
+            'reason' => ['required', 'string', 'max:2000'],
             'evidence' => ['nullable', 'array'],
         ]);
 

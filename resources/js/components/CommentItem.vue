@@ -60,7 +60,7 @@
       </div>
 
       <!-- Comment Content -->
-      <div v-if="!editing" class="mt-3 text-gray-700 dark:text-gray-300 text-sm" v-html="comment.content_html || comment.content"></div>
+      <div v-if="!editing" class="mt-3 text-gray-700 dark:text-gray-300 text-sm whitespace-pre-wrap">{{ comment.content }}</div>
 
       <!-- Edit form -->
       <div v-else class="mt-3">

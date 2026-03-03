@@ -14,6 +14,11 @@ class ActorSeeder extends Seeder
      */
     public function run(): void
     {
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('actors', 'slug')) {
+            $this->command->info('Actor seeder skipped: table schema has been normalized.');
+            return;
+        }
+
         $this->seedNonStateActors();
         $this->command->info('Non-state actors seeded successfully.');
     }

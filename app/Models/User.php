@@ -86,9 +86,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
-        'role',
-        'is_active',
-        'is_verified',
         'avatar_url',
         'avatar_type',
         'avatar_seed',
@@ -100,7 +97,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'timezone',
         'locale',
         'preferences',
-        'permissions',
         'onboarding_step',
         'onboarding_completed_at',
         'onboarding_skipped',
@@ -119,13 +115,14 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_preferences',
         'email_notifications_enabled',
         'email_unsubscribed_at',
-        'account_locked_at',
-        'account_locked_reason',
-        'failed_login_attempts',
-        'password_changed_at',
-        'last_login_at',
-        'last_login_ip',
     ];
+
+    /**
+     * Security-sensitive fields that must only be set via dedicated methods.
+     * Never mass-assignable: role, is_active, is_verified, permissions,
+     * account_locked_at, account_locked_reason, failed_login_attempts,
+     * password_changed_at, last_login_at, last_login_ip.
+     */
 
     protected $hidden = [
         'password',

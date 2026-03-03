@@ -210,6 +210,21 @@ class ConflictSeeder extends Seeder
             ],
         ];
 
+        $typeMapping = [
+            'interstate' => 'INTERSTATE',
+            'civil_war' => 'CIVIL_WAR',
+            'insurgency' => 'INSURGENCY',
+            'asymmetric' => 'OTHER',
+            'territorial' => 'BORDER_DISPUTE',
+        ];
+
+        $statusMapping = [
+            'active' => true,
+            'tension' => true,
+            'concluded' => false,
+            'frozen' => false,
+        ];
+
         foreach ($conflicts as $conflict) {
             DB::table('conflicts')->updateOrInsert(
                 ['name' => $conflict['name']],

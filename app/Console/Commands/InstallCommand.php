@@ -326,13 +326,13 @@ class InstallCommand extends Command
     {
         $this->info('Creating admin user...');
 
-        User::create([
+        $user = User::create([
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
-            'role' => 'admin',
             'email_verified_at' => now(),
         ]);
+        $user->forceFill(['role' => 'admin', 'is_active' => true, 'is_verified' => true])->save();
 
         $this->info('✓ Admin user created');
     }
