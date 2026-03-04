@@ -72,7 +72,7 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-500 dark:text-gray-400">Total Events</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.total.toLocaleString() }}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ (stats?.total || 0).toLocaleString() }}</p>
           </div>
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-500 dark:text-gray-400">This Week</p>
@@ -495,7 +495,7 @@ const getConfidenceBadgeClass = (confidence: string) => {
 };
 
 const formatEventType = (type: string) => {
-  return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  if (!type) return 'Unknown'; return type.toString().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 };
 
 const formatDate = (dateString: string) => {

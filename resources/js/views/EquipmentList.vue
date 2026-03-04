@@ -27,7 +27,7 @@
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
           <p class="text-sm text-gray-500 dark:text-gray-400">Total Equipment</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.total.toLocaleString() }}</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ (stats?.total || 0).toLocaleString() }}</p>
         </div>
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
           <p class="text-sm text-gray-500 dark:text-gray-400">Destroyed</p>

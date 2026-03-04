@@ -198,7 +198,7 @@
                   <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4">Statistics</h3>
                   <div class="space-y-4">
                     <div class="text-center p-3 bg-white dark:bg-gray-600 rounded-lg">
-                      <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ conflict.events_count.toLocaleString() }}</p>
+                      <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ (conflict?.events_count || 0).toLocaleString() }}</p>
                       <p class="text-xs text-gray-500 dark:text-gray-400">Tracked Events</p>
                     </div>
                     <div v-if="conflict.estimated_casualties" class="text-center p-3 bg-white dark:bg-gray-600 rounded-lg">

@@ -133,8 +133,8 @@ class StatsController extends Controller
                 ->orderBy('month')
                 ->get(),
 
-            'type' => $query->select('type', DB::raw('COUNT(*) as count'))
-                ->groupBy('type')
+            'type' => $query->select('event_type_id', DB::raw('COUNT(*) as count'))
+                ->groupBy('event_type_id')
                 ->orderBy('count', 'desc')
                 ->get(),
 
@@ -142,8 +142,8 @@ class StatsController extends Controller
                 ->groupBy('status')
                 ->get(),
 
-            default => $query->select('type', DB::raw('COUNT(*) as count'))
-                ->groupBy('type')
+            default => $query->select('event_type_id', DB::raw('COUNT(*) as count'))
+                ->groupBy('event_type_id')
                 ->orderBy('count', 'desc')
                 ->get(),
         };
@@ -173,7 +173,7 @@ class StatsController extends Controller
             ->where('occurred_at', '<=', $validated['end_date']);
 
         if (isset($validated['event_type'])) {
-            $query->where('type', $validated['event_type']);
+            $query->where('event_type_id', $validated['event_type']);
         }
 
         $dateFormat = match ($interval) {
@@ -183,8 +183,8 @@ class StatsController extends Controller
             default => '%Y-%m-%d',
         };
 
-        $timeline = $query->selectRaw("DATE_FORMAT(occurred_at, '{$dateFormat}') as period, type, COUNT(*) as count")
-            ->groupBy('period', 'type')
+        $timeline = $query->selectRaw("DATE_FORMAT(occurred_at, '{$dateFormat}') as period, event_type_id as type, COUNT(*) as count")
+            ->groupBy('period', 'event_type_id')
             ->orderBy('period')
             ->get()
             ->groupBy('period')
@@ -223,7 +223,7 @@ class StatsController extends Controller
         }
 
         if (isset($validated['event_type'])) {
-            $query->where('type', $validated['event_type']);
+            $query->where('event_type_id', $validated['event_type']);
         }
 
         $heatmapData = $query->groupBy('latitude', 'longitude')

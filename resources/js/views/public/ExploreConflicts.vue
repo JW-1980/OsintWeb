@@ -64,7 +64,7 @@
           </div>
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-500 dark:text-gray-400">Total Events</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.totalEvents.toLocaleString() }}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ (stats?.totalEvents || 0).toLocaleString() }}</p>
           </div>
         </div>
 
@@ -195,7 +195,7 @@
                 <!-- Stats -->
                 <div class="flex flex-col gap-3 md:w-48 md:flex-shrink-0">
                   <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 text-center">
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ conflict.events_count.toLocaleString() }}</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ (conflict?.events_count || 0).toLocaleString() }}</p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">Tracked Events</p>
                   </div>
                   <div v-if="conflict.estimated_casualties" class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3 text-center">

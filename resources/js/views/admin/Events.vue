@@ -332,7 +332,8 @@ const getEventTypeColor = (type: string) => {
 const getEventTypeBadge = (type: string) => getEventTypeColor(type);
 
 const formatEventType = (type: string) => {
-  return type.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  if (!type) return 'Unknown';
+  return String(type).split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 };
 
 const getConfidenceBadge = (level: string) => {

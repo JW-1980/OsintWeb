@@ -86,6 +86,15 @@ Route::get('/reset-password/{token}', function (string $token) {
     return redirect(url('/reset-password/' . $token . '?email=' . request('email')));
 })->name('password.reset');
 
+    // Statistics
+    Route::prefix('stats')->group(function () {
+        Route::get('/overview', [StatsController::class, 'overview']);
+        Route::get('/losses', [StatsController::class, 'losses']);
+        Route::get('/events', [StatsController::class, 'events']);
+        Route::get('/timeline', [StatsController::class, 'timeline']);
+        Route::get('/heatmap', [StatsController::class, 'heatmap']);
+    });
+
 // Protected routes (require authentication) - standard API rate limiting
 Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     // Authentication
@@ -173,14 +182,6 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::get('/download/{filename}', [ExportController::class, 'downloadMapExport'])->name('api.export.download');
     });
 
-    // Statistics
-    Route::prefix('stats')->group(function () {
-        Route::get('/overview', [StatsController::class, 'overview']);
-        Route::get('/losses', [StatsController::class, 'losses']);
-        Route::get('/events', [StatsController::class, 'events']);
-        Route::get('/timeline', [StatsController::class, 'timeline']);
-        Route::get('/heatmap', [StatsController::class, 'heatmap']);
-    });
 
     // Articles / News / Premium Content
     Route::prefix('articles')->group(function () {

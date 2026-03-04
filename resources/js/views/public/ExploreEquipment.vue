@@ -52,11 +52,11 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-500 dark:text-gray-400">Equipment Types</p>
-            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stats.types.toLocaleString() }}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ (stats?.types || 0).toLocaleString() }}</p>
           </div>
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-500 dark:text-gray-400">Total Losses</p>
-            <p class="text-2xl font-bold text-red-600 dark:text-red-400">{{ stats.losses.toLocaleString() }}</p>
+            <p class="text-2xl font-bold text-red-600 dark:text-red-400">{{ (stats?.losses || 0).toLocaleString() }}</p>
           </div>
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4 border border-gray-200 dark:border-gray-700">
             <p class="text-sm text-gray-500 dark:text-gray-400">Countries</p>
