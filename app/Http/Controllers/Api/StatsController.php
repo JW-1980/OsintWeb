@@ -62,7 +62,7 @@ class StatsController extends Controller
             ->join('events', 'event_equipment.event_id', '=', 'events.id')
             ->join('military_equipment', 'event_equipment.equipment_id', '=', 'military_equipment.id')
             ->select(
-                'military_equipment.category',
+                'military_equipment.category_id',
                 'event_equipment.status',
                 DB::raw('SUM(event_equipment.quantity) as total')
             );
@@ -79,9 +79,9 @@ class StatsController extends Controller
             $query->where('event_equipment.operator_faction_id', $validated['actor_id']);
         }
 
-        $losses = $query->groupBy('military_equipment.category', 'event_equipment.status')
+        $losses = $query->groupBy('military_equipment.category_id', 'event_equipment.status')
             ->get()
-            ->groupBy('category')
+            ->groupBy('category_id')
             ->map(function ($items) {
                 return $items->groupBy('status')->map(function ($statusItems) {
                     return $statusItems->sum('total');
