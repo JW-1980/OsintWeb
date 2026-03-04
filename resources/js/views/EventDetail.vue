@@ -1,4 +1,298 @@
+<template>
+
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-border-dark bg-background-dark/80 backdrop-blur-md">
+<div class="max-w-[1440px] mx-auto flex items-center justify-between px-6 py-3">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-3xl">radar</span>
+<h2 class="text-slate-100 text-xl font-bold tracking-tight">OSINT <span class="text-primary">Intel</span></h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-400 hover:text-primary text-sm font-medium transition-colors" href="#">Dashboard</a>
+<a class="text-slate-400 hover:text-primary text-sm font-medium transition-colors" href="#">Global Map</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary py-1" href="#">Intel Reports</a>
+<a class="text-slate-400 hover:text-primary text-sm font-medium transition-colors" href="#">Registry</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+<input class="bg-surface-dark border-none rounded-lg pl-10 pr-4 py-2 text-sm w-64 focus:ring-1 focus:ring-primary transition-all" placeholder="Search Intel Database..." type="text"/>
+</div>
+<button class="p-2 rounded-lg bg-surface-dark text-slate-400 hover:text-white transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="flex items-center gap-2 p-1 pr-3 rounded-full bg-surface-dark hover:bg-slate-800 transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">person</span>
+</div>
+<span class="text-xs font-bold text-slate-300">ANALYST_04</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-[1280px] mx-auto px-6 py-8">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-xs font-medium text-slate-500 mb-6 uppercase tracking-wider">
+<a class="hover:text-primary" href="#">Reports</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<a class="hover:text-primary" href="#">Conflict Zone: Eastern Sector</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-slate-300">OSINT-2023-08829</span>
+</nav>
+<!-- Page Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<span class="px-2 py-1 bg-red-500/10 text-red-500 text-[10px] font-bold rounded border border-red-500/20 uppercase tracking-widest">Kinetic Action</span>
+<div class="flex items-center gap-1.5 px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold rounded border border-green-500/20 uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm leading-none">check_circle</span>
+            Verified
+          </div>
+</div>
+<h1 class="text-4xl font-black text-slate-100 tracking-tight">Airstrike on Military Depot</h1>
+<p class="text-slate-400 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">fingerprint</span>
+          Event ID: OSINT-2023-08829 • Reported 4h ago
+        </p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2.5 bg-surface-dark hover:bg-slate-800 rounded-lg text-sm font-bold border border-border-dark transition-all">
+<span class="material-symbols-outlined text-xl">share</span>
+          Share
+        </button>
+<button class="flex items-center gap-2 px-6 py-2.5 bg-primary hover:bg-blue-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 transition-all">
+<span class="material-symbols-outlined text-xl">file_download</span>
+          Export Full Report
+        </button>
+</div>
+</div>
+<!-- Media Carousel -->
+<section class="grid grid-cols-12 gap-4 mb-10 h-[400px]">
+<div class="col-span-8 relative group overflow-hidden rounded-xl bg-surface-dark border border-border-dark">
+<img class="w-full h-full object-cover" data-alt="High resolution satellite imagery of tactical zone" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsnXyGPQedNULf_WTdf5DneqSBHqSvKRa1arABvVeD3SDCb_Tn6AtlHc4TnuHtPMDcJwLTbn0zLIn4MbI5ehOzByotQ9ajVpU8ciUdVkXP3vCxMDzzN_K4CKXLcJv_TEgOtkiNIoArBud3sOlf-XsPD2B9NgguT9wOpqWgEhV_eWp6zt6iUoDJNwydBgrXtJt7ZLrAuE5sPoYpGUIOXvQ-pA58sLIlLbCStSA0xUZxd2ugcgnE8lKGbvZFLh3sLA9NjV2I4I0EXDSq"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-6 left-6">
+<span class="bg-black/60 backdrop-blur-md px-3 py-1 rounded-md text-xs font-bold text-white mb-2 inline-block">SATELLITE VIEW (PRE-STRIKE)</span>
+<p class="text-slate-200 text-sm max-w-md">Target coordinate validation: Identified storage bunkers and logistics staging area.</p>
+</div>
+<div class="absolute top-1/2 -translate-y-1/2 w-full flex justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-primary transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-black/60 flex items-center justify-center text-white hover:bg-primary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="col-span-4 flex flex-col gap-4">
+<div class="flex-1 relative rounded-xl overflow-hidden border border-border-dark bg-surface-dark">
+<img class="w-full h-full object-cover grayscale opacity-80" data-alt="Ground level thermal image of explosion site" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVR5hzhyNRj4SPPfw0_0SKFH7bn_oYGM9jetyWE-vX6R6-xjwkqb-HOvKQD6xyECyIYfkQNLue7gWxrUvDwZeCp9fsgCpR-vvWKIU0GgSaXz6x8lAr87ugCqxPvK0bJ1mFjLtfkJpG-jYTkJHQ8on-9AuF1nC7GxARrj7j8DSen0PFcIithkXTzwDA5vaOIrp9rMbJ8sf8F7ow_q0BrO3vIjXPEbxVfO5mbDIJ9MXEPP6EjB3ZDcnDKIsne5ELaS_ewB2ec4eHpSo5"/>
+<div class="absolute inset-0 bg-primary/10 mix-blend-overlay"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="bg-black/60 px-3 py-1 rounded text-[10px] font-bold text-white uppercase tracking-widest">Thermal Overlay</span>
+</div>
+</div>
+<div class="flex-1 relative rounded-xl overflow-hidden border border-border-dark bg-surface-dark">
+<img class="w-full h-full object-cover" data-alt="Public social media imagery of aftermath smoke" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA91pHk9erHQ_oyemIJuCFYSUiObvgiFC4P5X-umie-U4OjomafP8nKGJiGwSEnKBFl8bZDVguIuItF5NKYkIfk9bLG-BRPftWDPKItd2G35tXHuxz_aN8IWbrSAQ5o5SKn4E81Hxx84QKw-LP4ue5K3n_n1t85ogA3o7W93f9etkbGNOeFWsAQzNby_mN_51xl-PF69PAm2X75rvYU5B89fTPljq2vu0Y3RN3U1yMkEDLAhlRclkt50fQ-k_3YYXy5LoEJdY3o3sO0"/>
+<div class="absolute inset-0 bg-black/40"></div>
+<div class="absolute inset-0 flex items-center justify-center flex-col gap-1">
+<span class="material-symbols-outlined text-white text-3xl">play_circle</span>
+<span class="text-[10px] font-bold text-white uppercase tracking-widest">Ground Footags (2)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left: Intelligence Summary -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<section class="bg-surface-dark border border-border-dark rounded-xl p-8">
+<div class="flex items-center gap-3 mb-6 border-b border-border-dark pb-4">
+<span class="material-symbols-outlined text-primary">description</span>
+<h3 class="text-xl font-bold">Intelligence Summary</h3>
+</div>
+<div class="prose prose-invert max-w-none text-slate-300 leading-relaxed space-y-4">
+<p>At approximately 03:45 local time, a high-intensity kinetic event was detected at the <span class="text-slate-100 font-bold underline decoration-primary decoration-2 underline-offset-4">Sector 7 Logistics Hub</span>. Satellite multi-spectral analysis confirms two primary impact points targeting reinforced ammunition storage bunkers.</p>
+<p>Preliminary assessment suggests the use of precision-guided munitions based on the blast radius and lack of collateral damage to adjacent civilian structures. Secondary explosions were recorded for 45 minutes following the initial strike, indicating the successful neutralization of stored explosive materials.</p>
+<div class="bg-primary/5 border-l-4 border-primary p-4 my-6">
+<p class="italic text-slate-300">"The strike profile matches tactical air-to-surface capabilities previously documented in this theater. Local ground observers reported multiple low-altitude flight paths 10 minutes prior to detonation."</p>
+<p class="text-xs font-bold text-primary mt-2 uppercase">— Field Analyst 12, Signal Intelligence Unit</p>
+</div>
+<p>Ground-level imagery geolocated via social media corroborates the damage seen in satellite feeds. Plumes of black smoke consistent with petroleum and chemical storage fires are visible in several unverified Telegram videos from the nearby industrial zone.</p>
+</div>
+</section>
+<!-- Source Citations -->
+<section class="bg-surface-dark border border-border-dark rounded-xl p-8">
+<div class="flex items-center gap-3 mb-6 border-b border-border-dark pb-4">
+<span class="material-symbols-outlined text-primary">link</span>
+<h3 class="text-xl font-bold">Evidence Trail &amp; Citations</h3>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 rounded-lg bg-background-dark/50 border border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-blue-500/10 flex items-center justify-center text-blue-500">
+<span class="material-symbols-outlined">satellite_alt</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-200">Maxar Sentinel-2 Archive</p>
+<p class="text-xs text-slate-500">ID: SAT-9902-1 • Captured 04:12 UTC</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary">open_in_new</span>
+</div>
+<div class="flex items-center justify-between p-4 rounded-lg bg-background-dark/50 border border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-sky-500/10 flex items-center justify-center text-sky-500">
+<span class="material-symbols-outlined">public</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-200">Telegram Channel: WarGeology_Live</p>
+<p class="text-xs text-slate-500">Video Evidence • 4.2k views • Verified Timestamp</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary">open_in_new</span>
+</div>
+<div class="flex items-center justify-between p-4 rounded-lg bg-background-dark/50 border border-border-dark hover:border-primary transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-orange-500/10 flex items-center justify-center text-orange-500">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-200">Public Flight Logs (ADSB-Exchange)</p>
+<p class="text-xs text-slate-500">Unidentified Transponders • Path: 22-A / Sector 7</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-600 group-hover:text-primary">open_in_new</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Right: Tactical Metadata Sidebar -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Location Pinned Map -->
+<div class="bg-surface-dark border border-border-dark rounded-xl overflow-hidden shadow-xl">
+<div class="relative h-48 w-full bg-slate-800">
+<div class="absolute inset-0 bg-cover bg-center opacity-60" data-location="Eastern Europe Border Region" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCN_k5Ljck_Nxpgv9KUFUNp6n6HyrK74ymTnees5FF-Vyfo8UsxxqrmS7T3ZBGHYTH9PNtYh2DhGmWI3bANS4q0Px2VpDJIFIwHkyubob6nLXrXdQOJPQgG8GRodg-JdxzjZYO0qSFtzXiRCczbaW8FVCuOPxo_FRtzBjUoWamea4gxhQtAj5bFflS40BluRHUfUbpPgfNXHdCVCKHxukj5LGl5CxKLo4tKfOaDGUyPjDofXk8i9GHZyw4ga0AhZQ_z546jt2RbLFbZ')"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="relative">
+<div class="w-12 h-12 bg-primary/20 rounded-full animate-ping absolute -top-3 -left-3"></div>
+<span class="material-symbols-outlined text-primary text-4xl relative z-10 drop-shadow-lg">location_on</span>
+</div>
+</div>
+<div class="absolute bottom-2 left-2 bg-black/70 backdrop-blur px-2 py-1 rounded text-[10px] text-slate-300 font-mono">
+              47.1234° N, 37.5678° E
+            </div>
+</div>
+<div class="p-4 bg-surface-dark border-t border-border-dark">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs text-slate-500 uppercase font-bold tracking-wider">Tactical Location</span>
+<button class="text-primary text-xs font-bold hover:underline">Full MapView</button>
+</div>
+<p class="text-slate-200 font-bold">Donbas Operational Sector B</p>
+<p class="text-xs text-slate-400">Industrial District 4, Mykolaiv Area</p>
+</div>
+</div>
+<!-- Confidence Gauge -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6">
+<div class="flex items-center justify-between mb-6">
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Confidence Level</h4>
+<span class="text-primary font-black text-xl">95%</span>
+</div>
+<div class="h-3 w-full bg-background-dark rounded-full overflow-hidden flex border border-border-dark">
+<div class="h-full bg-primary" style="width: 95%"></div>
+</div>
+<div class="flex justify-between mt-2 text-[10px] font-bold text-slate-500">
+<span>UNVERIFIED</span>
+<span>PROBABLE</span>
+<span class="text-primary">CONFIRMED</span>
+</div>
+</div>
+<!-- Metadata Grid -->
+<div class="bg-surface-dark border border-border-dark rounded-xl p-6 space-y-6">
+<div>
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tactical Data</h4>
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-500 bg-background-dark p-2 rounded-lg">schedule</span>
+<div>
+<p class="text-[10px] text-slate-500 font-bold uppercase">Timestamp</p>
+<p class="text-sm text-slate-200">2023-11-24 | 03:45:12 LCL</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-500 bg-background-dark p-2 rounded-lg">groups</span>
+<div>
+<p class="text-[10px] text-slate-500 font-bold uppercase">Estimated Actors</p>
+<p class="text-sm text-slate-200">58th Combined Arms Army</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-500 bg-background-dark p-2 rounded-lg">shield</span>
+<div>
+<p class="text-[10px] text-slate-500 font-bold uppercase">Equipment Involved</p>
+<div class="flex flex-wrap gap-1 mt-1">
+<span class="bg-background-dark px-2 py-0.5 rounded text-[10px] border border-border-dark">T-72 MBT</span>
+<span class="bg-background-dark px-2 py-0.5 rounded text-[10px] border border-border-dark">BMP-3</span>
+<span class="bg-background-dark px-2 py-0.5 rounded text-[10px] border border-border-dark">9M723 Iskr</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-6 border-t border-border-dark">
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Impact Analysis</h4>
+<ul class="space-y-2">
+<li class="flex items-center justify-between text-xs py-1">
+<span class="text-slate-400">Casualties Reported</span>
+<span class="text-red-400 font-bold">12-15 (Est)</span>
+</li>
+<li class="flex items-center justify-between text-xs py-1">
+<span class="text-slate-400">Structural Damage</span>
+<span class="text-slate-200 font-bold">Severe (Cat 4)</span>
+</li>
+<li class="flex items-center justify-between text-xs py-1">
+<span class="text-slate-400">Operational Downtime</span>
+<span class="text-orange-400 font-bold">Permanent Loss</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- System Actions -->
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-surface-dark border border-border-dark rounded-xl p-4 text-center hover:border-primary transition-all">
+<span class="material-symbols-outlined text-slate-400 mb-1">map</span>
+<p class="text-[10px] font-bold text-slate-300">GEOINT TOOLS</p>
+</button>
+<button class="bg-surface-dark border border-border-dark rounded-xl p-4 text-center hover:border-primary transition-all">
+<span class="material-symbols-outlined text-slate-400 mb-1">timeline</span>
+<p class="text-[10px] font-bold text-slate-300">HISTORICAL</p>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Info -->
+<footer class="mt-12 border-t border-border-dark bg-surface-dark py-8">
+<div class="max-w-[1280px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-600">terminal</span>
+<p class="text-xs text-slate-500 font-mono">Last Database Sync: 2023-11-24 07:12:00 UTC | System Status: <span class="text-green-500">OPTIMAL</span></p>
+</div>
+<div class="flex gap-6">
+<a class="text-xs text-slate-500 hover:text-slate-300 transition-colors uppercase tracking-widest font-bold" href="#">Compliance</a>
+<a class="text-xs text-slate-500 hover:text-slate-300 transition-colors uppercase tracking-widest font-bold" href="#">Source Policy</a>
+<a class="text-xs text-slate-500 hover:text-slate-300 transition-colors uppercase tracking-widest font-bold" href="#">API Access</a>
+</div>
+</div>
+</footer>
+
+</template>
+
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useEventsStore } from '@/stores/events';
@@ -82,203 +376,3 @@ const viewOnMap = () => {
   });
 };
 </script>
-
-<template>
-  <div v-if="eventsStore.loading" class="flex items-center justify-center h-96">
-    <div class="text-center">
-      <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      <p class="mt-4 text-gray-600">Loading event...</p>
-    </div>
-  </div>
-
-  <div v-else-if="!event" class="text-center py-12">
-    <p class="text-gray-600">Event not found</p>
-    <router-link to="/events" class="text-blue-600 hover:underline mt-4 inline-block">
-      Back to events
-    </router-link>
-  </div>
-
-  <div v-else class="event-detail max-w-4xl mx-auto">
-    <div class="mb-6 flex items-center justify-between">
-      <button
-        @click="router.back()"
-        class="flex items-center text-gray-600 hover:text-gray-900"
-      >
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        Back
-      </button>
-
-      <div v-if="authStore.isAnalyst" class="space-x-2">
-        <button
-          @click="handleEdit"
-          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          Edit
-        </button>
-        <button
-          @click="showDeleteConfirm = true"
-          class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-      <div class="p-6">
-        <div class="flex items-center justify-between mb-4">
-          <div class="flex items-center space-x-3">
-            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
-              {{ eventTypeLabel }}
-            </span>
-            <span
-              v-if="event.verified"
-              class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
-            >
-              Verified
-            </span>
-            <span
-              class="px-3 py-1 rounded-full text-sm font-medium"
-              :class="{
-                'bg-green-100 text-green-800': event.confidence_level === 'confirmed',
-                'bg-yellow-100 text-yellow-800': event.confidence_level === 'likely',
-                'bg-gray-100 text-gray-800': event.confidence_level === 'unconfirmed'
-              }"
-            >
-              {{ event.confidence_level }}
-            </span>
-          </div>
-
-          <button
-            v-if="event.coordinates"
-            @click="viewOnMap"
-            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-          >
-            View on Map
-          </button>
-        </div>
-
-        <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ event.title }}</h1>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 pb-6 border-b border-gray-200">
-          <div>
-            <p class="text-sm text-gray-600 mb-1">Occurred At</p>
-            <p class="text-gray-900 font-medium">{{ formattedDate }}</p>
-          </div>
-
-          <div v-if="event.location_name">
-            <p class="text-sm text-gray-600 mb-1">Location</p>
-            <p class="text-gray-900 font-medium">{{ event.location_name }}</p>
-          </div>
-
-          <div v-if="event.actor">
-            <p class="text-sm text-gray-600 mb-1">Actor</p>
-            <p class="text-gray-900 font-medium">{{ event.actor.name }}</p>
-          </div>
-
-          <div v-if="event.conflict">
-            <p class="text-sm text-gray-600 mb-1">Conflict</p>
-            <p class="text-gray-900 font-medium">{{ event.conflict.name }}</p>
-          </div>
-        </div>
-
-        <div v-if="event.description" class="mb-6">
-          <h2 class="text-lg font-semibold text-gray-900 mb-2">Description</h2>
-          <p class="text-gray-700 whitespace-pre-wrap">{{ event.description }}</p>
-        </div>
-
-        <div v-if="event.media_urls && event.media_urls.length > 0" class="mb-6">
-          <h2 class="text-lg font-semibold text-gray-900 mb-3">Media</h2>
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div
-              v-for="(url, index) in event.media_urls"
-              :key="index"
-              class="aspect-square bg-gray-200 rounded-lg overflow-hidden"
-            >
-              <img :src="url" :alt="`Media ${index + 1}`" class="w-full h-full object-cover" />
-            </div>
-          </div>
-        </div>
-
-        <div v-if="event.source_urls && event.source_urls.length > 0" class="mb-6">
-          <h2 class="text-lg font-semibold text-gray-900 mb-3">Sources</h2>
-          <div class="space-y-2">
-            <a
-              v-for="(url, index) in event.source_urls"
-              :key="index"
-              :href="url"
-              target="_blank"
-              class="block text-blue-600 hover:underline"
-            >
-              {{ url }}
-            </a>
-          </div>
-        </div>
-
-        <div class="pt-6 border-t border-gray-200">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-            <div>
-              <span class="font-medium">Created by:</span>
-              <span class="ml-2">{{ event.created_by?.name || 'Unknown' }}</span>
-            </div>
-            <div>
-              <span class="font-medium">Created at:</span>
-              <span class="ml-2">{{ new Date(event.created_at).toLocaleString() }}</span>
-            </div>
-            <div v-if="event.verified_by_id">
-              <span class="font-medium">Verified at:</span>
-              <span class="ml-2">{{ event.verified_at ? new Date(event.verified_at).toLocaleString() : 'N/A' }}</span>
-            </div>
-            <div>
-              <span class="font-medium">Last updated:</span>
-              <span class="ml-2">{{ new Date(event.updated_at).toLocaleString() }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div
-      v-if="showDeleteConfirm"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-    >
-      <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm Deletion</h3>
-        <p class="text-gray-600 mb-6">
-          Are you sure you want to delete this event? This action cannot be undone.
-        </p>
-        <div class="flex justify-end space-x-4">
-          <button
-            @click="showDeleteConfirm = false"
-            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-          >
-            Cancel
-          </button>
-          <button
-            @click="handleDelete"
-            class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<style scoped>
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>

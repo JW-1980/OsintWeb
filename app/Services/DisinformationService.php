@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Models\DisinformationAnalysis;
 use App\Models\DisinformationPattern;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\FlaggedContent;
 use App\Models\SocialMediaPost;
 use App\Models\Article;

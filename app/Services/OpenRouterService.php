@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 
 /**
- * Service for interacting with OpenRouter.ai API.
+ * Service for interacting with AI inference providers.
+ *
+ * Supports OpenRouter, Hugging Face Inference, and AIML API.
+ * All providers use OpenAI-compatible chat completion endpoints.
  *
  * Provides methods for chat completion, vision analysis, and
  * access to free LLM models for OCR, translation, and entity extraction.
@@ -21,14 +24,28 @@ class OpenRouterService
 {
     protected string $apiKey;
     protected string $baseUrl;
+    protected string $providerKey;
+    protected array $providerConfig;
     protected array $config;
     protected ?string $lastError = null;
 
     public function __construct()
     {
         $this->config = config('openrouter');
-        $this->apiKey = $this->config['api_key'] ?? '';
-        $this->baseUrl = $this->config['base_url'] ?? 'https://openrouter.ai/api/v1';
+        $this->providerKey = $this->config['provider'] ?? 'openrouter';
+
+        // Resolve active provider configuration
+        $this->providerConfig = $this->config['providers'][$this->providerKey] ?? [];
+        $this->apiKey = $this->providerConfig['api_key'] ?? $this->config['api_key'] ?? '';
+        $this->baseUrl = $this->providerConfig['base_url'] ?? $this->config['base_url'] ?? 'https://openrouter.ai/api/v1';
+
+        // Override models and free_models from the active provider
+        if (!empty($this->providerConfig['models'])) {
+            $this->config['models'] = $this->providerConfig['models'];
+        }
+        if (!empty($this->providerConfig['free_models'])) {
+            $this->config['free_models'] = $this->providerConfig['free_models'];
+        }
     }
 
     // =========================================================================
@@ -105,7 +122,7 @@ class OpenRouterService
     {
         if (!$this->checkRateLimit()) {
             $this->lastError = 'Rate limit exceeded. Please wait before making more requests.';
-            Log::warning('OpenRouter rate limit exceeded');
+            Log::warning('AI provider rate limit exceeded', ['provider' => $this->providerKey]);
             return null;
         }
 
@@ -136,7 +153,8 @@ class OpenRouterService
 
         } catch (\Exception $e) {
             $this->lastError = 'API request failed: ' . $e->getMessage();
-            Log::error('OpenRouter API error', [
+            Log::error('AI provider API error', [
+                'provider' => $this->providerKey,
                 'error' => $e->getMessage(),
                 'model' => $model,
             ]);
@@ -481,9 +499,10 @@ class OpenRouterService
             'Content-Type' => 'application/json',
         ];
 
-        // Add custom headers from config
-        if (isset($this->config['headers'])) {
-            $headers = array_merge($headers, $this->config['headers']);
+        // Add provider-specific headers
+        $providerHeaders = $this->providerConfig['headers'] ?? [];
+        if (!empty($providerHeaders)) {
+            $headers = array_merge($headers, $providerHeaders);
         }
 
         return Http::withHeaders($headers)
@@ -505,7 +524,8 @@ class OpenRouterService
         $url = $this->baseUrl . $endpoint;
 
         if ($this->config['logging']['log_requests'] ?? false) {
-            Log::debug('OpenRouter API request', [
+            Log::debug('AI provider API request', [
+                'provider' => $this->providerKey,
                 'method' => $method,
                 'endpoint' => $endpoint,
                 'model' => $data['model'] ?? 'N/A',
@@ -521,7 +541,8 @@ class OpenRouterService
         };
 
         if ($this->config['logging']['log_responses'] ?? false) {
-            Log::debug('OpenRouter API response', [
+            Log::debug('AI provider API response', [
+                'provider' => $this->providerKey,
                 'status' => $response->status(),
                 'success' => $response->successful(),
             ]);
@@ -547,13 +568,13 @@ class OpenRouterService
 
         // Read file and encode
         if (!file_exists($imagePath)) {
-            Log::error('OpenRouter: Image file not found', ['path' => $imagePath]);
+            Log::error('AI provider: Image file not found', ['provider' => $this->providerKey, 'path' => $imagePath]);
             return null;
         }
 
         $imageData = file_get_contents($imagePath);
         if ($imageData === false) {
-            Log::error('OpenRouter: Failed to read image file', ['path' => $imagePath]);
+            Log::error('AI provider: Failed to read image file', ['provider' => $this->providerKey, 'path' => $imagePath]);
             return null;
         }
 
@@ -582,7 +603,7 @@ class OpenRouterService
         $decoded = json_decode($content, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            Log::warning('OpenRouter: Failed to parse JSON response', [
+            Log::warning('AI provider: Failed to parse JSON response', [
                 'error' => json_last_error_msg(),
                 'content' => substr($content, 0, 500),
             ]);
@@ -601,7 +622,7 @@ class OpenRouterService
             return true;
         }
 
-        $key = 'openrouter_rate_limit';
+        $key = 'ai_rate_limit_' . $this->providerKey;
         $maxAttempts = $this->config['rate_limiting']['requests_per_minute'] ?? 20;
 
         return RateLimiter::attempt(
@@ -621,16 +642,18 @@ class OpenRouterService
         $body = $response->json();
 
         $errorMessage = $body['error']['message'] ?? $response->body();
+        $providerName = $this->getProviderName();
 
         $this->lastError = match ($status) {
-            401 => 'Invalid API key. Please check your OpenRouter credentials.',
-            402 => 'Insufficient credits. Please add credits to your OpenRouter account.',
+            401 => "Invalid API key. Please check your {$providerName} credentials.",
+            402 => "Insufficient credits. Please add credits to your {$providerName} account.",
             429 => 'Rate limit exceeded. Please wait before making more requests.',
-            500, 502, 503 => 'OpenRouter service temporarily unavailable. Please try again later.',
+            500, 502, 503 => "{$providerName} service temporarily unavailable. Please try again later.",
             default => "API error ({$status}): {$errorMessage}",
         };
 
-        Log::error('OpenRouter API error response', [
+        Log::error('AI provider API error response', [
+            'provider' => $this->providerKey,
             'status' => $status,
             'error' => $this->lastError,
             'body' => $body,
@@ -659,11 +682,62 @@ class OpenRouterService
 
         $usage = $response['usage'] ?? [];
 
-        Log::info('OpenRouter API usage', [
+        Log::info('AI provider API usage', [
+            'provider' => $this->providerKey,
+            'provider_name' => $this->getProviderName(),
             'model' => $model,
             'prompt_tokens' => $usage['prompt_tokens'] ?? 0,
             'completion_tokens' => $usage['completion_tokens'] ?? 0,
             'total_tokens' => $usage['total_tokens'] ?? 0,
         ]);
+    }
+
+    // =========================================================================
+    // PROVIDER INFORMATION
+    // =========================================================================
+
+    /**
+     * Get the active provider key.
+     *
+     * @return string Provider key (e.g., 'openrouter', 'huggingface', 'aimlapi')
+     */
+    public function getActiveProvider(): string
+    {
+        return $this->providerKey;
+    }
+
+    /**
+     * Get the active provider's display name.
+     *
+     * @return string Human-readable provider name
+     */
+    public function getProviderName(): string
+    {
+        return $this->providerConfig['name'] ?? ucfirst($this->providerKey);
+    }
+
+    /**
+     * Get all available providers with their configuration.
+     *
+     * @return array Provider configurations (without API keys)
+     */
+    public function getAvailableProviders(): array
+    {
+        $providers = [];
+
+        foreach ($this->config['providers'] ?? [] as $key => $config) {
+            $providers[$key] = [
+                'key' => $key,
+                'name' => $config['name'] ?? ucfirst($key),
+                'description' => $config['description'] ?? '',
+                'docs_url' => $config['docs_url'] ?? '',
+                'configured' => !empty($config['api_key']),
+                'is_active' => $key === $this->providerKey,
+                'models' => $config['models'] ?? [],
+                'free_models' => $config['free_models'] ?? [],
+            ];
+        }
+
+        return $providers;
     }
 }

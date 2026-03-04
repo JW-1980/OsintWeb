@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\ControlZone;
 use App\Models\MilitaryEquipment;
 use Illuminate\Support\Facades\DB;
@@ -127,7 +127,7 @@ class ExportController extends Controller
                 $query->where('occurred_at', '<=', $validated['end_date']);
             }
 
-            $events = $query->with('actor')->get();
+            $events = $query->with('actors')->get();
 
             foreach ($events as $event) {
                 $features[] = [
@@ -210,7 +210,7 @@ class ExportController extends Controller
             $query->where('occurred_at', '<=', $validated['end_date']);
         }
 
-        $events = $query->with('actor')->get();
+        $events = $query->with('actors')->get();
 
         $csv = "ID,Title,Description,Type,Occurred At,Latitude,Longitude,Location Name,Actor,Status,Confidence\n";
 

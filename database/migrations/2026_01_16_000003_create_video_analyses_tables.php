@@ -83,8 +83,7 @@ return new class extends Migration
             $table->index('codec');
             $table->index('container_format');
             $table->index(['gps_latitude', 'gps_longitude']);
-            // Note: spatial index requires NOT NULL, using regular index for nullable GPS
-            $table->index(['gps_latitude', 'gps_longitude'], 'video_analyses_gps_index');
+            // Spatial index omitted: gps_coordinates is nullable, use lat/lng index instead
         });
 
         // Video keyframes table

@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\EventMedia;
 use Illuminate\Support\Facades\Storage;
 

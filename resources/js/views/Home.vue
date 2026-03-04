@@ -234,12 +234,22 @@ const recentEvents = ref<RecentEvent[]>([]);
 // Load stats and recent events from API
 onMounted(async () => {
   try {
-    // TODO: Replace with actual API calls when backend is ready
-    // const statsResponse = await api.get('/public/stats');
-    // stats.value = statsResponse.data;
+    const [statsResponse, eventsResponse] = await Promise.allSettled([
+      api.get('/stats/overview'),
+      api.get('/events', { params: { per_page: 5, sort: '-occurred_at' } }),
+    ]);
 
-    // const eventsResponse = await api.get('/public/events/recent');
-    // recentEvents.value = eventsResponse.data;
+    if (statsResponse.status === 'fulfilled' && statsResponse.value?.data?.data) {
+      const data = statsResponse.value.data.data;
+      stats.value.totalEvents = data.total_events ?? stats.value.totalEvents;
+      stats.value.totalEquipment = data.total_equipment ?? stats.value.totalEquipment;
+      stats.value.activeConflicts = data.active_conflicts ?? stats.value.activeConflicts;
+      stats.value.countriesTracked = data.countries_tracked ?? stats.value.countriesTracked;
+    }
+
+    if (eventsResponse.status === 'fulfilled' && eventsResponse.value?.data?.data) {
+      recentEvents.value = eventsResponse.value.data.data;
+    }
   } catch (error) {
     console.error('Failed to load home page data:', error);
   }

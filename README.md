@@ -226,14 +226,17 @@ OsintWeb provides powerful tools for:
 *   **User Profiles**: Customizable profiles with unique generated avatars.
 
 ### 🤖 AI & Automation
+*   **Multi-Provider AI Support**: Choose between OpenRouter, Hugging Face Inference, and AIML API for AI-powered features. All providers use free-tier models and OpenAI-compatible APIs.
+*   **AI Provider Management**: Admin panel with provider status, connection testing, active model overview, and setup guide. Switch providers via a single environment variable.
 *   **AI Agents**: Deploy agents for tasks like geolocation and image verification.
 *   **Agent Management**: Full admin UI to create, configure, and monitor AI agents.
 *   **Smart Skills**: Keyword-triggered capabilities that enhance investigation workflows.
 *   **Skills Administration**: Manage skills with triggers, configurations, and agent assignments.
 *   **Transcription**: AI-powered audio transcription with speaker identification.
 
-### 🧠 Multi-Provider AI Inference (9 Providers, All Free Tier)
-*   **9 Inference Providers**: OpenRouter, Google Gemini, Groq, Cerebras, Mistral AI, SambaNova, GitHub Models, Together AI, and Novita AI.
+
+### 🧠 Multi-Provider AI Inference (11 Providers, All Free Tier)
+*   **11 Inference Providers**: OpenRouter, Google Gemini, Groq, Cerebras, Mistral AI, SambaNova, GitHub Models, Together AI, Novita AI, Hugging Face, and AIML API.
 *   **OpenAI-Compatible**: All providers use OpenAI-compatible endpoints for seamless switching.
 *   **Automatic Fallback**: If one provider is rate-limited or fails, automatically try the next in the fallback chain.
 *   **Task-Specific Routing**: Configure different providers for different tasks (vision, translation, etc.).
@@ -250,6 +253,8 @@ OsintWeb provides powerful tools for:
 | [GitHub Models](https://github.com/marketplace/models) | Medium | 128K | Yes | Free with GitHub account, Llama/Mistral/Phi |
 | [Together AI](https://www.together.ai/) | Fast | 128K | Yes | 200+ models, free credits, sub-100ms latency |
 | [Novita AI](https://novita.ai/) | Fast | 128K | No | Free models (Llama, Qwen, GLM), 300 tok/sec |
+| [Hugging Face](https://huggingface.co/) | Medium | Varies | Yes | Free API access, open-source models |
+| [AIML API](https://aimlapi.com/) | Fast | Varies | Yes | Free credits on signup, 200+ models |
 
 *   **Use Cases**:
     - **OCR & Vision**: Gemini (1M context) or Groq (speed) for document analysis
@@ -274,7 +279,7 @@ OsintWeb provides powerful tools for:
 *   **Analysis Types**: Detect five categories of disinformation: coordinated inauthentic behavior, propaganda, fake accounts, manipulated media, and false narratives.
 *   **Pattern Library**: Comprehensive library of known disinformation tactics with linguistic, behavioral, temporal, network, and media patterns.
 *   **Threat Scoring**: Automated threat scoring (0-100) based on detected indicators with confidence metrics.
-*   **AI-Powered Analysis**: Optional integration with OpenRouter.ai free models (Llama, Gemma, Mistral) for advanced text analysis.
+*   **AI-Powered Analysis**: Optional integration with free AI models (Llama, Gemma, Mistral, DeepSeek) via OpenRouter, Hugging Face, or AIML API for advanced text analysis.
 *   **Coordinated Behavior Detection**: Analyze multiple posts for synchronized posting, content similarity, hashtag coordination, and network anomalies.
 *   **Propaganda Indicators**: Detect loaded language, fear appeals, bandwagon effects, black-and-white thinking, and whataboutism patterns.
 *   **Temporal Analysis**: Identify unusual posting times, burst activity, and bot-like regular intervals.
@@ -482,6 +487,7 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 | Category | Base Path | Key Operations |
 |----------|-----------|----------------|
 | Email Templates | `/api/admin/email-templates` | CRUD, preview, test, duplicate, stats, logs |
+| AI Settings | `/api/admin/ai-settings` | View provider config, test connection |
 | Achievements | `/api/admin/achievements` | CRUD for achievement management |
 | CAPTCHA Settings | `/api/admin/captcha` | Get/update settings, test provider connectivity |
 
@@ -568,6 +574,16 @@ php artisan key:generate
 # DB_CONNECTION=mysql
 # DB_HOST=127.0.0.1
 # ...
+
+# Configure AI provider (optional - choose one):
+# AI_PROVIDER=openrouter          # Default: openrouter.ai
+# OPENROUTER_API_KEY=your-key     # Get free key at https://openrouter.ai/
+#
+# AI_PROVIDER=huggingface         # Alternative: Hugging Face
+# HUGGINGFACE_API_KEY=your-key    # Get free key at https://huggingface.co/settings/tokens
+#
+# AI_PROVIDER=aimlapi             # Alternative: AIML API
+# AIMLAPI_API_KEY=your-key        # Get free key at https://aimlapi.com/
 
 # Create database & Run migrations
 php artisan migrate --seed
@@ -678,6 +694,39 @@ Visit your domain in a browser. The installation wizard will:
 | Blank page | Enable `APP_DEBUG=true` temporarily in `.env` |
 | Session errors | Ensure `storage/framework/sessions` is writable |
 | CSS/JS not loading | Verify document root points to `public/` |
+
+---
+
+## Changelog
+
+### 2026-02-18 - Security Hardening & Bug Fixes
+
+**Security Fixes:**
+- Fixed critical SQL injection vulnerability in territorial control zone management (GeoJSON parameter binding)
+- Fixed XSS vulnerability in comment display component (sanitized user-generated content rendering)
+- Hardened User model by removing security-sensitive fields (role, permissions, account status) from mass assignment
+- Added authorization checks to event creation (restricted self-verification), dispute workflow, and source management
+- Restricted source creation and verification to moderator/admin roles
+
+**Bug Fixes:**
+- Created missing Conflict model with proper relationships and pivot table support
+- Fixed Actor model missing `aliases()` and `conflicts()` relationships causing 500 errors on actor API
+- Fixed incorrect singular relationship names (`actor` -> `actors`) in Event and Export controllers
+- Fixed Equipment controller loading relationships from wrong model
+- Connected Home page TODO placeholders to actual API endpoints (stats overview, recent events)
+- Replaced placeholder contact information with proper values
+- Fixed Vue template parsing error in Email Template Editor component
+- Fixed 7 spatial migration compatibility issues with MariaDB (geometry type, nullable spatial indexes)
+- Fixed migration ordering dependencies for scheduled reports tables
+- Fixed 5 database seeders referencing non-existent schema columns
+
+**Performance:**
+- Added 30-minute query caching to equipment losses, event statistics, timeline, and heatmap endpoints
+- Frontend built and optimized with Vite (code splitting, tree shaking)
+
+**Testing:**
+- Comprehensive browser test suite covering 126 pages/endpoints with 100% pass rate
+- API endpoint verification for all core data and authentication flows
 
 ---
 

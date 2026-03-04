@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\FlightAlert;
 use App\Models\FlightAlertTrigger;
 use App\Models\FlightPosition;
