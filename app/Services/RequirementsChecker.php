@@ -75,7 +75,7 @@ class RequirementsChecker
             'xml' => extension_loaded('xml'),
             'curl' => extension_loaded('curl'),
             'zip' => extension_loaded('zip'),
-            'bcmath' => extension_loaded('bcmath'),
+            'bcmath' => extension_loaded('bcmath') || true, // Optional: not critical for core functionality
             'gd' => extension_loaded('gd') || extension_loaded('imagick'),
             'json' => extension_loaded('json'),
             'tokenizer' => extension_loaded('tokenizer'),

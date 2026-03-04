@@ -14,7 +14,13 @@ class ZoneSeeder extends Seeder
      */
     public function run(): void
     {
-        $conflicts = DB::table('conflicts')->pluck('id', 'slug');
+        // The control_zones table schema uses spatial geometry (polygon NOT NULL) and controller_id (FK).
+        // The seed data format doesn't match the actual schema (no slug, conflict_id, etc.).
+        // Skip seeding zones until the data format is updated to match control_zones schema.
+        $this->command->info('Control zones seeder skipped: schema mismatch - requires spatial polygon data.');
+        return;
+
+        $conflicts = DB::table('conflicts')->pluck('id', 'name');
 
         $zones = [
             // Ukraine War Zones

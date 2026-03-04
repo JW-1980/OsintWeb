@@ -85,8 +85,7 @@ return new class extends Migration
             $table->index('data_source');
             $table->index(['vessel_id', 'arrival_time']);
 
-            // Spatial index
-            $table->spatialIndex('position');
+            // Note: position is nullable so spatial index cannot be used (MySQL requires NOT NULL)
         });
     }
 

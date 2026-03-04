@@ -1023,7 +1023,7 @@ class TrainingEnvironmentsSeeder extends Seeder
         ];
 
         foreach ($environments as $environment) {
-            DB::table('training_environments')->insert([
+            DB::table('training_environments')->insertOrIgnore([
                 ...$environment,
                 'created_at' => $now,
                 'updated_at' => $now,

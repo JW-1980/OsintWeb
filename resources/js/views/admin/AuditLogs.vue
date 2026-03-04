@@ -76,19 +76,19 @@
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
         <input v-model="filters.search" @input="debouncedFetch" type="text" placeholder="Search..." class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400" />
-        <select v-model="filters.action" @change="fetchLogs" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+        <select v-model="filters.action" @change="() => fetchLogs()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
           <option value="">All Actions</option>
           <option v-for="(label, value) in filterOptions.actions" :key="value" :value="value">{{ label }}</option>
         </select>
-        <select v-model="filters.entity" @change="fetchLogs" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+        <select v-model="filters.entity" @change="() => fetchLogs()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
           <option value="">All Entities</option>
           <option v-for="(label, value) in filterOptions.entities" :key="value" :value="value">{{ label }}</option>
         </select>
-        <select v-model="filters.user_id" @change="fetchLogs" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+        <select v-model="filters.user_id" @change="() => fetchLogs()" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
           <option value="">All Users</option>
           <option v-for="user in filterOptions.users" :key="user.id" :value="user.id">{{ user.name }}</option>
         </select>
-        <input v-model="filters.date" @change="fetchLogs" type="date" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
+        <input v-model="filters.date" @change="() => fetchLogs()" type="date" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white" />
         <button @click="clearFilters" class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600">Clear</button>
       </div>
     </div>

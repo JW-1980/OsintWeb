@@ -130,8 +130,8 @@ class EquipmentController extends Controller
         $equipment = MilitaryEquipment::where('uuid', $uuid)->firstOrFail();
 
         $events = $equipment->events()
-            ->with(['actor', 'media'])
-            ->orderBy('occurred_at', 'desc')
+            ->with(['event.actors', 'event.media', 'operatorFaction'])
+            ->orderBy('created_at', 'desc')
             ->paginate($this->perPage);
 
         return $this->paginated($events);

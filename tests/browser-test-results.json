@@ -1,0 +1,1067 @@
+{
+  "summary": {
+    "total": 126,
+    "passed": 8,
+    "passedWithRemarks": 118,
+    "failed": 0,
+    "passRate": "100.0%",
+    "testDate": "2026-02-18T13:52:58.526Z"
+  },
+  "resultsByCategory": {
+    "user-public": [
+      {
+        "url": "http://127.0.0.1:8000/",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "2 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:48:44.698Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/login",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:48:47.514Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/register",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:48:50.435Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/forgot-password",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:48:53.230Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "57 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:48:56.069Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore/map",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:48:58.967Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore/events",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "3 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:01.660Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore/equipment",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "2 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:04.425Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore/conflicts",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "2 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:07.194Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore/countries",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:10.034Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore/actors",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:12.890Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore/factions",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:15.659Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore/statistics",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:18.510Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/explore/timeline",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:21.392Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/articles",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:24.344Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/about",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:27.341Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/contact",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:30.195Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/privacy",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:33.014Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/terms",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:35.928Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/offline",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "2 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-public",
+        "timestamp": "2026-02-18T13:49:38.558Z",
+        "pageTitle": "OsintWeb"
+      }
+    ],
+    "user-auth": [
+      {
+        "url": "http://127.0.0.1:8000/dashboard",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:49:44.697Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/profile",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:49:47.546Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/profile/edit",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:49:50.422Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/profile/security",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:49:53.292Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/profile/preferences",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:49:56.176Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/profile/privacy",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:49:59.003Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/profile/export",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:50:01.802Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/notifications",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:50:04.517Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/bookmarks",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:50:07.363Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/events/create",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:50:10.188Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/my-events",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:50:13.127Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/my-articles",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:50:16.027Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/achievements",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:50:18.959Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/onboarding",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:50:21.803Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/settings",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "user-auth",
+        "timestamp": "2026-02-18T13:50:24.722Z",
+        "pageTitle": "OsintWeb"
+      }
+    ],
+    "admin": [
+      {
+        "url": "http://127.0.0.1:8000/admin",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:27.576Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/dashboard",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:30.439Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/users",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:33.341Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/roles",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:36.242Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/permissions",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:39.071Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/events",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:41.947Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/events/pending",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:44.634Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/equipment",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:47.472Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/equipment/categories",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:50.293Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/conflicts",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:53.097Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/countries",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:56.006Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/actors",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:50:58.830Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/factions",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:01.552Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/articles",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:04.489Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/comments",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:07.618Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/settings",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:10.451Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/settings/general",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:13.289Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/settings/email",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:16.152Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/settings/security",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:19.038Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/settings/map",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:21.984Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/audit-logs",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:24.695Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/analytics",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:27.657Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/analytics/events",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:30.629Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/analytics/users",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:33.542Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/analytics/search",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:36.461Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/reports",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:39.579Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/scheduled-reports",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:42.693Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/ab-testing",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:45.841Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/email-templates",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:48.888Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/disinformation",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:52.002Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/skills",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:55.046Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/agents",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:51:58.130Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/achievements",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:01.323Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/sources",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:04.380Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/health",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:07.473Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/training",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:10.618Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/cases",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:13.774Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/sitreps",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:16.851Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/network",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:19.935Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/maritime",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:22.928Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/flight-tracking",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:25.842Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/social-media",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:28.720Z",
+        "pageTitle": "OsintWeb"
+      },
+      {
+        "url": "http://127.0.0.1:8000/admin/evidence",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "1 console error(s): Failed to load resource: net::ERR_FAILED",
+        "category": "admin",
+        "timestamp": "2026-02-18T13:52:31.554Z",
+        "pageTitle": "OsintWeb"
+      }
+    ],
+    "api-public": [
+      {
+        "url": "/api/events?per_page=5",
+        "status": "PASS",
+        "notes": "",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:32.990Z"
+      },
+      {
+        "url": "/api/events/types",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 404",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.083Z"
+      },
+      {
+        "url": "/api/equipment?per_page=5",
+        "status": "PASS",
+        "notes": "",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.175Z"
+      },
+      {
+        "url": "/api/equipment/categories",
+        "status": "PASS",
+        "notes": "",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.264Z"
+      },
+      {
+        "url": "/api/countries",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.335Z"
+      },
+      {
+        "url": "/api/factions",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.409Z"
+      },
+      {
+        "url": "/api/actors",
+        "status": "PASS",
+        "notes": "",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.501Z"
+      },
+      {
+        "url": "/api/conflicts",
+        "status": "PASS",
+        "notes": "",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.575Z"
+      },
+      {
+        "url": "/api/stats/overview",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.635Z"
+      },
+      {
+        "url": "/api/stats/events",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.700Z"
+      },
+      {
+        "url": "/api/stats/losses",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.771Z"
+      },
+      {
+        "url": "/api/stats/timeline",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.837Z"
+      },
+      {
+        "url": "/api/articles?per_page=5",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.897Z"
+      },
+      {
+        "url": "/api/sources?per_page=5",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:33.952Z"
+      },
+      {
+        "url": "/api/health",
+        "status": "PASS",
+        "notes": "",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:34.047Z"
+      },
+      {
+        "url": "/api/health/quick",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 404",
+        "category": "api-public",
+        "timestamp": "2026-02-18T13:52:34.383Z"
+      }
+    ],
+    "api-auth": [
+      {
+        "url": "/api/auth/user",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:34.480Z"
+      },
+      {
+        "url": "/api/account/preferences",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:34.547Z"
+      },
+      {
+        "url": "/api/skills",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:34.611Z"
+      },
+      {
+        "url": "/api/agents",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:34.677Z"
+      },
+      {
+        "url": "/api/achievements",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 404",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:34.731Z"
+      },
+      {
+        "url": "/api/notifications",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:34.787Z"
+      },
+      {
+        "url": "/api/export/formats",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 404",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:34.850Z"
+      },
+      {
+        "url": "/api/onboarding/status",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:34.929Z"
+      },
+      {
+        "url": "/api/control-zones",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 404",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.000Z"
+      },
+      {
+        "url": "/api/alerts",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.071Z"
+      },
+      {
+        "url": "/api/reports",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.138Z"
+      },
+      {
+        "url": "/api/scheduled-reports",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.203Z"
+      },
+      {
+        "url": "/api/cases",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.258Z"
+      },
+      {
+        "url": "/api/sitreps",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.312Z"
+      },
+      {
+        "url": "/api/maritime/vessels",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.375Z"
+      },
+      {
+        "url": "/api/flight-tracking/aircraft",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.440Z"
+      },
+      {
+        "url": "/api/social-media/accounts",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.500Z"
+      },
+      {
+        "url": "/api/evidence",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.556Z"
+      },
+      {
+        "url": "/api/geolocation/verifications",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.607Z"
+      },
+      {
+        "url": "/api/weather/providers",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.661Z"
+      },
+      {
+        "url": "/api/audio",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.724Z"
+      },
+      {
+        "url": "/api/video-analysis",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.798Z"
+      },
+      {
+        "url": "/api/reverse-image",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.875Z"
+      },
+      {
+        "url": "/api/documents",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:35.973Z"
+      },
+      {
+        "url": "/api/disinformation/analyses",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:36.045Z"
+      },
+      {
+        "url": "/api/network/graphs",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 404",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:36.105Z"
+      },
+      {
+        "url": "/api/timeline",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "HTTP 401 (auth required)",
+        "category": "api-auth",
+        "timestamp": "2026-02-18T13:52:36.163Z"
+      }
+    ],
+    "navigation": [
+      {
+        "url": "Nav: / -> click \"Explore\"",
+        "status": "PASS",
+        "notes": "",
+        "category": "navigation",
+        "timestamp": "2026-02-18T13:52:40.421Z"
+      },
+      {
+        "url": "Nav: /explore -> click \"Map\"",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "Ended at http://127.0.0.1:8000/explore",
+        "category": "navigation",
+        "timestamp": "2026-02-18T13:52:44.837Z"
+      },
+      {
+        "url": "Nav: /explore -> click \"Equipment\"",
+        "status": "PASS",
+        "notes": "",
+        "category": "navigation",
+        "timestamp": "2026-02-18T13:52:49.425Z"
+      },
+      {
+        "url": "Nav: /login -> click \"Register\"",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "Ended at http://127.0.0.1:8000/login",
+        "category": "navigation",
+        "timestamp": "2026-02-18T13:52:53.666Z"
+      },
+      {
+        "url": "Nav: /register -> click \"Login\"",
+        "status": "PASS_WITH_REMARKS",
+        "notes": "Ended at http://127.0.0.1:8000/register",
+        "category": "navigation",
+        "timestamp": "2026-02-18T13:52:58.146Z"
+      }
+    ]
+  },
+  "errors": [],
+  "hardcodedIssues": [
+    {
+      "url": "http://127.0.0.1:8000/admin",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/users",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/roles",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/permissions",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/events",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/equipment",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/conflicts",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/actors",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/settings",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/audit-logs",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/reports",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/ab-testing",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/email-templates",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/skills",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/agents",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    },
+    {
+      "url": "http://127.0.0.1:8000/admin/achievements",
+      "issue": "Hardcoded admin@example.com",
+      "count": 1
+    }
+  ]
+}

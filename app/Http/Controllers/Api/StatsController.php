@@ -58,35 +58,39 @@ class StatsController extends Controller
             'actor_id' => ['nullable', 'exists:actors,id'],
         ]);
 
-        $query = DB::table('event_equipment')
-            ->join('events', 'event_equipment.event_id', '=', 'events.id')
-            ->join('military_equipment', 'event_equipment.equipment_id', '=', 'military_equipment.id')
-            ->select(
-                'military_equipment.category',
-                'event_equipment.status',
-                DB::raw('SUM(event_equipment.quantity) as total')
-            );
+        $cacheKey = 'stats.losses.' . md5(json_encode($validated));
 
-        if (isset($validated['start_date'])) {
-            $query->where('events.occurred_at', '>=', $validated['start_date']);
-        }
+        $losses = Cache::remember($cacheKey, 1800, function () use ($validated) {
+            $query = DB::table('event_equipment')
+                ->join('events', 'event_equipment.event_id', '=', 'events.id')
+                ->join('military_equipment', 'event_equipment.equipment_id', '=', 'military_equipment.id')
+                ->select(
+                    'military_equipment.category',
+                    'event_equipment.status',
+                    DB::raw('SUM(event_equipment.quantity) as total')
+                );
 
-        if (isset($validated['end_date'])) {
-            $query->where('events.occurred_at', '<=', $validated['end_date']);
-        }
+            if (isset($validated['start_date'])) {
+                $query->where('events.occurred_at', '>=', $validated['start_date']);
+            }
 
-        if (isset($validated['actor_id'])) {
-            $query->where('event_equipment.operator_faction_id', $validated['actor_id']);
-        }
+            if (isset($validated['end_date'])) {
+                $query->where('events.occurred_at', '<=', $validated['end_date']);
+            }
 
-        $losses = $query->groupBy('military_equipment.category', 'event_equipment.status')
-            ->get()
-            ->groupBy('category')
-            ->map(function ($items) {
-                return $items->groupBy('status')->map(function ($statusItems) {
-                    return $statusItems->sum('total');
+            if (isset($validated['actor_id'])) {
+                $query->where('event_equipment.operator_faction_id', $validated['actor_id']);
+            }
+
+            return $query->groupBy('military_equipment.category', 'event_equipment.status')
+                ->get()
+                ->groupBy('category')
+                ->map(function ($items) {
+                    return $items->groupBy('status')->map(function ($statusItems) {
+                        return $statusItems->sum('total');
+                    });
                 });
-            });
+        });
 
         return $this->success($losses);
     }
@@ -105,48 +109,52 @@ class StatsController extends Controller
             'group_by' => ['nullable', 'in:day,week,month,type,status'],
         ]);
 
-        $query = Event::query();
+        $cacheKey = 'stats.events.' . md5(json_encode($validated));
 
-        if (isset($validated['start_date'])) {
-            $query->where('occurred_at', '>=', $validated['start_date']);
-        }
+        $stats = Cache::remember($cacheKey, 1800, function () use ($validated) {
+            $query = Event::query();
 
-        if (isset($validated['end_date'])) {
-            $query->where('occurred_at', '<=', $validated['end_date']);
-        }
+            if (isset($validated['start_date'])) {
+                $query->where('occurred_at', '>=', $validated['start_date']);
+            }
 
-        $groupBy = $validated['group_by'] ?? 'type';
+            if (isset($validated['end_date'])) {
+                $query->where('occurred_at', '<=', $validated['end_date']);
+            }
 
-        $stats = match ($groupBy) {
-            'day' => $query->selectRaw('DATE(occurred_at) as date, COUNT(*) as count')
-                ->groupBy('date')
-                ->orderBy('date')
-                ->get(),
+            $groupBy = $validated['group_by'] ?? 'type';
 
-            'week' => $query->selectRaw('YEARWEEK(occurred_at) as week, COUNT(*) as count')
-                ->groupBy('week')
-                ->orderBy('week')
-                ->get(),
+            return match ($groupBy) {
+                'day' => $query->selectRaw('DATE(occurred_at) as date, COUNT(*) as count')
+                    ->groupBy('date')
+                    ->orderBy('date')
+                    ->get(),
 
-            'month' => $query->selectRaw('DATE_FORMAT(occurred_at, "%Y-%m") as month, COUNT(*) as count')
-                ->groupBy('month')
-                ->orderBy('month')
-                ->get(),
+                'week' => $query->selectRaw('YEARWEEK(occurred_at) as week, COUNT(*) as count')
+                    ->groupBy('week')
+                    ->orderBy('week')
+                    ->get(),
 
-            'type' => $query->select('type', DB::raw('COUNT(*) as count'))
-                ->groupBy('type')
-                ->orderBy('count', 'desc')
-                ->get(),
+                'month' => $query->selectRaw('DATE_FORMAT(occurred_at, "%Y-%m") as month, COUNT(*) as count')
+                    ->groupBy('month')
+                    ->orderBy('month')
+                    ->get(),
 
-            'status' => $query->select('status', DB::raw('COUNT(*) as count'))
-                ->groupBy('status')
-                ->get(),
+                'type' => $query->select('type', DB::raw('COUNT(*) as count'))
+                    ->groupBy('type')
+                    ->orderBy('count', 'desc')
+                    ->get(),
 
-            default => $query->select('type', DB::raw('COUNT(*) as count'))
-                ->groupBy('type')
-                ->orderBy('count', 'desc')
-                ->get(),
-        };
+                'status' => $query->select('status', DB::raw('COUNT(*) as count'))
+                    ->groupBy('status')
+                    ->get(),
+
+                default => $query->select('type', DB::raw('COUNT(*) as count'))
+                    ->groupBy('type')
+                    ->orderBy('count', 'desc')
+                    ->get(),
+            };
+        });
 
         return $this->success($stats);
     }
@@ -163,37 +171,41 @@ class StatsController extends Controller
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date'],
             'interval' => ['nullable', 'in:day,week,month'],
-            'event_type' => ['nullable', 'string'],
+            'event_type' => ['nullable', 'string', 'max:50'],
         ]);
 
-        $interval = $validated['interval'] ?? 'day';
+        $cacheKey = 'stats.timeline.' . md5(json_encode($validated));
 
-        $query = Event::query()
-            ->where('occurred_at', '>=', $validated['start_date'])
-            ->where('occurred_at', '<=', $validated['end_date']);
+        $timeline = Cache::remember($cacheKey, 1800, function () use ($validated) {
+            $interval = $validated['interval'] ?? 'day';
 
-        if (isset($validated['event_type'])) {
-            $query->where('type', $validated['event_type']);
-        }
+            $query = Event::query()
+                ->where('occurred_at', '>=', $validated['start_date'])
+                ->where('occurred_at', '<=', $validated['end_date']);
 
-        $dateFormat = match ($interval) {
-            'day' => '%Y-%m-%d',
-            'week' => '%Y-%u',
-            'month' => '%Y-%m',
-            default => '%Y-%m-%d',
-        };
+            if (isset($validated['event_type'])) {
+                $query->where('type', $validated['event_type']);
+            }
 
-        $timeline = $query->selectRaw("DATE_FORMAT(occurred_at, '{$dateFormat}') as period, type, COUNT(*) as count")
-            ->groupBy('period', 'type')
-            ->orderBy('period')
-            ->get()
-            ->groupBy('period')
-            ->map(function ($items) {
-                return [
-                    'total' => $items->sum('count'),
-                    'by_type' => $items->pluck('count', 'type'),
-                ];
-            });
+            $dateFormat = match ($interval) {
+                'day' => '%Y-%m-%d',
+                'week' => '%Y-%u',
+                'month' => '%Y-%m',
+                default => '%Y-%m-%d',
+            };
+
+            return $query->selectRaw("DATE_FORMAT(occurred_at, '{$dateFormat}') as period, type, COUNT(*) as count")
+                ->groupBy('period', 'type')
+                ->orderBy('period')
+                ->get()
+                ->groupBy('period')
+                ->map(function ($items) {
+                    return [
+                        'total' => $items->sum('count'),
+                        'by_type' => $items->pluck('count', 'type'),
+                    ];
+                });
+        });
 
         return $this->success($timeline);
     }
@@ -209,34 +221,38 @@ class StatsController extends Controller
         $validated = $request->validate([
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date'],
-            'event_type' => ['nullable', 'string'],
+            'event_type' => ['nullable', 'string', 'max:50'],
         ]);
 
-        $query = Event::select('latitude', 'longitude', DB::raw('COUNT(*) as weight'));
+        $cacheKey = 'stats.heatmap.' . md5(json_encode($validated));
 
-        if (isset($validated['start_date'])) {
-            $query->where('occurred_at', '>=', $validated['start_date']);
-        }
+        $heatmapData = Cache::remember($cacheKey, 1800, function () use ($validated) {
+            $query = Event::select('latitude', 'longitude', DB::raw('COUNT(*) as weight'));
 
-        if (isset($validated['end_date'])) {
-            $query->where('occurred_at', '<=', $validated['end_date']);
-        }
+            if (isset($validated['start_date'])) {
+                $query->where('occurred_at', '>=', $validated['start_date']);
+            }
 
-        if (isset($validated['event_type'])) {
-            $query->where('type', $validated['event_type']);
-        }
+            if (isset($validated['end_date'])) {
+                $query->where('occurred_at', '<=', $validated['end_date']);
+            }
 
-        $heatmapData = $query->groupBy('latitude', 'longitude')
-            ->orderBy('weight', 'desc')
-            ->limit(1000)
-            ->get()
-            ->map(function ($item) {
-                return [
-                    'lat' => $item->latitude,
-                    'lng' => $item->longitude,
-                    'weight' => $item->weight,
-                ];
-            });
+            if (isset($validated['event_type'])) {
+                $query->where('type', $validated['event_type']);
+            }
+
+            return $query->groupBy('latitude', 'longitude')
+                ->orderBy('weight', 'desc')
+                ->limit(1000)
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'lat' => $item->latitude,
+                        'lng' => $item->longitude,
+                        'weight' => $item->weight,
+                    ];
+                });
+        });
 
         return $this->success($heatmapData);
     }

@@ -44,13 +44,13 @@ class AdminController extends Controller
         ]);
 
         try {
-            User::create([
+            $user = User::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'password' => Hash::make($validated['password']),
-                'role' => 'admin',
                 'email_verified_at' => now(),
             ]);
+            $user->forceFill(['role' => 'admin', 'is_active' => true, 'is_verified' => true])->save();
 
             return redirect()->route('install.email');
         } catch (\Exception $e) {

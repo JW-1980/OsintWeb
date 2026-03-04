@@ -1,4 +1,4 @@
-import { ref, computed, onMounted, type Ref, type ComputedRef, watch } from 'vue';
+import { ref, computed, onMounted, type Ref, type ComputedRef } from 'vue';
 import axios from 'axios';
 
 /**
@@ -262,7 +262,7 @@ export function useABContent<T>(
 } {
   const { variant, loading, isControl, trackConversion } = useABTest(location);
 
-  const content = computed<T>(() => {
+  const content: ComputedRef<T> = computed(() => {
     if (!variant.value || variant.value.is_control) {
       return controlContent;
     }
@@ -277,7 +277,7 @@ export function useABContent<T>(
     }
 
     return variantContent as T;
-  });
+  }) as ComputedRef<T>;
 
   return {
     content,
@@ -299,7 +299,7 @@ export function useABClickTracking(location: string) {
   /**
    * Click handler that tracks conversion.
    */
-  const onClick = async (event?: MouseEvent) => {
+  const onClick = async (_event?: MouseEvent) => {
     if (!conversionTracked.value) {
       conversionTracked.value = true;
       await trackConversion(ConversionGoals.CLICK);

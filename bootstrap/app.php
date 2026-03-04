@@ -32,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'install.check' => \App\Http\Middleware\RedirectIfInstalled::class,
             'log.admin' => \App\Http\Middleware\LogAdminActions::class,
             'track.analytics' => \App\Http\Middleware\TrackAnalytics::class,
+            'captcha' => \App\Http\Middleware\ValidateCaptcha::class,
         ]);
 
         // Add analytics tracking to web routes (non-API)

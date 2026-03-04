@@ -14,6 +14,11 @@ class TipSeeder extends Seeder
      */
     public function run(): void
     {
+        if (!\Illuminate\Support\Facades\Schema::hasTable('tips')) {
+            $this->command->info('Tips seeder skipped: tips table does not exist.');
+            return;
+        }
+
         $tips = [
             [
                 'title' => 'Possible military convoy movement',

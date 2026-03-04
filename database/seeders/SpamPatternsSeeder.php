@@ -65,7 +65,7 @@ class SpamPatternsSeeder extends Seeder
         $now = now();
 
         foreach ($patterns as $pattern) {
-            DB::table('spam_patterns')->insert([
+            DB::table('spam_patterns')->insertOrIgnore([
                 ...$pattern,
                 'is_active' => true,
                 'hit_count' => 0,

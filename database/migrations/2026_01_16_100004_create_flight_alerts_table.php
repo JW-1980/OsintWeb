@@ -50,8 +50,7 @@ return new class extends Migration
             $table->index(['alert_type', 'is_active']);
         });
 
-        // Add spatial index on zone_polygon
-        DB::statement('ALTER TABLE flight_alerts ADD SPATIAL INDEX flight_alerts_zone_spatial(zone_polygon)');
+        // Note: zone_polygon is nullable so spatial index cannot be used (MySQL requires NOT NULL)
 
         // Create pivot table for triggered alerts
         Schema::create('flight_alert_triggers', function (Blueprint $table) {

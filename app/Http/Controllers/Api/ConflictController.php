@@ -72,11 +72,11 @@ class ConflictController extends Controller
     /**
      * Show a specific conflict.
      */
-    public function show(string $slug): JsonResponse
+    public function show(string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {
@@ -119,11 +119,11 @@ class ConflictController extends Controller
     /**
      * Get conflict events.
      */
-    public function events(Request $request, string $slug): JsonResponse
+    public function events(Request $request, string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {
@@ -160,11 +160,11 @@ class ConflictController extends Controller
     /**
      * Get conflict zones.
      */
-    public function zones(string $slug): JsonResponse
+    public function zones(string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {
@@ -181,11 +181,11 @@ class ConflictController extends Controller
     /**
      * Get conflict statistics.
      */
-    public function statistics(string $slug): JsonResponse
+    public function statistics(string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {
@@ -237,11 +237,11 @@ class ConflictController extends Controller
     /**
      * Get conflict actors.
      */
-    public function actors(string $slug): JsonResponse
+    public function actors(string $identifier): JsonResponse
     {
         $conflict = DB::table('conflicts')
-            ->where('slug', $slug)
-            ->orWhere('uuid', $slug)
+            ->where('uuid', $identifier)
+            ->when(is_numeric($identifier), fn ($q) => $q->orWhere('id', $identifier))
             ->first();
 
         if (!$conflict) {
@@ -255,18 +255,42 @@ class ConflictController extends Controller
         $actorDetails = [];
         $allParties = array_merge($primaryParties, $secondaryParties);
 
+        $potentialActors = collect();
+        $potentialCountries = collect();
+
+        if (!empty($allParties)) {
+            // Optimize: Fetch all potential actors in one query
+            $potentialActors = DB::table('actors')
+                ->where(function ($query) use ($allParties) {
+                    foreach ($allParties as $party) {
+                        $query->orWhere('name', 'like', '%' . $party . '%');
+                    }
+                })
+                ->get();
+
+            // Optimize: Fetch all potential countries in one query
+            $potentialCountries = DB::table('countries')
+                ->where(function ($query) use ($allParties) {
+                    foreach ($allParties as $party) {
+                        $query->orWhere('name', 'like', '%' . $party . '%');
+                    }
+                })
+                ->get();
+        }
+
         foreach ($allParties as $party) {
-            $actor = DB::table('actors')
-                ->where('name', 'like', '%' . $party . '%')
-                ->first();
+            // Find in actors collection (case-insensitive check)
+            $actor = $potentialActors->first(function ($item) use ($party) {
+                return stripos($item->name, $party) !== false;
+            });
 
             if ($actor) {
                 $actorDetails[] = $actor;
             } else {
                 // Check if it's a country
-                $country = DB::table('countries')
-                    ->where('name', 'like', '%' . $party . '%')
-                    ->first();
+                $country = $potentialCountries->first(function ($item) use ($party) {
+                    return stripos($item->name, $party) !== false;
+                });
 
                 if ($country) {
                     $actorDetails[] = [

@@ -9,6 +9,7 @@ use App\Domains\Intelligence\Services\SunPositionCalculator;
 use App\Models\AuditLog;
 use App\Models\GeolocationVerification;
 use App\Models\User;
+use App\Traits\GeoDistanceTrait;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -21,6 +22,8 @@ use Illuminate\Support\Str;
  */
 class GeolocationService
 {
+    use GeoDistanceTrait;
+
     /**
      * Earth's radius in meters for distance calculations.
      */
@@ -326,7 +329,7 @@ class GeolocationService
         float $lat2,
         float $lng2
     ): float {
-        return $this->haversineDistance($lat1, $lng1, $lat2, $lng2);
+        return $this->haversineDistance($lat1, $lng1, $lat2, $lng2, self::EARTH_RADIUS_METERS);
     }
 
     /**
@@ -432,30 +435,6 @@ class GeolocationService
     }
 
     /**
-     * Calculate Haversine distance between two points.
-     *
-     * @param float
-     * @param float
-     * @param float
-     * @param float
-     * @return float Distance in meters
-     */
-    private function haversineDistance(float $lat1, float $lng1, float $lat2, float $lng2): float
-    {
-        $lat1Rad = deg2rad($lat1);
-        $lat2Rad = deg2rad($lat2);
-        $deltaLat = deg2rad($lat2 - $lat1);
-        $deltaLng = deg2rad($lng2 - $lng1);
-
-        $a = sin($deltaLat / 2) * sin($deltaLat / 2)
-            + cos($lat1Rad) * cos($lat2Rad) * sin($deltaLng / 2) * sin($deltaLng / 2);
-
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-        return self::EARTH_RADIUS_METERS * $c;
-    }
-
-    /**
      * Calculate bounding box area in square kilometers.
      *
      * @param float
@@ -468,10 +447,10 @@ class GeolocationService
     {
         // Width at average latitude
         $avgLat = ($swLat + $neLat) / 2;
-        $width = $this->haversineDistance($avgLat, $swLng, $avgLat, $neLng) / 1000;
+        $width = $this->haversineDistance($avgLat, $swLng, $avgLat, $neLng, self::EARTH_RADIUS_METERS) / 1000;
 
         // Height
-        $height = $this->haversineDistance($swLat, $swLng, $neLat, $swLng) / 1000;
+        $height = $this->haversineDistance($swLat, $swLng, $neLat, $swLng, self::EARTH_RADIUS_METERS) / 1000;
 
         return $width * $height;
     }

@@ -143,7 +143,7 @@ class VesselAlert extends Model
      */
     public function setZoneFromGeoJson(array $geoJson): void
     {
-        $json = json_encode($geoJson);
+        $json = json_encode($geoJson, JSON_HEX_APOS);
         $this->zone_polygon = DB::raw(
             sprintf("ST_GeomFromGeoJSON('%s')", $json)
         );

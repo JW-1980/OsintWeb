@@ -142,7 +142,7 @@ const iconComponents: Record<string, FunctionalComponent> = {
 };
 
 const getIcon = (iconName: string): FunctionalComponent => {
-  return iconComponents[iconName] || iconComponents['information-circle'];
+  return (iconComponents[iconName] ?? iconComponents['information-circle']) as FunctionalComponent;
 };
 
 onMounted(refresh);

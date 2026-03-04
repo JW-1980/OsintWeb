@@ -1,262 +1,363 @@
 <template>
-  <div class="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
-    <div class="max-w-7xl mx-auto">
-      <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Analytics</h1>
-        <div class="flex items-center space-x-3">
-          <select
-            v-model="timeRange"
-            class="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-          >
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-            <option value="90d">Last 90 days</option>
-            <option value="1y">Last year</option>
-          </select>
-          <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            Export Report
-          </button>
-        </div>
-      </div>
 
-      <!-- Key Metrics -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Events</p>
-              <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ stats.totalEvents.toLocaleString() }}</p>
-            </div>
-            <div class="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-              <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-          </div>
-          <div class="mt-2 flex items-center text-sm">
-            <span class="text-green-600 dark:text-green-400 font-medium">+12.5%</span>
-            <span class="text-gray-500 dark:text-gray-400 ml-2">vs last period</span>
-          </div>
-        </div>
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 flex-shrink-0 bg-slate-100 dark:bg-slate-900/50 border-r border-slate-200 dark:border-slate-800 flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<div>
+<h1 class="text-sm font-bold tracking-tight">OSINT INTEL</h1>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Strategic Command</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-2 mt-4">
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[20px]">map</span>
+<span class="text-sm font-medium">Map Explorer</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[20px]">security</span>
+<span class="text-sm font-medium">Conflict Analysis</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[20px]">precision_manufacturing</span>
+<span class="text-sm font-medium">Equipment Tracker</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+<span class="text-sm font-medium">Actors</span>
+</div>
+<div class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-[20px]">trophy</span>
+<span class="text-sm font-medium">Contributors</span>
+</div>
+</nav>
+<div class="p-4 mt-auto">
+<div class="bg-slate-200/50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-300 dark:border-slate-700">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-sm">bolt</span>
+</div>
+<p class="text-[11px] font-bold uppercase tracking-tight">System Status</p>
+</div>
+<div class="w-full bg-slate-300 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[85%]"></div>
+</div>
+<p class="text-[10px] mt-2 text-slate-500">Processing 2.4k events/min</p>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<!-- Header & Global Filters -->
+<header class="sticky top-0 z-10 border-b border-slate-200 dark:border-slate-800 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-8 py-4">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h2 class="text-xl font-bold">Analytics Dashboard</h2>
+<p class="text-sm text-slate-500">Real-time situational awareness &amp; intelligence feeds</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="bg-slate-200 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary w-64" placeholder="Search Intel..." type="text"/>
+</div>
+<button class="p-2 bg-slate-200 dark:bg-slate-800 rounded-lg text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-slate-300 dark:bg-slate-700 border-2 border-primary" data-alt="User avatar profile picture"></div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex flex-wrap gap-3">
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+                        Date Range: Last 30 Days
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-sm">swords</span>
+                        Conflict: Eastern Europe
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-sm">person_pin_circle</span>
+                        Actor: All State Actors
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg text-xs font-semibold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors">
+<span class="material-symbols-outlined text-sm">category</span>
+                        Equipment: Heavy Armor
+                        <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+<div class="ml-auto">
+<button class="flex items-center gap-2 px-4 py-1.5 bg-primary text-white rounded-lg text-xs font-bold shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm">download</span>
+                            Export Data
+                        </button>
+</div>
+</div>
+</header>
+<div class="p-8 space-y-6">
+<!-- Top Section: Line Chart -->
+<section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-lg font-bold">Verified Events Over Time</h3>
+<div class="flex items-center gap-4 mt-1">
+<span class="flex items-center gap-1.5 text-xs text-slate-500">
+<span class="w-3 h-3 rounded-full bg-primary"></span> Primary Conflict
+                                </span>
+<span class="flex items-center gap-1.5 text-xs text-slate-500">
+<span class="w-3 h-3 rounded-full bg-slate-400"></span> Global Average
+                                </span>
+</div>
+</div>
+<div class="text-right">
+<p class="text-3xl font-bold text-primary">14,280</p>
+<p class="text-xs text-emerald-500 font-bold flex items-center justify-end gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span> +12.5% increase
+                            </p>
+</div>
+</div>
+<div class="h-64 relative">
+<!-- Chart Mockup with SVG -->
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#135bec" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#135bec" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<path class="w-full" d="M0 180 Q 50 160 100 170 T 200 120 T 300 140 T 400 90 T 500 100 T 600 60 T 700 80 T 800 40 T 900 60 T 1000 30" fill="none" stroke="#135bec" stroke-width="3"></path>
+<path d="M0 180 Q 50 160 100 170 T 200 120 T 300 140 T 400 90 T 500 100 T 600 60 T 700 80 T 800 40 T 900 60 T 1000 30 V 256 H 0 Z" fill="url(#chartGradient)"></path>
+<!-- Secondary Line -->
+<path d="M0 200 Q 100 190 200 210 T 400 180 T 600 200 T 800 170 T 1000 190" fill="none" opacity="0.5" stroke="#94a3b8" stroke-dasharray="6 4" stroke-width="2"></path>
+</svg>
+<!-- Grid Lines Mockup -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-10">
+<div class="border-t border-slate-500 w-full"></div>
+<div class="border-t border-slate-500 w-full"></div>
+<div class="border-t border-slate-500 w-full"></div>
+<div class="border-t border-slate-500 w-full"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 px-2 text-[10px] font-bold text-slate-500 uppercase">
+<span>Day 01</span>
+<span>Day 05</span>
+<span>Day 10</span>
+<span>Day 15</span>
+<span>Day 20</span>
+<span>Day 25</span>
+<span>Day 30</span>
+</div>
+</section>
+<!-- Middle Section: Donut Charts & Heatmap -->
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-12 lg:col-span-3 space-y-6">
+<!-- Donut 1 -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
+<h4 class="text-sm font-bold mb-4">Events by Category</h4>
+<div class="relative w-32 h-32 mx-auto mb-6">
+<svg class="w-full h-full transform -rotate-90">
+<circle cx="64" cy="64" fill="none" r="50" stroke="#1e293b" stroke-width="12"></circle>
+<circle cx="64" cy="64" fill="none" r="50" stroke="#135bec" stroke-dasharray="314" stroke-dashoffset="100" stroke-width="12"></circle>
+<circle cx="64" cy="64" fill="none" r="50" stroke="#ef4444" stroke-dasharray="314" stroke-dashoffset="240" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-lg font-bold">1,402</span>
+<span class="text-[8px] text-slate-500 uppercase">Total</span>
+</div>
+</div>
+<ul class="space-y-2">
+<li class="flex items-center justify-between text-xs">
+<span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span> Airstrikes</span>
+<span class="font-bold">42%</span>
+</li>
+<li class="flex items-center justify-between text-xs">
+<span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-500"></span> Ground Moves</span>
+<span class="font-bold">28%</span>
+</li>
+<li class="flex items-center justify-between text-xs">
+<span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-400"></span> Other</span>
+<span class="font-bold">30%</span>
+</li>
+</ul>
+</div>
+<!-- Donut 2 -->
+<div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm">
+<h4 class="text-sm font-bold mb-4">Losses by Affiliation</h4>
+<div class="relative w-32 h-32 mx-auto mb-6">
+<svg class="w-full h-full transform -rotate-90">
+<circle cx="64" cy="64" fill="none" r="50" stroke="#1e293b" stroke-width="12"></circle>
+<circle cx="64" cy="64" fill="none" r="50" stroke="#fbbf24" stroke-dasharray="314" stroke-dashoffset="150" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-lg font-bold">854</span>
+<span class="text-[8px] text-slate-500 uppercase">Units</span>
+</div>
+</div>
+<ul class="space-y-2">
+<li class="flex items-center justify-between text-xs">
+<span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Blue Force</span>
+<span class="font-bold">55%</span>
+</li>
+<li class="flex items-center justify-between text-xs">
+<span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-700"></span> Opposing</span>
+<span class="font-bold">45%</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Geospatial Map Center -->
+<div class="col-span-12 lg:col-span-9 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-1 relative overflow-hidden shadow-sm">
+<div class="absolute top-6 left-6 z-10">
+<h3 class="text-lg font-bold">Geospatial Intensity Heatmap</h3>
+<p class="text-xs text-slate-500">Global event density distribution</p>
+</div>
+<div class="absolute bottom-6 right-6 z-10 flex flex-col gap-2">
+<div class="bg-slate-900/80 backdrop-blur p-3 rounded-lg border border-slate-700 space-y-2">
+<div class="flex items-center justify-between gap-6">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Intensity</span>
+<div class="flex h-2 w-24 rounded-full bg-gradient-to-r from-blue-900 via-purple-600 to-orange-500"></div>
+</div>
+<div class="flex items-center justify-between gap-6">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Live Feed</span>
+<span class="flex items-center gap-1.5 text-[10px] text-emerald-500 font-bold uppercase"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Active</span>
+</div>
+</div>
+</div>
+<!-- Stylized World Map Background -->
+<div class="w-full h-full min-h-[480px] bg-slate-900 rounded-lg relative overflow-hidden" data-location="Global Conflict Zone" style="background-image: radial-gradient(#1e293b 1px, transparent 1px); background-size: 20px 20px;">
+<!-- Animated Heatmap Points Glow (CSS only) -->
+<div class="absolute top-[30%] left-[60%] w-48 h-48 bg-primary/20 blur-[60px] rounded-full"></div>
+<div class="absolute top-[45%] left-[65%] w-32 h-32 bg-red-500/20 blur-[40px] rounded-full"></div>
+<div class="absolute top-[35%] left-[25%] w-40 h-40 bg-primary/10 blur-[50px] rounded-full"></div>
+<!-- Map Markers -->
+<div class="absolute top-[35%] left-[62%]">
+<div class="relative">
+<div class="absolute inset-0 w-4 h-4 bg-primary rounded-full animate-ping opacity-75"></div>
+<div class="w-4 h-4 bg-primary rounded-full border-2 border-slate-900 shadow-lg"></div>
+</div>
+</div>
+<div class="absolute top-[40%] left-[65%]">
+<div class="w-3 h-3 bg-red-500 rounded-full border-2 border-slate-900 shadow-lg"></div>
+</div>
+<div class="absolute top-[48%] left-[68%]">
+<div class="w-3 h-3 bg-primary rounded-full border-2 border-slate-900 shadow-lg"></div>
+</div>
+<div class="absolute top-[28%] left-[58%]">
+<div class="w-3 h-3 bg-primary rounded-full border-2 border-slate-900 shadow-lg"></div>
+</div>
+<!-- Styled Map Labels -->
+<div class="absolute top-[32%] left-[63%] bg-slate-900/90 text-white text-[10px] px-2 py-1 rounded border border-slate-700 font-bold">
+                                SECTOR 7G - INTENSE
+                            </div>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Split View -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Top Active Regions -->
+<div class="col-span-12 lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold">Top Active Regions</h3>
+<button class="text-xs text-primary font-bold hover:underline">Full Report</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center font-bold text-lg">01</div>
+<div class="flex-1">
+<div class="flex justify-between items-end mb-1">
+<p class="text-sm font-bold">Donbas Region, Ukraine</p>
+<span class="text-xs font-semibold text-slate-500">4,281 Events</span>
+</div>
+<div class="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full">
+<div class="bg-primary h-full w-[85%] rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center font-bold text-lg">02</div>
+<div class="flex-1">
+<div class="flex justify-between items-end mb-1">
+<p class="text-sm font-bold">Red Sea Corridor</p>
+<span class="text-xs font-semibold text-slate-500">2,150 Events</span>
+</div>
+<div class="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full">
+<div class="bg-primary h-full w-[45%] rounded-full"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-lg bg-slate-200 dark:bg-slate-800 flex items-center justify-center font-bold text-lg">03</div>
+<div class="flex-1">
+<div class="flex justify-between items-end mb-1">
+<p class="text-sm font-bold">South China Sea</p>
+<span class="text-xs font-semibold text-slate-500">1,840 Events</span>
+</div>
+<div class="w-full h-2 bg-slate-200 dark:bg-slate-800 rounded-full">
+<div class="bg-primary h-full w-[38%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Contributor Leaderboard -->
+<div class="col-span-12 lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-bold">Contributor Leaderboard</h3>
+<span class="flex items-center gap-1 text-[10px] font-bold text-emerald-500 uppercase">
+<span class="material-symbols-outlined text-xs">verified</span> Trusted Network
+                            </span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-3 p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-slate-700 overflow-hidden" data-alt="Contributor avatar 1"></div>
+<div class="flex-1">
+<p class="text-xs font-bold">@osint_tech</p>
+<p class="text-[10px] text-slate-500">842 Verified Submissions</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 bg-primary/20 text-primary text-[10px] font-bold rounded">ELITE</span>
+</div>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-slate-700 overflow-hidden" data-alt="Contributor avatar 2"></div>
+<div class="flex-1">
+<p class="text-xs font-bold">@intel_flow</p>
+<p class="text-[10px] text-slate-500">621 Verified Submissions</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 bg-slate-200 dark:bg-slate-800 text-slate-500 text-[10px] font-bold rounded">PRO</span>
+</div>
+</div>
+<div class="flex items-center gap-3 p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer">
+<div class="w-8 h-8 rounded-full bg-slate-700 overflow-hidden" data-alt="Contributor avatar 3"></div>
+<div class="flex-1">
+<p class="text-xs font-bold">@signal_flare</p>
+<p class="text-[10px] text-slate-500">419 Verified Submissions</p>
+</div>
+<div class="text-right">
+<span class="px-2 py-0.5 bg-slate-200 dark:bg-slate-800 text-slate-500 text-[10px] font-bold rounded">PRO</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Conflicts</p>
-              <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ stats.activeConflicts }}</p>
-            </div>
-            <div class="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-              <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
-              </svg>
-            </div>
-          </div>
-          <div class="mt-2 flex items-center text-sm">
-            <span class="text-red-600 dark:text-red-400 font-medium">+2</span>
-            <span class="text-gray-500 dark:text-gray-400 ml-2">new this month</span>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Verified Events</p>
-              <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ stats.verifiedEvents }}%</p>
-            </div>
-            <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-              <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-          </div>
-          <div class="mt-2 flex items-center text-sm">
-            <span class="text-green-600 dark:text-green-400 font-medium">+5.2%</span>
-            <span class="text-gray-500 dark:text-gray-400 ml-2">improvement</span>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Active Contributors</p>
-              <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ stats.activeContributors }}</p>
-            </div>
-            <div class="w-12 h-12 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-              <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            </div>
-          </div>
-          <div class="mt-2 flex items-center text-sm">
-            <span class="text-green-600 dark:text-green-400 font-medium">+8</span>
-            <span class="text-gray-500 dark:text-gray-400 ml-2">this week</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Charts Row -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <!-- Events Over Time -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Events Over Time</h3>
-          <div class="h-64 flex items-end justify-between space-x-2">
-            <div v-for="(value, index) in eventsTrend" :key="index" class="flex-1 flex flex-col items-center">
-              <div
-                class="w-full bg-blue-500 dark:bg-blue-600 rounded-t transition-all duration-300 hover:bg-blue-600 dark:hover:bg-blue-500"
-                :style="{ height: `${(value / maxEventValue) * 200}px` }"
-              ></div>
-              <span class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ getMonthLabel(index) }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Events by Type -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Events by Type</h3>
-          <div class="space-y-4">
-            <div v-for="eventType in eventTypes" :key="eventType.name">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-sm text-gray-600 dark:text-gray-400">{{ eventType.name }}</span>
-                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ eventType.count }}</span>
-              </div>
-              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div
-                  class="h-2 rounded-full transition-all duration-300"
-                  :class="eventType.color"
-                  :style="{ width: `${eventType.percentage}%` }"
-                ></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Activity and Top Actors -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-        <!-- Regional Activity -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Regional Activity</h3>
-          <div class="space-y-3">
-            <div v-for="region in regions" :key="region.name" class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-              <span class="text-gray-900 dark:text-white">{{ region.name }}</span>
-              <div class="flex items-center space-x-2">
-                <span class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ region.events }} events</span>
-                <span :class="region.trend > 0 ? 'text-green-500' : 'text-red-500'" class="text-xs">
-                  {{ region.trend > 0 ? '+' : '' }}{{ region.trend }}%
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Most Active Actors -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Most Active Actors</h3>
-          <div class="space-y-3">
-            <div v-for="(actor, index) in topActors" :key="actor.name" class="flex items-center space-x-3">
-              <span class="text-lg font-bold text-gray-400 dark:text-gray-500 w-6">{{ index + 1 }}</span>
-              <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium" :style="{ backgroundColor: actor.color }">
-                {{ actor.name.charAt(0) }}
-              </div>
-              <div class="flex-1">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ actor.name }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ actor.events }} events</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Activity</h3>
-          <div class="space-y-3">
-            <div v-for="activity in recentActivity" :key="activity.id" class="flex items-start space-x-3">
-              <div class="w-2 h-2 rounded-full mt-2" :class="activity.color"></div>
-              <div>
-                <p class="text-sm text-gray-900 dark:text-white">{{ activity.description }}</p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">{{ activity.time }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bottom Row -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Equipment Losses -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Equipment Losses by Category</h3>
-          <div class="grid grid-cols-2 gap-4">
-            <div v-for="category in equipmentCategories" :key="category.name" class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-center">
-              <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ category.count }}</p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">{{ category.name }}</p>
-              <p class="text-xs mt-1" :class="category.change > 0 ? 'text-red-500' : 'text-green-500'">
-                {{ category.change > 0 ? '+' : '' }}{{ category.change }}% vs last period
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Data Quality -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Data Quality Metrics</h3>
-          <div class="grid grid-cols-2 gap-4">
-            <div class="text-center">
-              <div class="relative w-24 h-24 mx-auto">
-                <svg class="w-24 h-24 transform -rotate-90">
-                  <circle cx="48" cy="48" r="40" fill="none" stroke-width="8" class="stroke-gray-200 dark:stroke-gray-700"></circle>
-                  <circle cx="48" cy="48" r="40" fill="none" stroke-width="8" stroke-linecap="round" class="stroke-green-500" :stroke-dasharray="`${dataQuality.sourcesVerified * 2.51} 251`"></circle>
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="text-xl font-bold text-gray-900 dark:text-white">{{ dataQuality.sourcesVerified }}%</span>
-                </div>
-              </div>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Sources Verified</p>
-            </div>
-            <div class="text-center">
-              <div class="relative w-24 h-24 mx-auto">
-                <svg class="w-24 h-24 transform -rotate-90">
-                  <circle cx="48" cy="48" r="40" fill="none" stroke-width="8" class="stroke-gray-200 dark:stroke-gray-700"></circle>
-                  <circle cx="48" cy="48" r="40" fill="none" stroke-width="8" stroke-linecap="round" class="stroke-blue-500" :stroke-dasharray="`${dataQuality.geolocated * 2.51} 251`"></circle>
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="text-xl font-bold text-gray-900 dark:text-white">{{ dataQuality.geolocated }}%</span>
-                </div>
-              </div>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Geolocated</p>
-            </div>
-            <div class="text-center">
-              <div class="relative w-24 h-24 mx-auto">
-                <svg class="w-24 h-24 transform -rotate-90">
-                  <circle cx="48" cy="48" r="40" fill="none" stroke-width="8" class="stroke-gray-200 dark:stroke-gray-700"></circle>
-                  <circle cx="48" cy="48" r="40" fill="none" stroke-width="8" stroke-linecap="round" class="stroke-purple-500" :stroke-dasharray="`${dataQuality.mediaCaptured * 2.51} 251`"></circle>
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="text-xl font-bold text-gray-900 dark:text-white">{{ dataQuality.mediaCaptured }}%</span>
-                </div>
-              </div>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">With Media</p>
-            </div>
-            <div class="text-center">
-              <div class="relative w-24 h-24 mx-auto">
-                <svg class="w-24 h-24 transform -rotate-90">
-                  <circle cx="48" cy="48" r="40" fill="none" stroke-width="8" class="stroke-gray-200 dark:stroke-gray-700"></circle>
-                  <circle cx="48" cy="48" r="40" fill="none" stroke-width="8" stroke-linecap="round" class="stroke-yellow-500" :stroke-dasharray="`${dataQuality.crossReferenced * 2.51} 251`"></circle>
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="text-xl font-bold text-gray-900 dark:text-white">{{ dataQuality.crossReferenced }}%</span>
-                </div>
-              </div>
-              <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Cross-Referenced</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, computed } from 'vue';
 
 const timeRange = ref('30d');

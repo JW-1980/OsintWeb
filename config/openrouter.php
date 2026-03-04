@@ -6,11 +6,118 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | OpenRouter API Configuration
+    | AI Provider Selection
     |--------------------------------------------------------------------------
     |
-    | Configuration for OpenRouter.ai API used for OCR, document analysis,
-    | entity extraction, and translation services using free LLM models.
+    | Choose the AI inference provider for OCR, document analysis, entity
+    | extraction, and translation. All providers use OpenAI-compatible APIs.
+    |
+    | Supported: "openrouter", "huggingface", "aimlapi"
+    |
+    */
+
+    'provider' => env('AI_PROVIDER', 'openrouter'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Provider Configurations
+    |--------------------------------------------------------------------------
+    |
+    | Each provider requires an API key and base URL. All providers use the
+    | same OpenAI-compatible /v1/chat/completions endpoint format.
+    |
+    */
+
+    'providers' => [
+        'openrouter' => [
+            'name' => 'OpenRouter',
+            'api_key' => env('OPENROUTER_API_KEY'),
+            'base_url' => env('OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1'),
+            'description' => 'Access 100+ models including free-tier Llama, Mistral, and Gemma models.',
+            'docs_url' => 'https://openrouter.ai/',
+            'models' => [
+                'chat' => env('OPENROUTER_MODEL_CHAT', 'meta-llama/llama-3.1-8b-instruct:free'),
+                'vision' => env('OPENROUTER_MODEL_VISION', 'meta-llama/llama-3.2-11b-vision-instruct:free'),
+                'translation' => env('OPENROUTER_MODEL_TRANSLATION', 'meta-llama/llama-3.1-8b-instruct:free'),
+                'ner' => env('OPENROUTER_MODEL_NER', 'meta-llama/llama-3.1-8b-instruct:free'),
+                'classification' => env('OPENROUTER_MODEL_CLASSIFICATION', 'mistralai/mistral-7b-instruct:free'),
+                'language_detection' => env('OPENROUTER_MODEL_LANG_DETECT', 'meta-llama/llama-3.2-3b-instruct:free'),
+            ],
+            'free_models' => [
+                'meta-llama/llama-3.2-3b-instruct:free',
+                'meta-llama/llama-3.2-1b-instruct:free',
+                'meta-llama/llama-3.1-8b-instruct:free',
+                'mistralai/mistral-7b-instruct:free',
+                'google/gemma-2-9b-it:free',
+                'qwen/qwen-2-7b-instruct:free',
+                'microsoft/phi-3-mini-128k-instruct:free',
+                'meta-llama/llama-3.2-11b-vision-instruct:free',
+            ],
+            'headers' => [
+                'HTTP-Referer' => env('APP_URL', 'http://localhost'),
+                'X-Title' => 'OsintWeb Document Analysis',
+            ],
+        ],
+
+        'huggingface' => [
+            'name' => 'Hugging Face',
+            'api_key' => env('HUGGINGFACE_API_KEY'),
+            'base_url' => env('HUGGINGFACE_BASE_URL', 'https://router.huggingface.co/v1'),
+            'description' => 'Access open-source models via Hugging Face Inference Providers.',
+            'docs_url' => 'https://huggingface.co/docs/api-inference/',
+            'models' => [
+                'chat' => env('HUGGINGFACE_MODEL_CHAT', 'meta-llama/Llama-3.1-8B-Instruct'),
+                'vision' => env('HUGGINGFACE_MODEL_VISION', 'meta-llama/Llama-3.2-11B-Vision-Instruct'),
+                'translation' => env('HUGGINGFACE_MODEL_TRANSLATION', 'meta-llama/Llama-3.1-8B-Instruct'),
+                'ner' => env('HUGGINGFACE_MODEL_NER', 'meta-llama/Llama-3.1-8B-Instruct'),
+                'classification' => env('HUGGINGFACE_MODEL_CLASSIFICATION', 'mistralai/Mistral-7B-Instruct-v0.3'),
+                'language_detection' => env('HUGGINGFACE_MODEL_LANG_DETECT', 'meta-llama/Llama-3.2-3B-Instruct'),
+            ],
+            'free_models' => [
+                'meta-llama/Llama-3.2-3B-Instruct',
+                'meta-llama/Llama-3.1-8B-Instruct',
+                'meta-llama/Llama-3.2-11B-Vision-Instruct',
+                'mistralai/Mistral-7B-Instruct-v0.3',
+                'Qwen/Qwen2.5-7B-Instruct',
+                'HuggingFaceTB/SmolLM2-1.7B-Instruct',
+                'deepseek-ai/DeepSeek-V3',
+            ],
+            'headers' => [],
+        ],
+
+        'aimlapi' => [
+            'name' => 'AIML API',
+            'api_key' => env('AIMLAPI_API_KEY'),
+            'base_url' => env('AIMLAPI_BASE_URL', 'https://api.aimlapi.com/v1'),
+            'description' => 'Access 400+ AI models with a free tier including DeepSeek, Llama, and Mistral.',
+            'docs_url' => 'https://docs.aimlapi.com/',
+            'models' => [
+                'chat' => env('AIMLAPI_MODEL_CHAT', 'meta-llama/Llama-3.3-70B-Instruct-Turbo'),
+                'vision' => env('AIMLAPI_MODEL_VISION', 'meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo'),
+                'translation' => env('AIMLAPI_MODEL_TRANSLATION', 'meta-llama/Llama-3.3-70B-Instruct-Turbo'),
+                'ner' => env('AIMLAPI_MODEL_NER', 'meta-llama/Llama-3.3-70B-Instruct-Turbo'),
+                'classification' => env('AIMLAPI_MODEL_CLASSIFICATION', 'mistralai/Mistral-7B-Instruct-v0.3'),
+                'language_detection' => env('AIMLAPI_MODEL_LANG_DETECT', 'meta-llama/Llama-3.2-3B-Instruct-Turbo'),
+            ],
+            'free_models' => [
+                'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+                'meta-llama/Llama-3.2-3B-Instruct-Turbo',
+                'meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo',
+                'mistralai/Mistral-7B-Instruct-v0.3',
+                'deepseek-chat',
+                'Qwen/Qwen2.5-7B-Instruct-Turbo',
+            ],
+            'headers' => [],
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Legacy Keys (backward compatibility)
+    |--------------------------------------------------------------------------
+    |
+    | These are resolved at runtime from the active provider. Kept here so
+    | existing code referencing config('openrouter.api_key') still works.
     |
     */
 
@@ -43,57 +150,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Free Models Configuration
+    | Active Provider Models (resolved at runtime)
     |--------------------------------------------------------------------------
     |
-    | These are free-tier models available on OpenRouter.ai.
-    | Check https://openrouter.ai/docs#models for the latest free models.
+    | These are populated from the active provider config in the service.
+    | The env vars below serve as fallback when accessed via config() directly.
     |
     */
-    'free_models' => [
-        // Meta Llama models (free)
-        'meta-llama/llama-3.2-3b-instruct:free',
-        'meta-llama/llama-3.2-1b-instruct:free',
-        'meta-llama/llama-3.1-8b-instruct:free',
-
-        // Mistral models (free)
-        'mistralai/mistral-7b-instruct:free',
-
-        // Google models (free)
-        'google/gemma-2-9b-it:free',
-
-        // Qwen models (free)
-        'qwen/qwen-2-7b-instruct:free',
-
-        // Microsoft models (free)
-        'microsoft/phi-3-mini-128k-instruct:free',
-
-        // Vision models (free)
-        'meta-llama/llama-3.2-11b-vision-instruct:free',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Default Models by Task
-    |--------------------------------------------------------------------------
-    */
+    'free_models' => [],
     'models' => [
-        // General chat/text completion
         'chat' => env('OPENROUTER_MODEL_CHAT', 'meta-llama/llama-3.1-8b-instruct:free'),
-
-        // Vision/image analysis (OCR)
         'vision' => env('OPENROUTER_MODEL_VISION', 'meta-llama/llama-3.2-11b-vision-instruct:free'),
-
-        // Translation tasks
         'translation' => env('OPENROUTER_MODEL_TRANSLATION', 'meta-llama/llama-3.1-8b-instruct:free'),
-
-        // Named Entity Recognition (NER)
         'ner' => env('OPENROUTER_MODEL_NER', 'meta-llama/llama-3.1-8b-instruct:free'),
-
-        // Document classification
         'classification' => env('OPENROUTER_MODEL_CLASSIFICATION', 'mistralai/mistral-7b-instruct:free'),
-
-        // Language detection
         'language_detection' => env('OPENROUTER_MODEL_LANG_DETECT', 'meta-llama/llama-3.2-3b-instruct:free'),
     ],
 
@@ -250,16 +320,6 @@ return [
         'translation' => 'You are a professional translator. Translate the following text from {source_language} to {target_language}. Maintain the original formatting, paragraph structure, and tone. Do not add explanations or notes. Output ONLY the translation.',
 
         'table_extraction' => 'You are a table extraction expert. Extract all tables from the following text or image. Return a JSON array of tables, each with "headers" (array of column names) and "rows" (array of row arrays). Return ONLY valid JSON.',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Request Headers
-    |--------------------------------------------------------------------------
-    */
-    'headers' => [
-        'HTTP-Referer' => env('APP_URL', 'http://localhost'),
-        'X-Title' => 'OsintWeb Document Analysis',
     ],
 
     /*

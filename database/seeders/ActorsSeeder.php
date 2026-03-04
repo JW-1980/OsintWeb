@@ -905,7 +905,7 @@ class ActorsSeeder extends Seeder
         ];
 
         foreach ($actors as $actor) {
-            DB::table('actors')->insert(array_merge($actor, [
+            DB::table('actors')->insertOrIgnore(array_merge($actor, [
                 'uuid' => (string) Str::uuid(),
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -38,7 +38,6 @@ return new class extends Migration
             // Indexes
             $table->index(['is_monitored', 'monitoring_priority']);
             $table->index(['is_military', 'country_id']);
-            $table->index('aircraft_type');
         });
     }
 

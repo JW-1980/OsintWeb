@@ -1,263 +1,208 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
-          <div class="flex items-center space-x-2">
-            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-              </svg>
-            </div>
-            <span class="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">OsintWeb</span>
-          </div>
-          <div class="hidden md:flex items-center space-x-8">
-            <router-link to="/explore" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Map</router-link>
-            <router-link to="/explore/events" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Events</router-link>
-            <router-link to="/explore/equipment" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Equipment</router-link>
-            <router-link to="/explore/actors" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Actors</router-link>
-            <router-link to="/explore/conflicts" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Conflicts</router-link>
-            <router-link to="/about" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">About</router-link>
-          </div>
-          <div class="flex items-center space-x-4">
-            <button @click="toggleTheme" class="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-              <svg v-if="themeStore.isDark" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            </button>
-            <router-link to="/login" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Login</router-link>
-            <router-link to="/register" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all">
-              Register
-            </router-link>
-          </div>
-        </div>
-      </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section class="pt-28 pb-12 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto text-center">
-        <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-          Open Source Intelligence
-          <span class="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Platform</span>
-        </h1>
-        <p class="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-400 mb-8">
-          Track, analyze, and visualize global events with real-time mapping and comprehensive data management.
-        </p>
-        <router-link to="/explore" class="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-          </svg>
-          Explore Map
-        </router-link>
-      </div>
-    </section>
+<div class="relative flex min-h-screen flex-col">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 w-full border-b border-border-dark bg-background-dark/80 backdrop-blur-md px-6 md:px-12 py-4">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-3xl">radar</span>
+<h2 class="text-slate-100 text-xl font-bold tracking-tight">OSINT <span class="text-primary">CORE</span></h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<div class="group relative">
+<button class="flex items-center gap-1 text-slate-300 hover:text-primary text-sm font-medium transition-colors">
+                                Explore <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+<a class="text-slate-300 hover:text-primary text-sm font-medium transition-colors" href="#">Submit Tip</a>
+<a class="text-slate-300 hover:text-primary text-sm font-medium transition-colors" href="#">About</a>
+<a class="text-slate-300 hover:text-primary text-sm font-medium transition-colors" href="#">Contact</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-surface border border-border-dark rounded-lg px-3 py-1.5 w-64">
+<span class="material-symbols-outlined text-slate-400 text-lg">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full text-slate-100 placeholder:text-slate-500" placeholder="Search coordinates, units..." type="text"/>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 text-sm font-bold text-slate-100 hover:bg-surface rounded-lg transition-colors">Login</button>
+<button class="px-4 py-2 text-sm font-bold bg-primary text-white rounded-lg hover:bg-primary/90 transition-shadow shadow-lg shadow-primary/20">Register</button>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<!-- Hero Section -->
+<section class="relative w-full py-20 lg:py-32 overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-br from-background-dark via-[#0f172a] to-[#1e3a8a] z-0"></div>
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, #334155 1px, transparent 0); background-size: 40px 40px;"></div>
+<div class="relative z-10 max-w-7xl mx-auto px-6 text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                        Live Intelligence Feed Active
+                    </div>
+<h1 class="text-slate-100 text-4xl md:text-6xl font-black leading-tight tracking-tight mb-6 max-w-4xl mx-auto">
+                        Open Source Intelligence <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Tactical Platform</span>
+</h1>
+<p class="text-slate-400 text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto mb-10">
+                        Advanced tracking of global military conflicts, equipment losses, and geopolitical shifts through verified open source data analysis.
+                    </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white text-lg font-bold rounded-xl hover:scale-105 transition-transform shadow-xl shadow-primary/30">
+<span class="material-symbols-outlined">explore_nearby</span>
+                            Explore Map
+                        </button>
+<button class="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-surface border border-border-dark text-slate-100 text-lg font-bold rounded-xl hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined">analytics</span>
+                            Latest Reports
+                        </button>
+</div>
+</div>
+</section>
+<!-- Stats Bar -->
+<section class="bg-background-dark border-y border-border-dark">
+<div class="max-w-7xl mx-auto px-6 py-8">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="flex items-center gap-4 p-4 rounded-xl bg-surface/30 border border-border-dark/50">
+<div class="p-3 bg-red-500/10 rounded-lg">
+<span class="material-symbols-outlined text-red-500">warning</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium uppercase tracking-wider">Active Conflicts</p>
+<p class="text-slate-100 text-3xl font-black">12</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-surface/30 border border-border-dark/50">
+<div class="p-3 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">update</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium uppercase tracking-wider">Recent Events (24h)</p>
+<p class="text-slate-100 text-3xl font-black">145</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-surface/30 border border-border-dark/50">
+<div class="p-3 bg-emerald-500/10 rounded-lg">
+<span class="material-symbols-outlined text-emerald-500">precision_manufacturing</span>
+</div>
+<div>
+<p class="text-slate-400 text-sm font-medium uppercase tracking-wider">Equipment Tracked</p>
+<p class="text-slate-100 text-3xl font-black">3,200</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Map Preview -->
+<section class="max-w-7xl mx-auto px-6 py-20">
+<div class="flex flex-col md:flex-row items-end justify-between mb-8 gap-4">
+<div class="max-w-2xl">
+<h2 class="text-slate-100 text-3xl font-bold tracking-tight mb-2">Tactical Intelligence Map Preview</h2>
+<p class="text-slate-400">High-fidelity satellite imagery overlay with verified geolocation markers for ground movements and artillery impacts.</p>
+</div>
+<div class="flex gap-2">
+<span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold">
+<span class="h-1.5 w-1.5 rounded-full bg-red-500"></span>
+                            Hostile
+                        </span>
+<span class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold">
+<span class="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                            Friendly
+                        </span>
+</div>
+</div>
+<div class="relative group aspect-video w-full overflow-hidden rounded-2xl border border-border-dark bg-surface shadow-2xl">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Satellite map with red and blue tactical markers" data-location="Ukraine" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA-84kzyvxc7tL4ZFJViVkEK6bldPh-jZFSmF3hiQLciozqXr6D0e1mDWQRwGfm7N1e-Wn69sD5LH0Rt5nJ_8nKGw2ezCuJk7u_kGYjA94x9nUVlMgzjsOKdfpB9zmfdLmzDfqcIS1Y3aabqPkzekU4HIHLaoWKQ4DGIXKFMLVA2gbzREkTMA29j48sDn8WXlPSy-S4yyTbov_LBDnxzIDx2mLnlRyS5JW0giR1Vp4hmPebb2SS7Nz3Z3fFBJYOC5GEWqePf1ek2EOl');">
+</div>
+<!-- Mock Map Overlays -->
+<div class="absolute inset-0 pointer-events-none">
+<div class="absolute top-[30%] left-[45%] flex flex-col items-center">
+<span class="material-symbols-outlined text-red-500 text-3xl drop-shadow-lg">location_on</span>
+<span class="px-2 py-0.5 bg-background-dark/80 backdrop-blur-sm text-[10px] text-white rounded mt-1 border border-red-500/50">OBJ DELTA</span>
+</div>
+<div class="absolute top-[50%] left-[55%] flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-3xl drop-shadow-lg">location_on</span>
+<span class="px-2 py-0.5 bg-background-dark/80 backdrop-blur-sm text-[10px] text-white rounded mt-1 border border-primary/50">HQ ALPHA</span>
+</div>
+<!-- Coordinate Overlay -->
+<div class="absolute bottom-6 right-6 p-4 bg-background-dark/90 backdrop-blur border border-border-dark rounded-lg text-xs font-mono text-slate-300">
+<div>LAT: 48.3794</div>
+<div>LNG: 38.0297</div>
+<div class="mt-2 text-primary font-bold">GRID: 37U FV 0297 3794</div>
+</div>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/60 to-transparent"></div>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-background-dark/20 backdrop-blur-[2px]">
+<button class="px-6 py-3 bg-primary text-white font-bold rounded-lg shadow-xl">Launch Full Interactive View</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-background-dark border-t border-border-dark pt-16 pb-8 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-2 text-primary mb-6">
+<span class="material-symbols-outlined text-2xl">radar</span>
+<h2 class="text-slate-100 text-lg font-bold">OSINT CORE</h2>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed mb-6">
+                            The world's leading community-driven intelligence platform providing real-time verification of global events.
+                        </p>
+<div class="flex gap-4">
+<a class="text-slate-500 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-500 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-slate-500 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined">rss_feed</span></a>
+</div>
+</div>
+<div>
+<h4 class="text-slate-100 font-bold mb-6">Intelligence</h4>
+<ul class="space-y-4 text-sm text-slate-400">
+<li><a class="hover:text-primary" href="#">Conflict Zones</a></li>
+<li><a class="hover:text-primary" href="#">Equipment Tracker</a></li>
+<li><a class="hover:text-primary" href="#">Geolocation Reports</a></li>
+<li><a class="hover:text-primary" href="#">Satellite Imagery</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-slate-100 font-bold mb-6">Platform</h4>
+<ul class="space-y-4 text-sm text-slate-400">
+<li><a class="hover:text-primary" href="#">Verification Process</a></li>
+<li><a class="hover:text-primary" href="#">API Access</a></li>
+<li><a class="hover:text-primary" href="#">Premium Reports</a></li>
+<li><a class="hover:text-primary" href="#">Methodology</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-slate-100 font-bold mb-6">Legal</h4>
+<ul class="space-y-4 text-sm text-slate-400">
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary" href="#">Cookie Policy</a></li>
+<li><a class="hover:text-primary" href="#">Disclaimer</a></li>
+</ul>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-border-dark gap-4">
+<p class="text-slate-500 text-xs">© 2024 OSINT Core Intelligence Services. All rights reserved.</p>
+<div class="flex items-center gap-6 text-xs text-slate-500 font-mono uppercase tracking-widest">
+<span>Status: <span class="text-emerald-500">Nominal</span></span>
+<span>Uptime: 99.9%</span>
+</div>
+</div>
+</div>
+</footer>
+</div>
 
-    <!-- Stats Section -->
-    <section class="py-8 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <router-link to="/explore/events" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow text-center group">
-            <p class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ stats.events }}</p>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">Events</p>
-          </router-link>
-          <router-link to="/explore/equipment" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow text-center group">
-            <p class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ stats.equipment }}</p>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">Equipment</p>
-          </router-link>
-          <router-link to="/explore/actors" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow text-center group">
-            <p class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ stats.actors }}</p>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">Actors</p>
-          </router-link>
-          <router-link to="/explore/conflicts" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow text-center group">
-            <p class="text-3xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ stats.conflicts }}</p>
-            <p class="text-gray-600 dark:text-gray-400 mt-1">Conflicts</p>
-          </router-link>
-        </div>
-      </div>
-    </section>
-
-    <!-- Recent Activity Section -->
-    <section class="py-8 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex items-center justify-between mb-6">
-          <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
-          <router-link to="/explore/events" class="text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium">
-            View all events
-          </router-link>
-        </div>
-
-        <!-- Empty State -->
-        <div v-if="recentEvents.length === 0" class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-12 text-center">
-          <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">No events yet</h3>
-          <p class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
-            This platform is just getting started. Events, equipment sightings, and actor information will appear here as they are added.
-          </p>
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <router-link to="/explore" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-              Explore the Map
-            </router-link>
-            <router-link to="/submit-tip" class="px-6 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-medium rounded-lg transition-colors">
-              Submit a Tip
-            </router-link>
-          </div>
-        </div>
-
-        <!-- Events List -->
-        <div v-else class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <router-link
-            v-for="event in recentEvents"
-            :key="event.id"
-            :to="{ name: 'explore-event-detail', params: { id: event.id } }"
-            class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-5 hover:shadow-lg transition-all group"
-          >
-            <div class="flex items-center justify-between mb-2">
-              <span :class="getEventBadgeClass(event.event_type)" class="px-2 py-1 text-xs font-medium rounded-full">
-                {{ formatEventType(event.event_type) }}
-              </span>
-              <span class="text-xs text-gray-500 dark:text-gray-400">{{ formatDate(event.occurred_at) }}</span>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-1">
-              {{ event.title }}
-            </h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">{{ event.location_name }}</p>
-          </router-link>
-        </div>
-      </div>
-    </section>
-
-    <!-- Browse Features Section -->
-    <section class="py-12 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-800 border-y border-gray-200 dark:border-gray-700">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Browse by Category</h2>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <!-- Map -->
-          <router-link to="/explore" class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors group border border-gray-200 dark:border-gray-600">
-            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-200 dark:group-hover:bg-blue-800/40 transition-colors">
-              <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-              </svg>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Interactive Map</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Visualize events and zones on a global map</p>
-          </router-link>
-
-          <!-- Events -->
-          <router-link to="/explore/events" class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors group border border-gray-200 dark:border-gray-600">
-            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-green-200 dark:group-hover:bg-green-800/40 transition-colors">
-              <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Events</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Browse verified incidents and reports</p>
-          </router-link>
-
-          <!-- Equipment -->
-          <router-link to="/explore/equipment" class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors group border border-gray-200 dark:border-gray-600">
-            <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/40 transition-colors">
-              <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
-              </svg>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Equipment</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Military equipment database and sightings</p>
-          </router-link>
-
-          <!-- Actors -->
-          <router-link to="/explore/actors" class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group border border-gray-200 dark:border-gray-600">
-            <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-red-200 dark:group-hover:bg-red-800/40 transition-colors">
-              <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Actors</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">State and non-state actor profiles</p>
-          </router-link>
-
-          <!-- Conflicts -->
-          <router-link to="/explore/conflicts" class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 transition-colors group border border-gray-200 dark:border-gray-600">
-            <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-yellow-200 dark:group-hover:bg-yellow-800/40 transition-colors">
-              <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Conflicts</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Active and historical conflict zones</p>
-          </router-link>
-
-          <!-- Submit Tip -->
-          <router-link to="/submit-tip" class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group border border-gray-200 dark:border-gray-600">
-            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-200 dark:group-hover:bg-purple-800/40 transition-colors">
-              <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-              </svg>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Submit a Tip</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Report an event or sighting</p>
-          </router-link>
-
-          <!-- About -->
-          <router-link to="/about" class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors group border border-gray-200 dark:border-gray-600">
-            <div class="w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-teal-200 dark:group-hover:bg-teal-800/40 transition-colors">
-              <svg class="w-6 h-6 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">About</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Learn about this platform</p>
-          </router-link>
-
-          <!-- Contact -->
-          <router-link to="/contact" class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6 hover:bg-pink-50 dark:hover:bg-pink-900/20 transition-colors group border border-gray-200 dark:border-gray-600">
-            <div class="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-lg flex items-center justify-center mb-4 group-hover:bg-pink-200 dark:group-hover:bg-pink-800/40 transition-colors">
-              <svg class="w-6 h-6 text-pink-600 dark:text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Contact</h3>
-            <p class="text-sm text-gray-600 dark:text-gray-400">Get in touch with us</p>
-          </router-link>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-8 px-4 sm:px-6 lg:px-8">
-      <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row items-center justify-between">
-          <div class="flex items-center space-x-2 mb-4 md:mb-0">
-            <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-              </svg>
-            </div>
-            <span class="text-xl font-bold">OsintWeb</span>
-          </div>
-          <div class="flex items-center space-x-6 text-gray-400 text-sm">
-            <router-link to="/about" class="hover:text-white transition-colors">About</router-link>
-            <router-link to="/contact" class="hover:text-white transition-colors">Contact</router-link>
-            <a href="#" class="hover:text-white transition-colors">Privacy</a>
-            <a href="#" class="hover:text-white transition-colors">Terms</a>
-          </div>
-        </div>
-        <div class="mt-6 pt-6 border-t border-gray-800 text-center text-gray-400 text-sm">
-          <p>&copy; {{ new Date().getFullYear() }} OsintWeb. Open Source Intelligence Platform.</p>
-        </div>
-      </div>
-    </footer>
-  </div>
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck
 import { ref, onMounted } from 'vue';
 import { useThemeStore } from '@/stores/theme';
 
@@ -289,12 +234,22 @@ const recentEvents = ref<RecentEvent[]>([]);
 // Load stats and recent events from API
 onMounted(async () => {
   try {
-    // TODO: Replace with actual API calls when backend is ready
-    // const statsResponse = await api.get('/public/stats');
-    // stats.value = statsResponse.data;
+    const [statsResponse, eventsResponse] = await Promise.allSettled([
+      api.get('/stats/overview'),
+      api.get('/events', { params: { per_page: 5, sort: '-occurred_at' } }),
+    ]);
 
-    // const eventsResponse = await api.get('/public/events/recent');
-    // recentEvents.value = eventsResponse.data;
+    if (statsResponse.status === 'fulfilled' && statsResponse.value?.data?.data) {
+      const data = statsResponse.value.data.data;
+      stats.value.totalEvents = data.total_events ?? stats.value.totalEvents;
+      stats.value.totalEquipment = data.total_equipment ?? stats.value.totalEquipment;
+      stats.value.activeConflicts = data.active_conflicts ?? stats.value.activeConflicts;
+      stats.value.countriesTracked = data.countries_tracked ?? stats.value.countriesTracked;
+    }
+
+    if (eventsResponse.status === 'fulfilled' && eventsResponse.value?.data?.data) {
+      recentEvents.value = eventsResponse.value.data.data;
+    }
   } catch (error) {
     console.error('Failed to load home page data:', error);
   }

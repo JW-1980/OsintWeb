@@ -724,7 +724,7 @@ class IntelligenceAgentsSeeder extends Seeder
         ];
 
         foreach ($agents as $agent) {
-            DB::table('intelligence_agents')->insert([
+            DB::table('intelligence_agents')->insertOrIgnore([
                 'uuid' => Str::uuid(),
                 'name' => $agent['name'],
                 'slug' => $agent['slug'],

@@ -80,7 +80,7 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('social_media_posts')
                 ->nullOnDelete();
-            $table->point('geolocation')->nullable();
+            $table->geometry('geolocation', 'point', 4326)->nullable();
             $table->string('language_detected', 10)->nullable();
             $table->decimal('sentiment_score', 4, 3)->nullable()
                 ->comment('Range: -1.000 (negative) to 1.000 (positive)');
@@ -98,8 +98,7 @@ return new class extends Migration
             $table->index(['is_archived', 'created_at'], 'idx_archived_created');
             $table->index(['event_id', 'posted_at'], 'idx_event_posted');
 
-            // Spatial index for geolocation queries
-            $table->spatialIndex('geolocation', 'spatial_geolocation');
+            // Note: spatial index requires NOT NULL; geolocation is nullable so skip spatial index
 
             // Full-text index for content search (if using MySQL)
             $table->fullText('content_text', 'ft_content');

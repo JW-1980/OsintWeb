@@ -146,11 +146,37 @@ class Actor extends Model
     ];
 
     /**
-     * Get the actor's aliases
+     * Get the actor's aliases (named 'aliases' for controller compatibility)
+     */
+    public function aliases(): HasMany
+    {
+        return $this->hasMany(ActorAlias::class);
+    }
+
+    /**
+     * Get the actor's aliases (legacy name)
      */
     public function actorAliases(): HasMany
     {
         return $this->hasMany(ActorAlias::class);
+    }
+
+    /**
+     * Alias for actorAliases for convenience
+     */
+    public function aliases(): HasMany
+    {
+        return $this->actorAliases();
+    }
+
+    /**
+     * Get the conflicts this actor is involved in
+     */
+    public function conflicts(): BelongsToMany
+    {
+        return $this->belongsToMany(Conflict::class, 'conflict_parties')
+            ->withPivot(['side', 'role', 'joined_date', 'left_date', 'is_currently_active', 'notes'])
+            ->withTimestamps();
     }
 
     /**
@@ -249,7 +275,7 @@ class Actor extends Model
         }
 
         // Get aliases from relationship (new source of truth)
-        $relatedAliases = $this->actorAliases->pluck('alias')->toArray();
+        $relatedAliases = $this->aliases->pluck('alias')->toArray();
         if (!empty($relatedAliases)) {
             $names = array_merge($names, $relatedAliases);
         }

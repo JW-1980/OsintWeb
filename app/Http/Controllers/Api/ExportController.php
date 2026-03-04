@@ -127,7 +127,7 @@ class ExportController extends Controller
                 $query->where('occurred_at', '<=', $validated['end_date']);
             }
 
-            $events = $query->with('actor')->get();
+            $events = $query->with('actors')->get();
 
             foreach ($events as $event) {
                 $features[] = [
@@ -210,7 +210,7 @@ class ExportController extends Controller
             $query->where('occurred_at', '<=', $validated['end_date']);
         }
 
-        $events = $query->with('actor')->get();
+        $events = $query->with('actors')->get();
 
         $csv = "ID,Title,Description,Type,Occurred At,Latitude,Longitude,Location Name,Actor,Status,Confidence\n";
 
