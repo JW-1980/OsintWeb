@@ -796,9 +796,19 @@ class CaseManagementService
             });
         }
 
-        // Default ordering
-        $sortBy = $filters['sort_by'] ?? 'updated_at';
-        $sortDir = $filters['sort_dir'] ?? 'desc';
+        // Default ordering with validation to prevent SQL injection
+        $allowedSortBy = [
+            'id', 'title', 'case_number', 'status', 'priority',
+            'case_type', 'classification_level', 'progress_percentage',
+            'start_date', 'due_date', 'created_at', 'updated_at'
+        ];
+
+        $sortBy = in_array($filters['sort_by'] ?? '', $allowedSortBy)
+            ? $filters['sort_by']
+            : 'updated_at';
+
+        $sortDir = strtolower($filters['sort_dir'] ?? '') === 'asc' ? 'asc' : 'desc';
+
         $query->orderBy($sortBy, $sortDir);
 
         return $query->paginate($perPage);

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Domains\Intelligence\Models\Event;
+use App\Domains\Intelligence\Services\SunPositionCalculator;
 use App\Models\AuditLog;
-use App\Models\Event;
 use App\Models\GeolocationVerification;
 use App\Models\User;
+use App\Traits\GeoDistanceTrait;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -20,37 +22,49 @@ use Illuminate\Support\Str;
  */
 class GeolocationService
 {
+    use GeoDistanceTrait;
+
     /**
      * Earth's radius in meters for distance calculations.
      */
     private const EARTH_RADIUS_METERS = 6371000;
 
     /**
+     * @var SunPositionCalculator
+     */
+    protected SunPositionCalculator ;
+
+    public function __construct(SunPositionCalculator )
+    {
+        ->sunPositionCalculator = ;
+    }
+
+    /**
      * Create a new verification for an event.
      *
-     * @param int $eventId
-     * @param string $method
-     * @param array $data
-     * @param User|null $user
+     * @param int
+     * @param string
+     * @param array
+     * @param User|null
      * @return GeolocationVerification
      *
      * @throws \InvalidArgumentException
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function verifyCoordinates(int $eventId, string $method, array $data, ?User $user = null): GeolocationVerification
+    public function verifyCoordinates(int , string , array , ?User  = null): GeolocationVerification
     {
-        $event = Event::findOrFail($eventId);
+         = Event::findOrFail();
 
         // Validate verification method
-        if (!in_array($method, GeolocationVerification::getMethods())) {
+        if (!in_array(, GeolocationVerification::getMethods())) {
             throw new \InvalidArgumentException("Invalid verification method: {$method}");
         }
 
         // Get original coordinates from event
-        $originalLat = $event->latitude;
-        $originalLng = $event->longitude;
+         = ->latitude;
+         = ->longitude;
 
-        if ($originalLat === null || $originalLng === null) {
+        if ( === null ||  === null) {
             throw new \InvalidArgumentException('Event does not have valid coordinates');
         }
 
@@ -112,15 +126,15 @@ class GeolocationService
      * This method prepares data for satellite image comparison.
      * Actual image matching would require integration with external services.
      *
-     * @param string $groundImagePath Path or URL to the ground image
-     * @param array $region Bounding box [sw_lat, sw_lng, ne_lat, ne_lng]
-     * @param array $options Additional options for matching
+     * @param string  Path or URL to the ground image
+     * @param array  Bounding box [sw_lat, sw_lng, ne_lat, ne_lng]
+     * @param array  Additional options for matching
      * @return array Analysis results with potential matches
      */
-    public function matchSatelliteImagery(string $groundImagePath, array $region, array $options = []): array
+    public function matchSatelliteImagery(string , array , array  = []): array
     {
         // Validate region bounds
-        if (count($region) !== 4) {
+        if (count() !== 4) {
             throw new \InvalidArgumentException('Region must contain [sw_lat, sw_lng, ne_lat, ne_lng]');
         }
 
@@ -161,12 +175,12 @@ class GeolocationService
     /**
      * Analyze shadows in an image to estimate location and time.
      *
-     * @param string $imagePath Path or URL to the image
-     * @param string|null $dateString Estimated date of image capture (YYYY-MM-DD)
-     * @param array $options Additional options
+     * @param string  Path or URL to the image
+     * @param string|null  Estimated date of image capture (YYYY-MM-DD)
+     * @param array  Additional options
      * @return array Shadow analysis results
      */
-    public function analyzeShadows(string $imagePath, ?string $dateString = null, array $options = []): array
+    public function analyzeShadows(string , ?string  = null, array  = []): array
     {
         $date = $dateString ? Carbon::parse($dateString) : now();
 
@@ -212,74 +226,20 @@ class GeolocationService
     /**
      * Calculate sun position for shadow analysis verification.
      *
-     * @param float $latitude
-     * @param float $longitude
-     * @param Carbon $dateTime
+     * @param float
+     * @param float
+     * @param Carbon
      * @return array Sun position data
      */
-    public function calculateSunPosition(float $latitude, float $longitude, Carbon $dateTime): array
+    public function calculateSunPosition(float , float , Carbon ): array
     {
-        // Julian date calculation
-        $jd = $this->toJulianDate($dateTime);
-
-        // Time since J2000.0
-        $T = ($jd - 2451545.0) / 36525;
-
-        // Mean longitude of the Sun
-        $L0 = fmod(280.46646 + 36000.76983 * $T + 0.0003032 * $T * $T, 360);
-
-        // Mean anomaly of the Sun
-        $M = fmod(357.52911 + 35999.05029 * $T - 0.0001537 * $T * $T, 360);
-        $M_rad = deg2rad($M);
-
-        // Equation of center
-        $C = (1.914602 - 0.004817 * $T - 0.000014 * $T * $T) * sin($M_rad)
-            + (0.019993 - 0.000101 * $T) * sin(2 * $M_rad)
-            + 0.000289 * sin(3 * $M_rad);
-
-        // Sun's true longitude
-        $sunLong = $L0 + $C;
-
-        // Obliquity of the ecliptic
-        $eps = 23.439291 - 0.0130042 * $T;
-        $eps_rad = deg2rad($eps);
-
-        // Sun's right ascension and declination
-        $sunLong_rad = deg2rad($sunLong);
-        $ra = atan2(cos($eps_rad) * sin($sunLong_rad), cos($sunLong_rad));
-        $dec = asin(sin($eps_rad) * sin($sunLong_rad));
-
-        // Hour angle
-        $lst = $this->calculateLocalSiderealTime($longitude, $dateTime);
-        $ha = deg2rad($lst - rad2deg($ra));
-
-        // Convert to altitude and azimuth
-        $lat_rad = deg2rad($latitude);
-        $alt = asin(sin($lat_rad) * sin($dec) + cos($lat_rad) * cos($dec) * cos($ha));
-        $az = atan2(
-            -sin($ha),
-            cos($lat_rad) * tan($dec) - sin($lat_rad) * cos($ha)
-        );
-
-        $altitude = rad2deg($alt);
-        $azimuth = fmod(rad2deg($az) + 360, 360);
-
-        return [
-            'altitude' => round($altitude, 2),
-            'azimuth' => round($azimuth, 2),
-            'latitude' => $latitude,
-            'longitude' => $longitude,
-            'datetime' => $dateTime->toIso8601String(),
-            'datetime_utc' => $dateTime->utc()->toIso8601String(),
-            'is_daytime' => $altitude > 0,
-            'solar_noon_distance' => abs(180 - $azimuth),
-        ];
+        return $this->sunPositionCalculator->calculate($latitude, $longitude, $dateTime);
     }
 
     /**
      * Extract metadata from an image file.
      *
-     * @param UploadedFile|string $image Image file or path
+     * @param UploadedFile|string  Image file or path
      * @return array Extracted metadata including GPS coordinates if available
      */
     public function extractImageMetadata($image): array
@@ -357,10 +317,10 @@ class GeolocationService
     /**
      * Calculate the distance between original and verified coordinates.
      *
-     * @param float $lat1 Original latitude
-     * @param float $lng1 Original longitude
-     * @param float $lat2 Verified latitude
-     * @param float $lng2 Verified longitude
+     * @param float  Original latitude
+     * @param float  Original longitude
+     * @param float  Verified latitude
+     * @param float  Verified longitude
      * @return float Distance in meters
      */
     public function calculateDistanceFromOriginal(
@@ -369,13 +329,13 @@ class GeolocationService
         float $lat2,
         float $lng2
     ): float {
-        return $this->haversineDistance($lat1, $lng1, $lat2, $lng2);
+        return $this->haversineDistance($lat1, $lng1, $lat2, $lng2, self::EARTH_RADIUS_METERS);
     }
 
     /**
      * Generate a comprehensive verification report.
      *
-     * @param GeolocationVerification $verification
+     * @param GeolocationVerification
      * @return array Report data
      */
     public function generateVerificationReport(GeolocationVerification $verification): array
@@ -436,7 +396,7 @@ class GeolocationService
     /**
      * Get verification statistics for an event.
      *
-     * @param int $eventId
+     * @param int
      * @return array Statistics
      */
     public function getEventVerificationStats(int $eventId): array
@@ -475,46 +435,22 @@ class GeolocationService
     }
 
     /**
-     * Calculate Haversine distance between two points.
-     *
-     * @param float $lat1
-     * @param float $lng1
-     * @param float $lat2
-     * @param float $lng2
-     * @return float Distance in meters
-     */
-    private function haversineDistance(float $lat1, float $lng1, float $lat2, float $lng2): float
-    {
-        $lat1Rad = deg2rad($lat1);
-        $lat2Rad = deg2rad($lat2);
-        $deltaLat = deg2rad($lat2 - $lat1);
-        $deltaLng = deg2rad($lng2 - $lng1);
-
-        $a = sin($deltaLat / 2) * sin($deltaLat / 2)
-            + cos($lat1Rad) * cos($lat2Rad) * sin($deltaLng / 2) * sin($deltaLng / 2);
-
-        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
-
-        return self::EARTH_RADIUS_METERS * $c;
-    }
-
-    /**
      * Calculate bounding box area in square kilometers.
      *
-     * @param float $swLat
-     * @param float $swLng
-     * @param float $neLat
-     * @param float $neLng
+     * @param float
+     * @param float
+     * @param float
+     * @param float
      * @return float Area in km2
      */
     private function calculateBoundingBoxArea(float $swLat, float $swLng, float $neLat, float $neLng): float
     {
         // Width at average latitude
         $avgLat = ($swLat + $neLat) / 2;
-        $width = $this->haversineDistance($avgLat, $swLng, $avgLat, $neLng) / 1000;
+        $width = $this->haversineDistance($avgLat, $swLng, $avgLat, $neLng, self::EARTH_RADIUS_METERS) / 1000;
 
         // Height
-        $height = $this->haversineDistance($swLat, $swLng, $neLat, $swLng) / 1000;
+        $height = $this->haversineDistance($swLat, $swLng, $neLat, $swLng, self::EARTH_RADIUS_METERS) / 1000;
 
         return $width * $height;
     }
@@ -522,7 +458,7 @@ class GeolocationService
     /**
      * Parse GPS coordinates from EXIF data.
      *
-     * @param array $gpsData
+     * @param array
      * @return array|null
      */
     private function parseGpsFromExif(array $gpsData): ?array
@@ -558,8 +494,8 @@ class GeolocationService
     /**
      * Convert GPS coordinate from EXIF format to decimal degrees.
      *
-     * @param array $coordinate
-     * @param string $ref
+     * @param array
+     * @param string
      * @return float|null
      */
     private function convertGpsCoordinate(array $coordinate, string $ref): ?float
@@ -588,7 +524,7 @@ class GeolocationService
     /**
      * Parse a rational number from EXIF format.
      *
-     * @param mixed $value
+     * @param mixed
      * @return float|null
      */
     private function parseRational($value): ?float
@@ -610,7 +546,7 @@ class GeolocationService
     /**
      * Parse GPS timestamp from EXIF format.
      *
-     * @param array $timestamp
+     * @param array
      * @return string|null
      */
     private function parseGpsTimestamp(array $timestamp): ?string
@@ -629,7 +565,7 @@ class GeolocationService
     /**
      * Sanitize EXIF data by removing binary data.
      *
-     * @param array $exif
+     * @param array
      * @return array
      */
     private function sanitizeExifData(array $exif): array
@@ -662,59 +598,9 @@ class GeolocationService
     }
 
     /**
-     * Convert to Julian Date.
-     *
-     * @param Carbon $date
-     * @return float
-     */
-    private function toJulianDate(Carbon $date): float
-    {
-        $y = $date->year;
-        $m = $date->month;
-        $d = $date->day + ($date->hour + $date->minute / 60 + $date->second / 3600) / 24;
-
-        if ($m <= 2) {
-            $y--;
-            $m += 12;
-        }
-
-        $A = (int) ($y / 100);
-        $B = 2 - $A + (int) ($A / 4);
-
-        return (int) (365.25 * ($y + 4716)) + (int) (30.6001 * ($m + 1)) + $d + $B - 1524.5;
-    }
-
-    /**
-     * Calculate Local Sidereal Time.
-     *
-     * @param float $longitude
-     * @param Carbon $dateTime
-     * @return float LST in degrees
-     */
-    private function calculateLocalSiderealTime(float $longitude, Carbon $dateTime): float
-    {
-        $jd = $this->toJulianDate($dateTime->utc());
-        $T = ($jd - 2451545.0) / 36525;
-
-        // Greenwich Mean Sidereal Time
-        $gmst = 280.46061837
-            + 360.98564736629 * ($jd - 2451545)
-            + 0.000387933 * $T * $T
-            - $T * $T * $T / 38710000;
-
-        $gmst = fmod($gmst, 360);
-        if ($gmst < 0) {
-            $gmst += 360;
-        }
-
-        // Local Sidereal Time
-        return fmod($gmst + $longitude, 360);
-    }
-
-    /**
      * Format distance for display.
      *
-     * @param float|null $meters
+     * @param float|null
      * @return string|null
      */
     private function formatDistance(?float $meters): ?string
@@ -733,7 +619,7 @@ class GeolocationService
     /**
      * Generate assessment text based on verification data.
      *
-     * @param GeolocationVerification $verification
+     * @param GeolocationVerification
      * @return array
      */
     private function generateAssessment(GeolocationVerification $verification): array
@@ -806,8 +692,8 @@ class GeolocationService
     /**
      * Log verification attempt to audit log.
      *
-     * @param GeolocationVerification $verification
-     * @param User|null $user
+     * @param GeolocationVerification
+     * @param User|null
      * @return void
      */
     private function logVerificationAttempt(GeolocationVerification $verification, ?User $user): void

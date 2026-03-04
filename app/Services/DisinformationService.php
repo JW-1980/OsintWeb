@@ -6,7 +6,7 @@ namespace App\Services;
 
 use App\Models\DisinformationAnalysis;
 use App\Models\DisinformationPattern;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\FlaggedContent;
 use App\Models\SocialMediaPost;
 use App\Models\Article;
@@ -984,14 +984,7 @@ class DisinformationService
             'explosive', 'bombshell', 'breaking', 'urgent', 'critical',
         ]);
 
-        $found = [];
-        foreach ($loadedTerms as $term) {
-            if (str_contains($text, strtolower($term))) {
-                $found[] = $term;
-            }
-        }
-
-        return $found;
+        return $this->findMatchingTerms($text, $loadedTerms, true);
     }
 
     /**
@@ -1008,14 +1001,7 @@ class DisinformationService
             'deadly', 'fatal', 'collapse', 'destruction',
         ]);
 
-        $found = [];
-        foreach ($fearTerms as $term) {
-            if (str_contains($text, $term)) {
-                $found[] = $term;
-            }
-        }
-
-        return $found;
+        return $this->findMatchingTerms($text, $fearTerms);
     }
 
     /**
@@ -1032,14 +1018,7 @@ class DisinformationService
             'going viral', 'the majority', 'common knowledge',
         ];
 
-        $found = [];
-        foreach ($bandwagonTerms as $term) {
-            if (str_contains($text, $term)) {
-                $found[] = $term;
-            }
-        }
-
-        return $found;
+        return $this->findMatchingTerms($text, $bandwagonTerms);
     }
 
     /**
@@ -1057,14 +1036,7 @@ class DisinformationService
             'absolutely', 'totally', '100%', 'zero',
         ];
 
-        $found = [];
-        foreach ($binaryTerms as $term) {
-            if (str_contains($text, $term)) {
-                $found[] = $term;
-            }
-        }
-
-        return $found;
+        return $this->findMatchingTerms($text, $binaryTerms);
     }
 
     /**
@@ -1109,10 +1081,24 @@ class DisinformationService
             'but they did', 'both sides', 'equally bad',
         ];
 
+        return $this->findMatchingTerms($text, $whataboutPatterns);
+    }
+
+    /**
+     * Find matching terms in text.
+     *
+     * @param string $text Text to search
+     * @param array $terms Terms to search for
+     * @param bool $normalizeTerms Whether to lowercase terms before searching
+     * @return array Found terms
+     */
+    protected function findMatchingTerms(string $text, array $terms, bool $normalizeTerms = false): array
+    {
         $found = [];
-        foreach ($whataboutPatterns as $pattern) {
-            if (str_contains($text, $pattern)) {
-                $found[] = $pattern;
+        foreach ($terms as $term) {
+            $checkTerm = $normalizeTerms ? strtolower($term) : $term;
+            if (str_contains($text, $checkTerm)) {
+                $found[] = $term;
             }
         }
 

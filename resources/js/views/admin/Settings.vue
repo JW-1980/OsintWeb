@@ -289,6 +289,122 @@
         </div>
       </div>
 
+      <!-- AI Provider Settings -->
+      <div v-if="activeTab === 'ai'" class="space-y-6">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">AI Provider Configuration</h2>
+            <span
+              :class="[
+                'px-3 py-1 text-xs font-medium rounded-full',
+                aiSettings.configured
+                  ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                  : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+              ]"
+            >
+              {{ aiSettings.configured ? 'Configured' : 'Not Configured' }}
+            </span>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            The active AI provider is set via the <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs">AI_PROVIDER</code> environment variable.
+            All providers use OpenAI-compatible APIs for OCR, translation, entity extraction, and document analysis.
+          </p>
+
+          <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-blue-500 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+              </svg>
+              <div>
+                <p class="text-sm font-medium text-blue-800 dark:text-blue-300">Active Provider: {{ aiSettings.provider_name }}</p>
+                <p class="text-xs text-blue-600 dark:text-blue-400 mt-1">Provider key: <code>{{ aiSettings.active_provider }}</code></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Test Connection -->
+          <button
+            @click="testAIConnection"
+            :disabled="aiTestLoading || !aiSettings.configured"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ aiTestLoading ? 'Testing...' : 'Test Connection' }}
+          </button>
+
+          <div v-if="aiTestResult" class="mt-3 p-3 rounded-lg text-sm" :class="aiTestResult.success ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400'">
+            <p class="font-medium">{{ aiTestResult.success ? 'Connection successful' : 'Connection failed' }}</p>
+            <p class="text-xs mt-1">{{ aiTestResult.success ? `Model: ${aiTestResult.model}` : aiTestResult.error }}</p>
+          </div>
+        </div>
+
+        <!-- Available Providers -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Available Providers</h2>
+          <div class="space-y-4">
+            <div
+              v-for="(provider, key) in aiSettings.providers"
+              :key="key"
+              :class="[
+                'border rounded-lg p-4',
+                provider.is_active
+                  ? 'border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-900/10'
+                  : 'border-gray-200 dark:border-gray-700'
+              ]"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-sm font-semibold text-gray-900 dark:text-white">{{ provider.name }}</h3>
+                  <span v-if="provider.is_active" class="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">Active</span>
+                </div>
+                <span
+                  :class="[
+                    'px-2 py-0.5 text-xs font-medium rounded-full',
+                    provider.configured
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
+                  ]"
+                >
+                  {{ provider.configured ? 'API Key Set' : 'Not Configured' }}
+                </span>
+              </div>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">{{ provider.description }}</p>
+              <div class="flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500">
+                <span>{{ provider.free_models?.length || 0 }} free models</span>
+                <a v-if="provider.docs_url" :href="provider.docs_url" target="_blank" class="text-blue-500 hover:text-blue-600">Documentation</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Models -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Active Models</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Models currently assigned to each AI task from the active provider.</p>
+          <div class="space-y-3">
+            <div v-for="(model, task) in aiSettings.models" :key="task" class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">{{ String(task).replace('_', ' ') }}</span>
+              <code class="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">{{ model }}</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Environment Setup Guide -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Setup Guide</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            To switch providers, update your <code class="bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded text-xs">.env</code> file:
+          </p>
+          <div class="bg-gray-900 rounded-lg p-4 text-sm font-mono text-gray-300 overflow-x-auto">
+            <p class="text-green-400"># Choose your AI provider</p>
+            <p>AI_PROVIDER=openrouter <span class="text-gray-500"># or: huggingface, aimlapi</span></p>
+            <p class="mt-2 text-green-400"># Set the API key for your chosen provider</p>
+            <p>OPENROUTER_API_KEY=your-key-here</p>
+            <p>HUGGINGFACE_API_KEY=your-key-here</p>
+            <p>AIMLAPI_API_KEY=your-key-here</p>
+          </div>
+        </div>
+      </div>
+
       <!-- Save Button -->
       <div class="mt-8 flex justify-end">
         <button @click="saveSettings" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
@@ -300,7 +416,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
+import axios from 'axios';
 
 const activeTab = ref('general');
 
@@ -309,7 +426,8 @@ const tabs = [
   { id: 'registration', label: 'Registration' },
   { id: 'map', label: 'Map' },
   { id: 'security', label: 'Security' },
-  { id: 'email', label: 'Email' }
+  { id: 'email', label: 'Email' },
+  { id: 'ai', label: 'AI Provider' }
 ];
 
 const settings = reactive({
@@ -354,6 +472,47 @@ const settings = reactive({
   smtpPassword: '',
   fromEmail: '',
   fromName: 'OsintWeb'
+});
+
+// AI Provider state
+const aiSettings = reactive({
+  active_provider: '',
+  provider_name: '',
+  configured: false,
+  providers: {} as Record<string, any>,
+  models: {} as Record<string, string>,
+  free_models: [] as string[],
+});
+const aiTestLoading = ref(false);
+const aiTestResult = ref<{ success: boolean; model?: string; error?: string } | null>(null);
+
+const loadAISettings = async () => {
+  try {
+    const response = await axios.get('/api/admin/ai-settings');
+    Object.assign(aiSettings, response.data.data);
+  } catch (error) {
+    console.error('Failed to load AI settings:', error);
+  }
+};
+
+const testAIConnection = async () => {
+  aiTestLoading.value = true;
+  aiTestResult.value = null;
+  try {
+    const response = await axios.post('/api/admin/ai-settings/test-connection');
+    aiTestResult.value = response.data.data;
+  } catch (error: any) {
+    aiTestResult.value = {
+      success: false,
+      error: error.response?.data?.message || 'Connection test failed',
+    };
+  } finally {
+    aiTestLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  loadAISettings();
 });
 
 const saveSettings = () => {

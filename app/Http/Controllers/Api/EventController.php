@@ -7,7 +7,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
+use App\Domains\Intelligence\DataTransfer\EventData;
+use App\Domains\Intelligence\Actions\CreateEventAction;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -41,27 +43,23 @@ class EventController extends Controller
 
         // Filter by status
         if ($request->has('status')) {
-            $query->where('status', $request->status);
+            $query->withStatus($request->status);
         }
 
         // Filter by location radius (requires lat, lng, radius in km)
         if ($request->has(['lat', 'lng', 'radius'])) {
-            $lat = $request->lat;
-            $lng = $request->lng;
-            $radius = $request->radius;
-
-            // Using spatial query (MySQL 8.0+)
-            $query->whereRaw(
-                'ST_Distance_Sphere(location, POINT(?, ?)) <= ?',
-                [$lng, $lat, $radius * 1000]
+            $query->nearLocation(
+                (float) $request->lat,
+                (float) $request->lng,
+                (float) $request->radius
             );
         }
 
         // Order by most recent
         $query->orderBy('occurred_at', 'desc');
 
-        // Eager load relationships (actors omitted - no pivot table exists)
-        $query->with(['media', 'sources', 'equipment']);
+        // Eager load relationships
+        $query->with(['actors', 'media', 'sources', 'equipment']);
 
         $events = $query->paginate($this->perPage);
 
@@ -72,9 +70,10 @@ class EventController extends Controller
      * Store a newly created event
      *
      * @param Request $request
+     * @param CreateEventAction $createEventAction
      * @return JsonResponse
      */
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, CreateEventAction $createEventAction): JsonResponse
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -85,24 +84,28 @@ class EventController extends Controller
             'longitude' => ['required', 'numeric', 'between:-180,180'],
             'location_name' => ['nullable', 'string', 'max:255'],
             'actor_id' => ['nullable', 'exists:actors,id'],
-            'status' => ['required', 'in:draft,pending,verified,disputed'],
+            'status' => ['required', 'in:draft,pending'],
             'confidence' => ['required', 'in:confirmed,likely,unconfirmed'],
             'custom_fields' => ['nullable', 'array'],
         ]);
 
-        // Create point geometry for location
-        $location = DB::raw(
-            sprintf('POINT(%f, %f)', $validated['longitude'], $validated['latitude'])
+        $data = new EventData(
+            title: $validated['title'],
+            description: $validated['description'],
+            type: $validated['type'],
+            occurredAt: \Carbon\Carbon::parse($validated['occurred_at']),
+            latitude: (float) $validated['latitude'],
+            longitude: (float) $validated['longitude'],
+            status: $validated['status'],
+            confidence: $validated['confidence'],
+            locationName: $validated['location_name'] ?? null,
+            actorId: isset($validated['actor_id']) ? (int) $validated['actor_id'] : null,
+            customFields: $validated['custom_fields'] ?? null,
         );
 
-        $event = Event::create([
-            ...$validated,
-            'location' => $location,
-            'created_by' => $request->user()->id,
-            'uuid' => \Illuminate\Support\Str::uuid(),
-        ]);
+        $event = $createEventAction->execute($data, $request->user());
 
-        return $this->success($event->load(['media', 'sources']), 201);
+        return $this->success($event->load(['actors', 'media', 'sources']), 201);
     }
 
     /**
@@ -113,7 +116,7 @@ class EventController extends Controller
      */
     public function show(string $uuid): JsonResponse
     {
-        $event = Event::with(['media', 'sources', 'equipment'])
+        $event = Event::with(['actors', 'media', 'sources', 'equipment', 'versions'])
             ->where('uuid', $uuid)
             ->firstOrFail();
 
@@ -157,7 +160,7 @@ class EventController extends Controller
 
         $event->update($validated);
 
-        return $this->success($event->fresh(['media', 'sources']));
+        return $this->success($event->fresh(['actors', 'media', 'sources']));
     }
 
     /**
@@ -224,8 +227,13 @@ class EventController extends Controller
     {
         $event = Event::where('uuid', $uuid)->firstOrFail();
 
+        // Prevent creators from disputing their own events
+        if ($event->created_by === $request->user()->id) {
+            return response()->json(['message' => 'You cannot dispute your own event.'], 403);
+        }
+
         $validated = $request->validate([
-            'reason' => ['required', 'string'],
+            'reason' => ['required', 'string', 'max:2000'],
             'evidence' => ['nullable', 'array'],
         ]);
 

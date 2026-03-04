@@ -210,6 +210,149 @@ return [
             ],
         ],
 
+        /*
+        |----------------------------------------------------------------------
+        | SambaNova - RDU Inference
+        |----------------------------------------------------------------------
+        | Website: https://cloud.sambanova.ai/
+        | Free tier: 10-30 RPM per model (no payment method required)
+        | Features: Ultra-fast RDU hardware, Llama/DeepSeek/Qwen models
+        */
+        'sambanova' => [
+            'name' => 'SambaNova',
+            'enabled' => env('SAMBANOVA_ENABLED', true),
+            'api_key' => env('SAMBANOVA_API_KEY'),
+            'base_url' => env('SAMBANOVA_BASE_URL', 'https://api.sambanova.ai/v1'),
+            'models' => [
+                'chat' => env('SAMBANOVA_MODEL_CHAT', 'Meta-Llama-3.3-70B-Instruct'),
+                'vision' => env('SAMBANOVA_MODEL_VISION', 'Llama-3.2-11B-Vision-Instruct'),
+                'translation' => env('SAMBANOVA_MODEL_TRANSLATION', 'Meta-Llama-3.3-70B-Instruct'),
+                'ner' => env('SAMBANOVA_MODEL_NER', 'Meta-Llama-3.1-8B-Instruct'),
+                'classification' => env('SAMBANOVA_MODEL_CLASSIFICATION', 'Meta-Llama-3.1-8B-Instruct'),
+                'language_detection' => env('SAMBANOVA_MODEL_LANG_DETECT', 'Meta-Llama-3.1-8B-Instruct'),
+            ],
+            'free_models' => [
+                'Meta-Llama-3.3-70B-Instruct',
+                'Meta-Llama-3.1-405B-Instruct',
+                'Meta-Llama-3.1-70B-Instruct',
+                'Meta-Llama-3.1-8B-Instruct',
+                'Llama-3.2-11B-Vision-Instruct',
+                'Llama-3.2-90B-Vision-Instruct',
+                'Qwen2.5-72B-Instruct',
+                'Qwen2.5-Coder-32B-Instruct',
+                'DeepSeek-R1',
+                'DeepSeek-V3-0324',
+            ],
+            'rate_limits' => [
+                'requests_per_minute' => (int) env('SAMBANOVA_RATE_LIMIT_RPM', 20),
+            ],
+        ],
+
+        /*
+        |----------------------------------------------------------------------
+        | GitHub Models - Azure AI Inference
+        |----------------------------------------------------------------------
+        | Website: https://github.com/marketplace/models
+        | Free tier: Free with GitHub account (PAT auth)
+        | Features: Access to GPT-4o, Llama, Mistral, Phi models
+        */
+        'github' => [
+            'name' => 'GitHub Models',
+            'enabled' => env('GITHUB_MODELS_ENABLED', true),
+            'api_key' => env('GITHUB_MODELS_TOKEN'), // GitHub Personal Access Token
+            'base_url' => env('GITHUB_MODELS_BASE_URL', 'https://models.inference.ai.azure.com'),
+            'models' => [
+                'chat' => env('GITHUB_MODELS_MODEL_CHAT', 'Meta-Llama-3.1-70B-Instruct'),
+                'vision' => env('GITHUB_MODELS_MODEL_VISION', 'Llama-3.2-11B-Vision-Instruct'),
+                'translation' => env('GITHUB_MODELS_MODEL_TRANSLATION', 'Meta-Llama-3.1-70B-Instruct'),
+                'ner' => env('GITHUB_MODELS_MODEL_NER', 'Meta-Llama-3.1-8B-Instruct'),
+                'classification' => env('GITHUB_MODELS_MODEL_CLASSIFICATION', 'Mistral-small'),
+                'language_detection' => env('GITHUB_MODELS_MODEL_LANG_DETECT', 'Meta-Llama-3.1-8B-Instruct'),
+            ],
+            'free_models' => [
+                'Meta-Llama-3.1-70B-Instruct',
+                'Meta-Llama-3.1-8B-Instruct',
+                'Llama-3.2-11B-Vision-Instruct',
+                'Mistral-large',
+                'Mistral-small',
+                'Phi-4',
+                'Phi-3.5-mini-instruct',
+            ],
+            'rate_limits' => [
+                'requests_per_minute' => (int) env('GITHUB_MODELS_RATE_LIMIT_RPM', 15),
+                'requests_per_day' => (int) env('GITHUB_MODELS_RATE_LIMIT_RPD', 150),
+            ],
+        ],
+
+        /*
+        |----------------------------------------------------------------------
+        | Together AI - Open-Source Model Cloud
+        |----------------------------------------------------------------------
+        | Website: https://www.together.ai/
+        | Free tier: Free credits on signup, free model tier
+        | Features: 200+ models, fine-tuning, sub-100ms latency
+        */
+        'together' => [
+            'name' => 'Together AI',
+            'enabled' => env('TOGETHER_ENABLED', true),
+            'api_key' => env('TOGETHER_API_KEY'),
+            'base_url' => env('TOGETHER_BASE_URL', 'https://api.together.xyz/v1'),
+            'models' => [
+                'chat' => env('TOGETHER_MODEL_CHAT', 'meta-llama/Llama-3.3-70B-Instruct-Turbo'),
+                'vision' => env('TOGETHER_MODEL_VISION', 'meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo'),
+                'translation' => env('TOGETHER_MODEL_TRANSLATION', 'meta-llama/Llama-3.3-70B-Instruct-Turbo'),
+                'ner' => env('TOGETHER_MODEL_NER', 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo'),
+                'classification' => env('TOGETHER_MODEL_CLASSIFICATION', 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo'),
+                'language_detection' => env('TOGETHER_MODEL_LANG_DETECT', 'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo'),
+            ],
+            'free_models' => [
+                'meta-llama/Llama-3.3-70B-Instruct-Turbo',
+                'meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo',
+                'meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo',
+                'mistralai/Mixtral-8x7B-Instruct-v0.1',
+                'Qwen/Qwen2.5-72B-Instruct-Turbo',
+                'deepseek-ai/DeepSeek-R1-Distill-Llama-70B',
+                'google/gemma-2-9b-it',
+            ],
+            'rate_limits' => [
+                'requests_per_minute' => (int) env('TOGETHER_RATE_LIMIT_RPM', 60),
+                'tokens_per_minute' => (int) env('TOGETHER_RATE_LIMIT_TPM', 2000000),
+            ],
+        ],
+
+        /*
+        |----------------------------------------------------------------------
+        | Novita AI - Multi-Model Platform
+        |----------------------------------------------------------------------
+        | Website: https://novita.ai/
+        | Free tier: Several free models (Llama, Qwen, GLM)
+        | Features: 200+ models, 300 tokens/sec, global CDN
+        */
+        'novita' => [
+            'name' => 'Novita AI',
+            'enabled' => env('NOVITA_ENABLED', true),
+            'api_key' => env('NOVITA_API_KEY'),
+            'base_url' => env('NOVITA_BASE_URL', 'https://api.novita.ai/v3/openai'),
+            'models' => [
+                'chat' => env('NOVITA_MODEL_CHAT', 'meta-llama/llama-3.1-70b-instruct'),
+                'vision' => null, // Free models do not include vision
+                'translation' => env('NOVITA_MODEL_TRANSLATION', 'meta-llama/llama-3.1-70b-instruct'),
+                'ner' => env('NOVITA_MODEL_NER', 'qwen/qwen-2.5-7b-instruct'),
+                'classification' => env('NOVITA_MODEL_CLASSIFICATION', 'qwen/qwen-2.5-7b-instruct'),
+                'language_detection' => env('NOVITA_MODEL_LANG_DETECT', 'qwen/qwen-2.5-7b-instruct'),
+            ],
+            'free_models' => [
+                'meta-llama/llama-3.2-1b-instruct',
+                'meta-llama/llama-3.1-70b-instruct',
+                'qwen/qwen-2.5-7b-instruct',
+                'thudm/glm-4-9b-0414',
+                'thudm/glm-z1-9b-0414',
+            ],
+            'rate_limits' => [
+                'requests_per_minute' => (int) env('NOVITA_RATE_LIMIT_RPM', 60),
+            ],
+        ],
+
     ],
 
     /*
@@ -223,10 +366,14 @@ return [
     */
 
     'fallback_chain' => [
-        'groq',      // Ultra-fast inference
-        'cerebras',  // Fast inference
-        'gemini',    // Large context window
-        'mistral',   // European provider
+        'groq',       // Ultra-fast LPU inference
+        'cerebras',   // Fast wafer-scale inference
+        'sambanova',  // Fast RDU inference
+        'gemini',     // Large context window (1M)
+        'together',   // 200+ models, sub-100ms latency
+        'mistral',    // European provider, multilingual
+        'github',     // Free with GitHub account
+        'novita',     // Free models, global CDN
         'openrouter', // Multi-model gateway (last resort)
     ],
 
@@ -337,7 +484,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Provider Comparison Summary
+    | Provider Comparison Summary (9 Providers)
     |--------------------------------------------------------------------------
     |
     | Quick reference for provider selection:
@@ -349,6 +496,10 @@ return [
     | Groq         | Fastest  | 128K     | Yes    | 30 RPM, 14.4K RPD
     | Cerebras     | Fastest  | 128K     | No     | 30 RPM, 1B tokens/month
     | Mistral      | Fast     | 128K     | Yes    | Experimental tier
+    | SambaNova    | Fastest  | 128K     | Yes    | 10-30 RPM per model
+    | GitHub       | Medium   | 128K     | Yes    | Free with GitHub PAT
+    | Together AI  | Fast     | 128K     | Yes    | Free credits + models
+    | Novita AI    | Fast     | 128K     | No     | Free models available
     |
     */
 

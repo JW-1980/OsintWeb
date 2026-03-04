@@ -698,7 +698,7 @@ class GeolocationController extends Controller
         try {
             $response = Http::withHeaders([
                 'User-Agent' => 'OsintWeb/1.0',
-            ])->get('https://nominatim.openstreetmap.org/reverse', [
+            ])->get(config('services.nominatim.url'), [
                 'lat' => $validated['latitude'],
                 'lon' => $validated['longitude'],
                 'format' => 'json',

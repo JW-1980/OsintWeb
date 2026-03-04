@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Models\Actor;
 use App\Models\ActorRelationship;
 use App\Models\Country;
-use App\Models\Event;
+use App\Domains\Intelligence\Models\Event;
 use App\Models\Faction;
 use App\Models\NetworkEntity;
 use App\Models\NetworkGraph;

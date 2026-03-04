@@ -14,12 +14,16 @@ use Illuminate\Support\Facades\RateLimiter;
 /**
  * Multi-provider inference service with OpenAI-compatible endpoints.
  *
- * Supports multiple AI providers with automatic fallback:
+ * Supports 9 AI providers with automatic fallback, all offering free tiers:
  * - OpenRouter (multi-model gateway)
  * - Google Gemini (1M context, free tier)
  * - Groq (ultra-fast LPU inference)
- * - Cerebras (fastest inference)
- * - Mistral AI (European provider)
+ * - Cerebras (fastest wafer-scale inference)
+ * - Mistral AI (European provider, multilingual)
+ * - SambaNova (ultra-fast RDU inference)
+ * - GitHub Models (free with GitHub account)
+ * - Together AI (200+ models, free credits)
+ * - Novita AI (free models, global CDN)
  */
 class InferenceService
 {
@@ -37,6 +41,10 @@ class InferenceService
         'groq' => ['chat', 'vision', 'translation', 'ner', 'classification', 'language_detection'],
         'cerebras' => ['chat', 'translation', 'ner', 'classification', 'language_detection'], // No vision
         'mistral' => ['chat', 'vision', 'translation', 'ner', 'classification', 'language_detection'],
+        'sambanova' => ['chat', 'vision', 'translation', 'ner', 'classification', 'language_detection'],
+        'github' => ['chat', 'vision', 'translation', 'ner', 'classification', 'language_detection'],
+        'together' => ['chat', 'vision', 'translation', 'ner', 'classification', 'language_detection'],
+        'novita' => ['chat', 'translation', 'ner', 'classification', 'language_detection'], // No free vision models
     ];
 
     public function __construct(?string $provider = null)

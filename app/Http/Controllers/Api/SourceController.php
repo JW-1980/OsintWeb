@@ -96,6 +96,11 @@ class SourceController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        // Creating verified sources requires moderator or admin role
+        if (!$request->user()->isModerator()) {
+            return response()->json(['message' => 'Insufficient permissions to create sources.'], 403);
+        }
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255', 'unique:sources,name'],
             'url' => ['nullable', 'url', 'max:500'],
@@ -237,6 +242,11 @@ class SourceController extends Controller
      */
     public function verify(Request $request, string $uuid): JsonResponse
     {
+        // Source verification requires moderator or admin role
+        if (!$request->user()->isModerator()) {
+            return response()->json(['message' => 'Insufficient permissions to verify sources.'], 403);
+        }
+
         $source = Source::where('uuid', $uuid)->firstOrFail();
 
         $validated = $request->validate([

@@ -237,19 +237,21 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useApi } from '@/composables/useApi';
+import { expertiseOptions, timezoneOptions, countryOptions } from '@/constants/options';
 
-const router = useRouter();
+import ProfileHeader from '@/components/profile/ProfileHeader.vue';
+import ProfileEditTab from '@/components/profile/ProfileEditTab.vue';
+import ActivityTab from '@/components/profile/ActivityTab.vue';
+import SecurityTab from '@/components/profile/SecurityTab.vue';
+import DataPrivacyTab from '@/components/profile/DataPrivacyTab.vue';
+
 const authStore = useAuthStore();
 const api = useApi();
 
 const activeTab = ref<'profile' | 'activity' | 'security' | 'data'>('profile');
 const loading = ref(false);
-const saving = ref(false);
-const showDeleteModal = ref(false);
-const showTwoFactorModal = ref(false);
 const errorMessage = ref('');
 const successMessage = ref('');
-const deletePassword = ref('');
 
 const profile = reactive({
   // Basic Info
@@ -275,18 +277,6 @@ const profile = reactive({
   publicProfile: true,
   // Bio
   bio: ''
-});
-
-const passwordForm = reactive({
-  current: '',
-  new: '',
-  confirm: ''
-});
-
-const twoFactor = reactive({
-  enabled: false,
-  qrCode: '',
-  verificationCode: ''
 });
 
 interface Activity {
@@ -332,64 +322,6 @@ const stats = ref({
 });
 
 const sessions = ref<Session[]>([]);
-
-// Expertise area options for OSINT analysts
-const expertiseOptions = [
-  'Conflict Analysis',
-  'Military Equipment',
-  'Geolocation',
-  'Social Media Intelligence',
-  'Satellite Imagery',
-  'Open Source Research',
-  'Data Verification',
-  'Disinformation Analysis',
-  'Crisis Monitoring',
-  'Maritime Tracking',
-  'Aviation Tracking',
-  'Cybersecurity'
-];
-
-// Common timezones
-const timezoneOptions = [
-  'UTC-12:00', 'UTC-11:00', 'UTC-10:00', 'UTC-09:00', 'UTC-08:00', 'UTC-07:00',
-  'UTC-06:00', 'UTC-05:00', 'UTC-04:00', 'UTC-03:00', 'UTC-02:00', 'UTC-01:00',
-  'UTC+00:00', 'UTC+01:00', 'UTC+02:00', 'UTC+03:00', 'UTC+04:00', 'UTC+05:00',
-  'UTC+06:00', 'UTC+07:00', 'UTC+08:00', 'UTC+09:00', 'UTC+10:00', 'UTC+11:00', 'UTC+12:00'
-];
-
-// Countries list
-const countryOptions = [
-  'Afghanistan', 'Albania', 'Algeria', 'Argentina', 'Australia', 'Austria', 'Bangladesh',
-  'Belgium', 'Brazil', 'Bulgaria', 'Canada', 'Chile', 'China', 'Colombia', 'Croatia',
-  'Czech Republic', 'Denmark', 'Egypt', 'Estonia', 'Finland', 'France', 'Germany', 'Greece',
-  'Hungary', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Israel', 'Italy', 'Japan',
-  'Kenya', 'Latvia', 'Lithuania', 'Malaysia', 'Mexico', 'Morocco', 'Netherlands', 'New Zealand',
-  'Nigeria', 'Norway', 'Pakistan', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Romania',
-  'Russia', 'Saudi Arabia', 'Singapore', 'Slovakia', 'Slovenia', 'South Africa', 'South Korea',
-  'Spain', 'Sweden', 'Switzerland', 'Taiwan', 'Thailand', 'Turkey', 'Ukraine', 'United Arab Emirates',
-  'United Kingdom', 'United States', 'Venezuela', 'Vietnam'
-];
-
-const toggleExpertise = (area: string) => {
-  const index = profile.expertiseAreas.indexOf(area);
-  if (index === -1) {
-    profile.expertiseAreas.push(area);
-  } else {
-    profile.expertiseAreas.splice(index, 1);
-  }
-};
-
-const userInitials = computed(() => {
-  const name = profile.name || 'User';
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
-});
-
-const isPasswordValid = computed(() => {
-  return passwordForm.current &&
-    passwordForm.new &&
-    passwordForm.new.length >= 8 &&
-    passwordForm.new === passwordForm.confirm;
-});
 
 const showMessage = (message: string, isError: boolean = false) => {
   if (isError) {
@@ -469,209 +401,8 @@ const loadAchievements = async () => {
   }
 };
 
-const saveProfile = async () => {
-  saving.value = true;
-  errorMessage.value = '';
-  try {
-    await api.put('/account/profile', {
-      name: profile.name,
-      bio: profile.bio,
-      organization: profile.organization,
-      location: profile.country,
-      website: profile.website,
-      timezone: profile.timezone,
-    });
-    showMessage('Profile updated successfully!');
-  } catch (error: any) {
-    showMessage(error.message || 'Failed to save profile', true);
-  } finally {
-    saving.value = false;
-  }
-};
-
-const changePassword = async () => {
-  if (!isPasswordValid.value) return;
-
-  saving.value = true;
-  errorMessage.value = '';
-  try {
-    await api.put('/account/password', {
-      current_password: passwordForm.current,
-      password: passwordForm.new,
-      password_confirmation: passwordForm.confirm,
-    });
-    passwordForm.current = '';
-    passwordForm.new = '';
-    passwordForm.confirm = '';
-    showMessage('Password changed successfully!');
-  } catch (error: any) {
-    showMessage(error.message || 'Failed to change password', true);
-  } finally {
-    saving.value = false;
-  }
-};
-
-const uploadAvatar = () => {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = async (e) => {
-    const file = (e.target as HTMLInputElement).files?.[0];
-    if (file) {
-      saving.value = true;
-      try {
-        const formData = new FormData();
-        formData.append('avatar', file);
-
-        const response = await api.post<{ data: { avatar_url: string } }>('/account/avatar/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        profile.avatarUrl = response.data.avatar_url;
-        showMessage('Avatar uploaded successfully!');
-      } catch (error: any) {
-        showMessage(error.message || 'Failed to upload avatar', true);
-      } finally {
-        saving.value = false;
-      }
-    }
-  };
-  input.click();
-};
-
-const enableTwoFactor = async () => {
-  try {
-    const response = await api.post<{ data: { qr_code: string } }>('/account/2fa/enable');
-    twoFactor.qrCode = response.data.qr_code;
-    showTwoFactorModal.value = true;
-  } catch (error: any) {
-    showMessage(error.message || 'Failed to enable 2FA', true);
-  }
-};
-
-const verifyTwoFactor = async () => {
-  if (!twoFactor.verificationCode) return;
-
-  saving.value = true;
-  try {
-    await api.post('/account/2fa/verify', {
-      code: twoFactor.verificationCode,
-    });
-    twoFactor.enabled = true;
-    showTwoFactorModal.value = false;
-    twoFactor.verificationCode = '';
-    showMessage('Two-factor authentication enabled!');
-  } catch (error: any) {
-    showMessage(error.message || 'Failed to verify 2FA code', true);
-  } finally {
-    saving.value = false;
-  }
-};
-
-const disableTwoFactor = async () => {
-  if (confirm('Are you sure you want to disable two-factor authentication?')) {
-    try {
-      await api.post('/account/2fa/disable');
-      twoFactor.enabled = false;
-      showMessage('Two-factor authentication disabled');
-    } catch (error: any) {
-      showMessage(error.message || 'Failed to disable 2FA', true);
-    }
-  }
-};
-
-const revokeSession = async (sessionUuid: string) => {
-  try {
-    await api.delete(`/account/sessions/${sessionUuid}`);
-    sessions.value = sessions.value.filter(s => s.uuid !== sessionUuid);
-    showMessage('Session revoked');
-  } catch (error: any) {
-    showMessage(error.message || 'Failed to revoke session', true);
-  }
-};
-
-const revokeAllSessions = async () => {
-  if (confirm('Are you sure you want to revoke all other sessions?')) {
-    try {
-      await api.delete('/account/sessions');
-      sessions.value = sessions.value.filter(s => s.is_current);
-      showMessage('All other sessions revoked');
-    } catch (error: any) {
-      showMessage(error.message || 'Failed to revoke sessions', true);
-    }
-  }
-};
-
-const exportData = async (format: 'json' | 'csv') => {
-  saving.value = true;
-  try {
-    await api.post('/account/data-export', { format });
-    showMessage(`Your data export request has been submitted. You'll be notified when it's ready.`);
-  } catch (error: any) {
-    showMessage(error.message || 'Failed to request data export', true);
-  } finally {
-    saving.value = false;
-  }
-};
-
-const deleteAccount = async () => {
-  if (!deletePassword.value) {
-    showMessage('Please enter your password to confirm deletion', true);
-    return;
-  }
-
-  saving.value = true;
-  try {
-    await api.post('/account/deletion', {
-      password: deletePassword.value,
-      reason: 'user_requested',
-    });
-    showDeleteModal.value = false;
-    showMessage('Account deletion request submitted. Check your email to confirm.');
-    // Wait a bit then logout
-    setTimeout(async () => {
-      await authStore.logout();
-      router.push('/');
-    }, 3000);
-  } catch (error: any) {
-    showMessage(error.message || 'Failed to delete account', true);
-  } finally {
-    saving.value = false;
-    deletePassword.value = '';
-  }
-};
-
-const getActivityIcon = (type: string) => {
-  switch (type) {
-    case 'create':
-      return 'M12 4v16m8-8H4';
-    case 'edit':
-      return 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z';
-    case 'verify':
-      return 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z';
-    case 'comment':
-      return 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z';
-    case 'download':
-      return 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4';
-    default:
-      return 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z';
-  }
-};
-
-const getAchievementIcon = (type: string) => {
-  switch (type) {
-    case 'star':
-      return 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z';
-    case 'check':
-      return 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z';
-    case 'calendar':
-      return 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z';
-    case 'award':
-      return 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z';
-    case 'users':
-      return 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z';
-    default:
-      return 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z';
-  }
+const updateProfile = (newProfile: any) => {
+  Object.assign(profile, newProfile);
 };
 
 onMounted(async () => {
@@ -684,4 +415,5 @@ onMounted(async () => {
   ]);
   loading.value = false;
 });
+
 </script>
