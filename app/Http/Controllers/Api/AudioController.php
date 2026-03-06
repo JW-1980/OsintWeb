@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\AudioCollection;
 use App\Models\AudioFile;
 use App\Models\Transcription;
 use App\Models\TranscriptionJob;
