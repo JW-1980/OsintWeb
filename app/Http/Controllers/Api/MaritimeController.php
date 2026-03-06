@@ -73,8 +73,27 @@ class MaritimeController extends Controller
         }
 
         // Ordering
+        $allowedSorts = [
+            'id',
+            'monitoring_priority',
+            'mmsi',
+            'imo_number',
+            'name',
+            'callsign',
+            'vessel_type',
+            'build_year',
+            'created_at',
+            'updated_at'
+        ];
+
         $sortBy = $request->get('sort', 'monitoring_priority');
+        if (!in_array($sortBy, $allowedSorts)) {
+            $sortBy = 'monitoring_priority';
+        }
+
         $sortDir = $request->get('direction', 'asc');
+        $sortDir = strtolower($sortDir) === 'desc' ? 'desc' : 'asc';
+
         $query->orderBy($sortBy, $sortDir);
 
         // Eager load relationships
