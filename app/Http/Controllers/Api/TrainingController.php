@@ -141,8 +141,13 @@ class TrainingController extends Controller
         }
 
         // Sort
+        $allowedSortFields = ['id', 'uuid', 'name', 'environment_type', 'difficulty', 'time_limit_minutes', 'created_at', 'updated_at'];
         $sortField = $request->input('sort', 'created_at');
-        $sortDir = $request->input('direction', 'desc');
+        if (!in_array($sortField, $allowedSortFields, true)) {
+            $sortField = 'created_at';
+        }
+
+        $sortDir = strtolower($request->input('direction', 'desc')) === 'asc' ? 'asc' : 'desc';
         $query->orderBy($sortField, $sortDir);
 
         // Paginate
