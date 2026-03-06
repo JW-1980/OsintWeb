@@ -44,7 +44,7 @@ class DatabaseController extends Controller
         $validated = $request->validate([
             'host' => 'required|string',
             'port' => 'required|integer',
-            'database' => 'required|string',
+            'database' => ['required', 'string', 'regex:/^[a-zA-Z0-9_]+$/'],
             'username' => 'required|string',
             'password' => 'nullable|string',
         ]);
@@ -109,7 +109,7 @@ class DatabaseController extends Controller
         $validated = $request->validate([
             'host' => 'required|string',
             'port' => 'required|integer',
-            'database' => 'required|string',
+            'database' => ['required', 'string', 'regex:/^[a-zA-Z0-9_]+$/'],
             'username' => 'required|string',
             'password' => 'nullable|string',
             'create_database' => 'boolean',
