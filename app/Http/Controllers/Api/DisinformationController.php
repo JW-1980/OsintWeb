@@ -133,8 +133,15 @@ class DisinformationController extends Controller
         }
 
         // Sort
-        $sortField = $request->input('sort_by', 'created_at');
-        $sortDirection = $request->input('sort_direction', 'desc');
+        $allowedSorts = [
+            'created_at', 'updated_at', 'threat_score', 'confidence_score',
+            'analysis_status', 'manual_review_status', 'analysis_type', 'analyzable_type'
+        ];
+        $sortField = in_array($request->input('sort_by'), $allowedSorts)
+            ? $request->input('sort_by')
+            : 'created_at';
+
+        $sortDirection = strtolower((string) $request->input('sort_direction')) === 'asc' ? 'asc' : 'desc';
         $query->orderBy($sortField, $sortDirection);
 
         $analyses = $query->paginate($this->perPage);
@@ -275,8 +282,15 @@ class DisinformationController extends Controller
         }
 
         // Sort
-        $sortField = $request->input('sort_by', 'flagged_at');
-        $sortDirection = $request->input('sort_direction', 'desc');
+        $allowedSorts = [
+            'flagged_at', 'created_at', 'updated_at', 'priority',
+            'resolution_status', 'flag_reason', 'content_type'
+        ];
+        $sortField = in_array($request->input('sort_by'), $allowedSorts)
+            ? $request->input('sort_by')
+            : 'flagged_at';
+
+        $sortDirection = strtolower((string) $request->input('sort_direction')) === 'asc' ? 'asc' : 'desc';
         $query->orderBy($sortField, $sortDirection);
 
         $flagged = $query->paginate($this->perPage);
@@ -461,8 +475,15 @@ class DisinformationController extends Controller
         }
 
         // Sort
-        $sortField = $request->input('sort_by', 'name');
-        $sortDirection = $request->input('sort_direction', 'asc');
+        $allowedSorts = [
+            'name', 'pattern_type', 'severity', 'base_threat_weight',
+            'match_count', 'last_matched_at', 'created_at', 'updated_at'
+        ];
+        $sortField = in_array($request->input('sort_by'), $allowedSorts)
+            ? $request->input('sort_by')
+            : 'name';
+
+        $sortDirection = strtolower((string) $request->input('sort_direction')) === 'desc' ? 'desc' : 'asc';
         $query->orderBy($sortField, $sortDirection);
 
         $patterns = $query->paginate($this->perPage);
