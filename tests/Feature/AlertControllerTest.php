@@ -102,4 +102,102 @@ class AlertControllerTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['alert_type', 'notification_channels.0', 'frequency']);
     }
+
+    /**
+     * Test listing user's notifications.
+     */
+    public function test_can_list_notifications(): void
+    {
+        $user = User::factory()->create();
+
+        // Create some notifications
+        \Illuminate\Support\Facades\DB::table('notifications')->insert([
+            [
+                'id' => \Illuminate\Support\Str::uuid()->toString(),
+                'type' => 'App\Notifications\TestNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user->id,
+                'data' => json_encode(['message' => 'Notification 1']),
+                'read_at' => null,
+                'created_at' => now()->subMinutes(10),
+                'updated_at' => now()->subMinutes(10),
+            ],
+            [
+                'id' => \Illuminate\Support\Str::uuid()->toString(),
+                'type' => 'App\Notifications\TestNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user->id,
+                'data' => json_encode(['message' => 'Notification 2']),
+                'read_at' => now(),
+                'created_at' => now()->subMinutes(5),
+                'updated_at' => now()->subMinutes(5),
+            ]
+        ]);
+
+        $response = $this->actingAs($user)
+            ->getJson('/api/notifications');
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'type',
+                        'notifiable_type',
+                        'notifiable_id',
+                        'data',
+                        'read_at',
+                        'created_at',
+                        'updated_at',
+                    ]
+                ],
+                'meta' => [
+                    'current_page',
+                    'total',
+                    'unread_count',
+                ]
+            ]);
+
+        $this->assertCount(2, $response->json('data'));
+        $this->assertEquals(1, $response->json('meta.unread_count'));
+    }
+
+    /**
+     * Test filtering unread notifications.
+     */
+    public function test_can_filter_unread_notifications(): void
+    {
+        $user = User::factory()->create();
+
+        // Create some notifications
+        \Illuminate\Support\Facades\DB::table('notifications')->insert([
+            [
+                'id' => \Illuminate\Support\Str::uuid()->toString(),
+                'type' => 'App\Notifications\TestNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user->id,
+                'data' => json_encode(['message' => 'Unread Notification']),
+                'read_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => \Illuminate\Support\Str::uuid()->toString(),
+                'type' => 'App\Notifications\TestNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user->id,
+                'data' => json_encode(['message' => 'Read Notification']),
+                'read_at' => now(),
+                'created_at' => now()->subMinutes(5),
+                'updated_at' => now()->subMinutes(5),
+            ]
+        ]);
+
+        $response = $this->actingAs($user)
+            ->getJson('/api/notifications?unread_only=1');
+
+        $response->assertStatus(200);
+        $this->assertCount(1, $response->json('data'));
+        $this->assertNull($response->json('data.0.read_at'));
+    }
 }
