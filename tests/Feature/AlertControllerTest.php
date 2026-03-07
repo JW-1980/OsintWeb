@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AlertControllerTest extends TestCase
 {
@@ -199,5 +201,83 @@ class AlertControllerTest extends TestCase
         $response->assertStatus(200);
         $this->assertCount(1, $response->json('data'));
         $this->assertNull($response->json('data.0.read_at'));
+    }
+
+    /**
+     * Test successful alert deletion.
+     */
+    public function test_can_delete_alert(): void
+    {
+        $user = User::factory()->create();
+
+        $uuid = Str::uuid()->toString();
+        $alertId = DB::table('alerts')->insertGetId([
+            'uuid' => $uuid,
+            'user_id' => $user->id,
+            'name' => 'Alert to Delete',
+            'alert_type' => 'keyword',
+            'conditions' => json_encode(['keywords' => ['delete']]),
+            'notification_channels' => json_encode(['email']),
+            'frequency' => 'instant',
+            'is_active' => true,
+            'status' => 'active',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->actingAs($user)
+            ->deleteJson("/api/alerts/{$uuid}");
+
+        $response->assertStatus(200)
+            ->assertJson(['message' => 'Alert deleted successfully']);
+
+        $this->assertDatabaseMissing('alerts', ['id' => $alertId]);
+    }
+
+    /**
+     * Test deletion of non-existent alert.
+     */
+    public function test_delete_alert_not_found(): void
+    {
+        $user = User::factory()->create();
+        $uuid = Str::uuid()->toString();
+
+        $response = $this->actingAs($user)
+            ->deleteJson("/api/alerts/{$uuid}");
+
+        $response->assertStatus(404)
+            ->assertJson(['message' => 'Alert not found']);
+    }
+
+    /**
+     * Test cannot delete another user's alert.
+     */
+    public function test_cannot_delete_other_users_alert(): void
+    {
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+
+        $uuid = Str::uuid()->toString();
+        $alertId = DB::table('alerts')->insertGetId([
+            'uuid' => $uuid,
+            'user_id' => $user1->id,
+            'name' => 'User 1 Alert',
+            'alert_type' => 'keyword',
+            'conditions' => json_encode(['keywords' => ['test']]),
+            'notification_channels' => json_encode(['email']),
+            'frequency' => 'instant',
+            'is_active' => true,
+            'status' => 'active',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $response = $this->actingAs($user2)
+            ->deleteJson("/api/alerts/{$uuid}");
+
+        $response->assertStatus(404)
+            ->assertJson(['message' => 'Alert not found']);
+
+        $this->assertDatabaseHas('alerts', ['id' => $alertId]);
     }
 }
