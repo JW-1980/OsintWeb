@@ -1,8 +1,10 @@
-🎯 **What:** The `destroy` method in `AlertController` was previously untested. It handles the deletion of user alerts and should be properly tested.
+🔒 Fix SQL Injection Vulnerability in DisinformationController Sorting
 
-📊 **Coverage:** Three tests have been added to `tests/Feature/AlertControllerTest.php` to verify the functionality of the `destroy` method:
-1. `test_can_delete_alert`: Tests successful alert deletion and DB state verification.
-2. `test_delete_alert_not_found`: Tests 404 response when deleting a non-existent alert.
-3. `test_cannot_delete_other_users_alert`: Tests authorization failure and DB state verification when attempting to delete another user's alert.
+🎯 **What:**
+Fixed an unvalidated sort parameter vulnerability in `app/Http/Controllers/Api/DisinformationController.php`. The `index`, `flags`, and `patterns` methods were directly passing `$request->input('sort_by')` into the Query Builder's `orderBy` clause without proper validation.
 
-✨ **Result:** Enhanced test coverage for `AlertController::destroy`.
+⚠️ **Risk:**
+Directly interpolating unvalidated user input into an `orderBy` clause is a known SQL injection vector. Attackers could potentially manipulate the `sort_by` parameter to execute arbitrary SQL commands, leading to data exfiltration, information disclosure, or denial of service.
+
+🛡️ **Solution:**
+Implemented a strict array allowlist for the `$sortField` parameter in each affected method. If an invalid or malicious column name is provided, the code safely falls back to a default sort column (`created_at`, `flagged_at`, or `name`). Additionally, explicitly cast `$request->input('sort_direction')` to a string before using `strtolower()` to avoid PHP 8.1+ deprecation warnings when the parameter is missing.

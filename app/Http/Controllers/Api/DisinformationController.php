@@ -133,9 +133,15 @@ class DisinformationController extends Controller
         }
 
         // Sort
-        $allowedSortFields = ['created_at', 'threat_score', 'confidence_score', 'analysis_type', 'manual_review_status', 'analysis_status', 'updated_at'];
-        $sortField = in_array($request->input('sort_by', 'created_at'), $allowedSortFields) ? $request->input('sort_by', 'created_at') : 'created_at';
-        $sortDirection = strtolower($request->input('sort_direction', 'desc')) === 'asc' ? 'asc' : 'desc';
+        $allowedSorts = [
+            'created_at', 'updated_at', 'threat_score', 'confidence_score',
+            'analysis_status', 'manual_review_status', 'analysis_type', 'analyzable_type'
+        ];
+        $sortField = in_array($request->input('sort_by'), $allowedSorts)
+            ? $request->input('sort_by')
+            : 'created_at';
+
+        $sortDirection = strtolower((string) $request->input('sort_direction')) === 'asc' ? 'asc' : 'desc';
         $query->orderBy($sortField, $sortDirection);
 
         $analyses = $query->paginate($this->perPage);
@@ -276,9 +282,15 @@ class DisinformationController extends Controller
         }
 
         // Sort
-        $allowedSortFields = ['flagged_at', 'resolution_status', 'priority', 'created_at', 'updated_at'];
-        $sortField = in_array($request->input('sort_by', 'flagged_at'), $allowedSortFields) ? $request->input('sort_by', 'flagged_at') : 'flagged_at';
-        $sortDirection = strtolower($request->input('sort_direction', 'desc')) === 'asc' ? 'asc' : 'desc';
+        $allowedSorts = [
+            'flagged_at', 'created_at', 'updated_at', 'priority',
+            'resolution_status', 'flag_reason', 'content_type'
+        ];
+        $sortField = in_array($request->input('sort_by'), $allowedSorts)
+            ? $request->input('sort_by')
+            : 'flagged_at';
+
+        $sortDirection = strtolower((string) $request->input('sort_direction')) === 'asc' ? 'asc' : 'desc';
         $query->orderBy($sortField, $sortDirection);
 
         $flagged = $query->paginate($this->perPage);
@@ -463,9 +475,15 @@ class DisinformationController extends Controller
         }
 
         // Sort
-        $allowedSortFields = ['name', 'pattern_type', 'severity', 'base_threat_weight', 'match_count', 'last_matched_at', 'created_at', 'updated_at'];
-        $sortField = in_array($request->input('sort_by', 'name'), $allowedSortFields) ? $request->input('sort_by', 'name') : 'name';
-        $sortDirection = strtolower($request->input('sort_direction', 'asc')) === 'desc' ? 'desc' : 'asc';
+        $allowedSorts = [
+            'name', 'pattern_type', 'severity', 'base_threat_weight',
+            'match_count', 'last_matched_at', 'created_at', 'updated_at'
+        ];
+        $sortField = in_array($request->input('sort_by'), $allowedSorts)
+            ? $request->input('sort_by')
+            : 'name';
+
+        $sortDirection = strtolower((string) $request->input('sort_direction')) === 'desc' ? 'desc' : 'asc';
         $query->orderBy($sortField, $sortDirection);
 
         $patterns = $query->paginate($this->perPage);
