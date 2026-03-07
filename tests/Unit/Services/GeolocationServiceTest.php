@@ -2,12 +2,16 @@
 
 namespace Tests\Unit\Services;
 
+use App\Models\Event;
 use App\Services\GeolocationService;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class GeolocationServiceTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * @var GeolocationService
      */
@@ -122,5 +126,24 @@ class GeolocationServiceTest extends TestCase
         // 1 degree at equator is approx 111km. 111 * 111 = ~12321 km2
         $this->assertGreaterThan(12000, $result['search_area_km2']);
         $this->assertLessThan(13000, $result['search_area_km2']);
+    }
+
+    /** @test */
+    public function verify_coordinates_throws_exception_for_invalid_method()
+    {
+        // Create an event so findOrFail succeeds
+        $event = Event::factory()->create([
+            'latitude' => 10.0,
+            'longitude' => 20.0,
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid verification method: invalid_method');
+
+        $this->service->verifyCoordinates(
+            $event->id,
+            'invalid_method',
+            ['verified_latitude' => 10.001, 'verified_longitude' => 20.001]
+        );
     }
 }
