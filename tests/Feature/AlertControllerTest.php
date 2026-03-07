@@ -384,4 +384,87 @@ class AlertControllerTest extends TestCase
         $response->assertStatus(404)
             ->assertJson(['message' => 'Alert not found']);
     }
+
+    /**
+     * Test marking all unread notifications as read.
+     */
+    public function test_mark_all_read_updates_notifications(): void
+    {
+        $user = User::factory()->create();
+
+        // Create unread notifications for the user
+        DB::table('notifications')->insert([
+            [
+                'id' => Str::uuid(),
+                'type' => 'App\Notifications\TestNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user->id,
+                'data' => json_encode(['message' => 'Test 1']),
+                'read_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => Str::uuid(),
+                'type' => 'App\Notifications\TestNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user->id,
+                'data' => json_encode(['message' => 'Test 2']),
+                'read_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        $this->assertEquals(2, DB::table('notifications')->where('notifiable_id', $user->id)->whereNull('read_at')->count());
+
+        $response = $this->actingAs($user)->postJson('/api/notifications/read-all');
+
+        $response->assertStatus(200)
+            ->assertJson(['message' => 'All notifications marked as read']);
+
+        $this->assertEquals(0, DB::table('notifications')->where('notifiable_id', $user->id)->whereNull('read_at')->count());
+    }
+
+    /**
+     * Test marking all read only affects the current user.
+     */
+    public function test_mark_all_read_only_affects_current_user(): void
+    {
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+
+        // Create unread notifications for both users
+        DB::table('notifications')->insert([
+            [
+                'id' => Str::uuid(),
+                'type' => 'App\Notifications\TestNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user1->id,
+                'data' => json_encode(['message' => 'User 1 Notification']),
+                'read_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => Str::uuid(),
+                'type' => 'App\Notifications\TestNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id' => $user2->id,
+                'data' => json_encode(['message' => 'User 2 Notification']),
+                'read_at' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        // Authenticate as user 1 and mark all read
+        $this->actingAs($user1)->postJson('/api/notifications/read-all');
+
+        // Verify user 1's notification is read
+        $this->assertEquals(0, DB::table('notifications')->where('notifiable_id', $user1->id)->whereNull('read_at')->count());
+
+        // Verify user 2's notification is STILL unread
+        $this->assertEquals(1, DB::table('notifications')->where('notifiable_id', $user2->id)->whereNull('read_at')->count());
+    }
 }
