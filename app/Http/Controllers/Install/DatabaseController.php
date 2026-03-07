@@ -82,6 +82,10 @@ class DatabaseController extends Controller
             // Check spatial extension support
             $spatialSupport = false;
             if ($dbExists) {
+                if (!preg_match('/^[a-zA-Z0-9_]+$/', $validated['database'])) {
+                    throw new PDOException('Invalid database name format. Only alphanumeric characters and underscores are allowed.');
+                }
+
                 $pdo->exec("USE `{$validated['database']}`");
                 $result = $pdo->query("SHOW VARIABLES LIKE 'version'")->fetch(PDO::FETCH_ASSOC);
                 $spatialSupport = $result !== false;
@@ -118,6 +122,10 @@ class DatabaseController extends Controller
         // Create database if requested
         if ($request->boolean('create_database')) {
             try {
+                if (!preg_match('/^[a-zA-Z0-9_]+$/', $validated['database'])) {
+                    throw new PDOException('Invalid database name format. Only alphanumeric characters and underscores are allowed.');
+                }
+
                 $pdo = new PDO(
                     "mysql:host={$validated['host']};port={$validated['port']}",
                     $validated['username'],
