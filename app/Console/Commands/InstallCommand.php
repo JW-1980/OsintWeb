@@ -287,17 +287,18 @@ class InstallCommand extends Command
      */
     private function createDatabase(string $host, int $port, string $database, string $username, ?string $password): void
     {
-        if (!preg_match('/^[a-zA-Z0-9_]+$/', $database)) {
-            $this->error('Invalid database name. Only alphanumeric characters and underscores are allowed.');
-            return;
-        }
-
         try {
             $pdo = new PDO(
                 "mysql:host={$host};port={$port}",
                 $username,
                 $password ?? ''
             );
+
+            // Final security check before raw SQL execution
+            if (!preg_match('/^[a-zA-Z0-9_]+$/', $database)) {
+                $this->error('Invalid database name. Only alphanumeric characters and underscores are allowed.');
+                return;
+            }
 
             $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
             $this->info("✓ Database '{$database}' ready");
