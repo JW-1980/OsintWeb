@@ -164,10 +164,6 @@ class Actor extends Model
     /**
      * Alias for actorAliases for convenience
      */
-    public function aliases(): HasMany
-    {
-        return $this->actorAliases();
-    }
 
     /**
      * Get the conflicts this actor is involved in

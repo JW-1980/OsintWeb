@@ -1,0 +1,74 @@
+
+> osintweb-platform@1.0.0 dev
+> vite
+
+
+  VITE v5.4.21  ready in 932 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://192.168.0.2:5173/
+
+  LARAVEL v11.47.0  plugin v1.3.0
+
+  ➜  APP_URL: https://your-domain.com
+10:28:43 PM [vite] Internal server error: Tags with side effect (<script> and <style>) are ignored in client component templates.
+  Plugin: vite:vue
+  File: /app/resources/js/views/public/Contact.vue:6:1
+  4  |  <meta charset="utf-8"/>
+  5  |  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  6  |  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+     |   ^
+  7  |  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  8  |  <script id="tailwind-config">
+      at Object.createCompilerError (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:1378:17)
+      at createDOMCompilerError (/app/node_modules/@vue/compiler-dom/dist/compiler-dom.cjs.js:122:23)
+      at Array.ignoreSideEffectTags (/app/node_modules/@vue/compiler-dom/dist/compiler-dom.cjs.js:690:7)
+      at traverseNode (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3606:38)
+      at traverseChildren (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3598:5)
+      at traverseNode (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3641:7)
+      at transform (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3534:3)
+      at Object.baseCompile (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:6710:3)
+      at Object.compile (/app/node_modules/@vue/compiler-dom/dist/compiler-dom.cjs.js:889:23)
+      at doCompileTemplate (/app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:4274:47)
+10:30:28 PM [vite] Internal server error: Tags with side effect (<script> and <style>) are ignored in client component templates.
+  Plugin: vite:vue
+  File: /app/resources/js/views/public/Contact.vue:6:1
+  4  |  <meta charset="utf-8"/>
+  5  |  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  6  |  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+     |   ^
+  7  |  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  8  |  <script id="tailwind-config">
+      at Object.createCompilerError (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:1378:17)
+      at createDOMCompilerError (/app/node_modules/@vue/compiler-dom/dist/compiler-dom.cjs.js:122:23)
+      at Array.ignoreSideEffectTags (/app/node_modules/@vue/compiler-dom/dist/compiler-dom.cjs.js:690:7)
+      at traverseNode (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3606:38)
+      at traverseChildren (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3598:5)
+      at traverseNode (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3641:7)
+      at transform (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3534:3)
+      at Object.baseCompile (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:6710:3)
+      at Object.compile (/app/node_modules/@vue/compiler-dom/dist/compiler-dom.cjs.js:889:23)
+      at doCompileTemplate (/app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:4274:47)
+4:40:21 AM [vite] page reload storage/framework/views/31bd1c0675d2c09ac57f108a9b11bc0f.php
+4:40:21 AM [vite] page reload storage/framework/views/833e9cf59baf7852387639a88bfa679e.php
+4:40:21 AM [vite] page reload storage/framework/views/9d2ffcd45a99e50ae9ed2f1ba720db97.php
+4:44:01 AM [vite] page reload storage/framework/views/31bd1c0675d2c09ac57f108a9b11bc0f.php
+4:44:27 AM [vite] Internal server error: Tags with side effect (<script> and <style>) are ignored in client component templates.
+  Plugin: vite:vue
+  File: /app/resources/js/views/public/Contact.vue:6:1
+  4  |  <meta charset="utf-8"/>
+  5  |  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  6  |  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+     |   ^
+  7  |  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  8  |  <script id="tailwind-config">
+      at Object.createCompilerError (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:1378:17)
+      at createDOMCompilerError (/app/node_modules/@vue/compiler-dom/dist/compiler-dom.cjs.js:122:23)
+      at Array.ignoreSideEffectTags (/app/node_modules/@vue/compiler-dom/dist/compiler-dom.cjs.js:690:7)
+      at traverseNode (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3606:38)
+      at traverseChildren (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3598:5)
+      at traverseNode (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3641:7)
+      at transform (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:3534:3)
+      at Object.baseCompile (/app/node_modules/@vue/compiler-core/dist/compiler-core.cjs.js:6710:3)
+      at Object.compile (/app/node_modules/@vue/compiler-dom/dist/compiler-dom.cjs.js:889:23)
+      at doCompileTemplate (/app/node_modules/@vue/compiler-sfc/dist/compiler-sfc.cjs.js:4274:47)
