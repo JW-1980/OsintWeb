@@ -16,11 +16,11 @@ class EventQueryBuilder extends Builder
      * @param float
      * @return self
      */
-    public function nearLocation(float , float , float ): self
+    public function nearLocation(float $latitude, float $longitude, float $radiusKm): self
     {
-        return ->whereRaw(
+        return $this->whereRaw(
             'ST_Distance_Sphere(location, POINT(?, ?)) <= ?',
-            [, ,  * 1000]
+            [$longitude, $latitude, $radiusKm * 1000]
         );
     }
 
@@ -31,9 +31,9 @@ class EventQueryBuilder extends Builder
      * @param string
      * @return self
      */
-    public function dateRange(string , string ): self
+    public function dateRange(string $startDate, string $endDate): self
     {
-        return ->whereBetween('occurred_at', [, ]);
+        return $this->whereBetween('occurred_at', [$startDate, $endDate]);
     }
 
     /**
@@ -42,8 +42,8 @@ class EventQueryBuilder extends Builder
      * @param string
      * @return self
      */
-    public function withStatus(string ): self
+    public function withStatus(string $status): self
     {
-        return ->where('status', );
+        return $this->where('status', $status);
     }
 }

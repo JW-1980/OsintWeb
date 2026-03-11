@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('group', 100)->default('general')->index()->comment('Setting group/category');
             $table->text('description')->nullable();
             $table->boolean('is_public')->default(false)->index()->comment('Whether setting is accessible to frontend');
+            $table->boolean('is_encrypted')->default(false)->comment('Whether setting is encrypted');
             $table->timestamps();
 
             // Note: 'key' has unique constraint, 'group' and 'is_public' already indexed inline

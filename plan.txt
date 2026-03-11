@@ -1,0 +1,1 @@
+1. Run database initialization and seeder to populate dummy data\n2. Fix issue in codebase preventing full page rendering\n3. Capture 24 screenshots using Playwright
