@@ -33,10 +33,27 @@ class SiteAnalyticsController extends Controller
         $from = $request->input('from', now()->subDays(30)->toDateString());
         $to = $request->input('to', now()->toDateString());
 
-        $summary = $this->analyticsService->getDashboardSummary($from, $to);
+        // Get raw summary data
+        $pageViewSummary = $this->analyticsService->getPageViewSummary($from, $to);
+        $sessionSummary = SessionAnalytics::getSummary($from, $to);
+        $featureTotal = FeatureUsageStat::dateRange($from, $to)->sum('usage_count');
+        $searchTotal = SearchAnalytics::dateRange($from, $to)->sum('search_count');
+        $zeroResultTotal = SearchAnalytics::dateRange($from, $to)->sum('zero_results');
+        $searchTotalForRate = max($searchTotal, 1);
 
+        // Flatten into the format the frontend expects
         return response()->json([
-            'data' => $summary,
+            'data' => [
+                'total_page_views' => $pageViewSummary['total_views'] ?? 0,
+                'unique_page_views' => $pageViewSummary['total_unique'] ?? 0,
+                'total_sessions' => $sessionSummary['total_sessions'] ?? 0,
+                'avg_session_duration' => $sessionSummary['avg_duration'] ?? 0,
+                'avg_bounce_rate' => $sessionSummary['bounce_rate'] ?? 0,
+                'total_feature_uses' => $featureTotal,
+                'total_searches' => $searchTotal,
+                'zero_result_rate' => round(($zeroResultTotal / $searchTotalForRate) * 100, 1),
+                'avg_pages_per_session' => $sessionSummary['avg_pages'] ?? 0,
+            ],
             'period' => ['from' => $from, 'to' => $to],
         ]);
     }
@@ -84,9 +101,18 @@ class SiteAnalyticsController extends Controller
         $previousFrom = now()->parse($from)->subDays($periodDays)->toDateString();
         $previousTo = now()->parse($from)->subDay()->toDateString();
 
+        // Map to format Vue component expects (feature_name, category, total_uses)
+        $topFeatures = FeatureUsageStat::getTopFeatures($from, $to, 30)->map(fn ($f) => [
+            'feature_name' => $f->feature_name,
+            'category' => $f->feature_category,
+            'action' => $f->feature_action,
+            'total_uses' => $f->total_usage,
+            'unique_users' => $f->total_unique,
+        ]);
+
         return response()->json([
-            'data' => [
-                'top_features' => FeatureUsageStat::getTopFeatures($from, $to, 30),
+            'data' => $topFeatures,
+            'meta' => [
                 'by_category' => FeatureUsageStat::getUsageByCategory($from, $to),
                 'daily' => FeatureUsageStat::getDailyTotals($from, $to),
                 'trends' => FeatureUsageStat::getFeatureTrends($from, $to, $previousFrom, $previousTo),
@@ -131,10 +157,22 @@ class SiteAnalyticsController extends Controller
         $from = $request->input('from', now()->subDays(30)->toDateString());
         $to = $request->input('to', now()->toDateString());
 
+        // Map top searches to format Vue component expects (search_term, search_count)
+        $topSearches = SearchAnalytics::getTopSearches($from, $to, 50)->map(fn ($s) => [
+            'search_term' => $s['term'],
+            'search_count' => $s['searches'],
+            'avg_results' => 0,
+        ]);
+
+        $zeroResults = SearchAnalytics::getZeroResultSearches($from, $to, 20)->map(fn ($s) => [
+            'search_term' => $s->search_term,
+            'search_count' => $s->total_zero,
+        ]);
+
         return response()->json([
             'data' => [
-                'top_searches' => SearchAnalytics::getTopSearches($from, $to, 50),
-                'zero_results' => SearchAnalytics::getZeroResultSearches($from, $to, 20),
+                'top_searches' => $topSearches,
+                'zero_result_searches' => $zeroResults,
                 'by_type' => SearchAnalytics::getVolumeByType($from, $to),
                 'daily' => SearchAnalytics::getDailyVolume($from, $to),
                 'trending' => SearchAnalytics::getTrendingSearches(7, 15),
@@ -155,9 +193,17 @@ class SiteAnalyticsController extends Controller
 
         $from = $request->input('from', now()->subDays(30)->toDateString());
         $to = $request->input('to', now()->toDateString());
+        $limit = $request->integer('limit', 30);
+
+        // Vue expects flat array with from_page, to_page, transition_count
+        $flows = UserFlowStat::getTopPaths($from, $to, $limit);
 
         return response()->json([
-            'data' => $this->analyticsService->getUserFlow($from, $to),
+            'data' => $flows->map(fn ($f) => [
+                'from_page' => $f->from_page,
+                'to_page' => $f->to_page,
+                'transition_count' => $f->total_transitions,
+            ]),
             'period' => ['from' => $from, 'to' => $to],
         ]);
     }

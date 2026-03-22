@@ -54,6 +54,26 @@ class ABTestingController extends Controller
         $experiments = $query->orderByDesc('created_at')
             ->paginate($request->integer('per_page', 20));
 
+        // Append variant stats (impressions, conversions, conversion_rate) that the Vue component expects
+        $experiments->getCollection()->transform(function ($experiment) {
+            $experiment->variants->transform(function ($variant) use ($experiment) {
+                $totals = \App\Models\ExperimentConversion::where('variant_id', $variant->id)
+                    ->where('goal', $experiment->primary_goal)
+                    ->selectRaw('SUM(impressions) as total_impressions, SUM(conversions) as total_conversions')
+                    ->first();
+
+                $variant->impressions = $totals?->total_impressions ?? 0;
+                $variant->conversions = $totals?->total_conversions ?? 0;
+                $variant->conversion_rate = $variant->impressions > 0
+                    ? round(($variant->conversions / $variant->impressions) * 100, 2)
+                    : 0;
+
+                return $variant;
+            });
+
+            return $experiment;
+        });
+
         return response()->json($experiments);
     }
 
