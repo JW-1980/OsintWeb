@@ -20,11 +20,15 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+
+            \App\Http\Middleware\SecurityHeaders::class,
         ]);
 
         // Add installation check to all web routes
         $middleware->web(append: [
             \App\Http\Middleware\CheckInstallation::class,
+
+            \App\Http\Middleware\SecurityHeaders::class,
         ]);
 
         $middleware->alias([
