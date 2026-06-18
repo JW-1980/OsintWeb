@@ -1261,3 +1261,4 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->prefix('health')->group(fun
     Route::get('/component/{component}', [HealthController::class, 'healthComponent']);
     Route::post('/cleanup', [HealthController::class, 'cleanup']);
 });
+require __DIR__ . '/api_darkmode.php';

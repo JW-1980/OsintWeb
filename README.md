@@ -494,6 +494,9 @@ OsintWeb provides a comprehensive REST API with 80+ endpoints covering all platf
 ### User Settings APIs
 | Category | Base Path | Key Operations |
 |----------|-----------|----------------|
+| Theme Preference | `/api/user/theme-preference` | Set light, dark, or system mode |
+| Category | Base Path | Key Operations |
+|----------|-----------|----------------|
 | Email Preferences | `/api/email-preferences` | Get/update preferences, resubscribe |
 
 ## Documentation
