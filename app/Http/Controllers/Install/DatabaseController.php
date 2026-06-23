@@ -82,6 +82,7 @@ class DatabaseController extends Controller
             // Check spatial extension support
             $spatialSupport = false;
             if ($dbExists) {
+                // Final security check before raw SQL execution
                 if (!preg_match('/^[a-zA-Z0-9_]+$/', $validated['database'])) {
                     throw new PDOException('Invalid database name format. Only alphanumeric characters and underscores are allowed.');
                 }
@@ -122,10 +123,6 @@ class DatabaseController extends Controller
         // Create database if requested
         if ($request->boolean('create_database')) {
             try {
-                if (!preg_match('/^[a-zA-Z0-9_]+$/', $validated['database'])) {
-                    throw new PDOException('Invalid database name format. Only alphanumeric characters and underscores are allowed.');
-                }
-
                 $pdo = new PDO(
                     "mysql:host={$validated['host']};port={$validated['port']}",
                     $validated['username'],
@@ -133,6 +130,12 @@ class DatabaseController extends Controller
                 );
 
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                // Final security check before raw SQL execution
+                if (!preg_match('/^[a-zA-Z0-9_]+$/', $validated['database'])) {
+                    throw new PDOException('Invalid database name format. Only alphanumeric characters and underscores are allowed.');
+                }
+
                 $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$validated['database']}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
             } catch (PDOException $e) {
                 return redirect()
